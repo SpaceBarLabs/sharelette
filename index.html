@@ -18,6 +18,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -243,6 +244,29 @@
         .remove-custom-btn { background-color: #dc2626; }
         .btn-sm { background-color: var(--brand-blue); }
         .settings-io-buttons { margin-top: 1.5rem; display: flex; gap: 0.5rem; }
+        
+        .footer {
+            padding: 2rem 1.5rem;
+            background-color: transparent;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        .footer .content {
+            line-height: 1.5;
+        }
+        .has-text-centered {
+            text-align: center;
+        }
+        .is-size-7 {
+            font-size: 0.8rem;
+        }
+        .footer img {
+            height: 40px;
+            margin-bottom: 0.5rem;
+        }
+        .footer a {
+            color: var(--text-secondary);
+        }
 
         @media (max-width: 600px) {
             body { align-items: flex-start; padding: 1rem; }
@@ -258,11 +282,11 @@
             <img src="sharelette.jpeg" alt="Sharelette Logo" class="logo">
             <h1>Sharelette</h1>
             <p class="attribution">
-                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
+                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener">from CloudBreak</a>
             </p>
             <p class="coupon-code">
-                With Pocket shutting down, try our self-hosted 
-                <a href="https://cloudbreak.app/wallabag?utm_source=sharelette&utm_medium=webapp&utm_campaign=wallabag_promo&rby=sharelette" target="_blank" rel="noopener noreferrer">Wallabag read-it-later app</a>! 
+                With Pocket shutting down, try our managed hosting for 
+                <a href="https://cloudbreak.app/wallabag?utm_source=sharelette&utm_medium=webapp&utm_campaign=wallabag_promo&rby=sharelette" target="_blank" rel="noopener">Wallabag, a read-it-later app</a>! 
                 Use code <strong>SHARELETTE</strong> for $2 USD off.
             </p>
         </div>
@@ -273,7 +297,7 @@
             <div class="content-preview">
                 <p class="preview-text" id="textContent"></p>
                 <div class="preview-link-card">
-                    <a href="#" id="url-link" target="_blank" rel="noopener noreferrer">
+                    <a href="#" id="url-link" target="_blank" rel="noopener">
                         <div class="hostname" id="urlHostname"></div>
                         <div class="url-text" id="urlContent"></div>
                     </a>
@@ -383,6 +407,14 @@
             </div>
         </div>
     </div>
+    
+    <footer class="footer">
+      <div class="content has-text-centered is-size-7">
+        <a href="https://spacebarlabs.com/"><img src="/SBL_Logo.svg" alt="Space Bar Labs Logo"></a><br>
+        <span>&copy; space bar labs 2025</span><br>
+        <span><a href="https://spacebarlabs.com/privacy-policy/">Privacy Policy</a> | <a href="https://spacebarlabs.com/terms-of-service/">Terms of Service</a></span>
+      </div>
+    </footer>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
