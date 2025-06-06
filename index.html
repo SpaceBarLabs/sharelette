@@ -119,10 +119,10 @@
             <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
             <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank">LinkedIn</a>
             <a href="#" id="reddit-share" class="share-btn reddit" target="_blank">Reddit</a>
+            <a href="#" id="mastodon-share" class="share-btn mastodon" target="_blank">Mastodon</a>
+            <a href="#" id="lemmy-share" class="share-btn lemmy" target="_blank">Lemmy</a>
             <a href="#" id="email-share" class="share-btn email">Email</a>
             <a href="#" id="sms-share" class="share-btn sms">SMS</a>
-            <button id="mastodon-share" class="share-btn mastodon">Mastodon</button>
-            <button id="lemmy-share" class="share-btn lemmy">Lemmy</button>
             <button id="discord-share" class="share-btn discord">Discord</button>
         </div>
         <button id="native-share" class="share-btn native-share" style="display: none;">Share</button>
@@ -140,12 +140,14 @@
             const encodedUrl = encodeURIComponent(url);
             const encodedText = encodeURIComponent(text);
 
-            // Standard Shares
+            // Standard & Federated Shares
             document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
             document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
             document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
-            document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
             document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('mastodon-share').href = `https://mastodon.social/share?text=${encodedText}%20${encodedUrl}`;
+            document.getElementById('lemmy-share').href = `https://lemmy.world/create_post?title=${encodedText}&url=${encodedUrl}`;
+            document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
             
             let smsLink;
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
@@ -154,23 +156,6 @@
                 smsLink = `sms:?body=${encodedText}%20${encodedUrl}`;
             }
             document.getElementById('sms-share').href = smsLink;
-
-            // Federated & Prompt-based Shares
-            document.getElementById('mastodon-share').addEventListener('click', () => {
-                const instance = prompt("Enter your Mastodon instance (e.g., mastodon.social)");
-                if (instance) {
-                    const shareUrl = `https://${instance}/share?text=${encodedText}%20${encodedUrl}`;
-                    window.open(shareUrl, '_blank');
-                }
-            });
-
-            document.getElementById('lemmy-share').addEventListener('click', () => {
-                const instance = prompt("Enter your Lemmy instance (e.g., lemmy.world)");
-                if (instance) {
-                    const shareUrl = `https://${instance}/create_post?title=${encodedText}&url=${encodedUrl}`;
-                    window.open(shareUrl, '_blank');
-                }
-            });
 
             // Clipboard-based Shares
             const discordBtn = document.getElementById('discord-share');
