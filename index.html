@@ -277,24 +277,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- 1. CORE LOGIC: Get URL and Text from Query String ---
-            
-            // Set default values to be used if the query string is empty.
-            // This ensures the page always has valid content to display.
             const defaults = {
                 url: 'https://cloudbreak.app',
                 text: 'Check out CloudBreak!',
                 mastodonInstance: 'mastodon.social',
                 lemmyInstance: 'lemmy.world'
             };
-
-            // This is the key part that reads from the browser's address bar.
-            // It looks for "?url=..." and "?text=..." parameters.
             const params = new URLSearchParams(window.location.search);
-
-            // Get the 'url' from the query string. If it's not found, use the default.
             const url = params.get('url') || defaults.url;
-            
-            // Get the 'text' from the query string. If it's not found, use the default.
             const text = params.get('text') || defaults.text;
 
             // --- 2. LOCAL STORAGE & SETTINGS (Federated Networks) ---
@@ -302,41 +292,32 @@
                 mastodonInstance: localStorage.getItem('mastodonInstance') || defaults.mastodonInstance,
                 lemmyInstance: localStorage.getItem('lemmyInstance') || defaults.lemmyInstance
             };
-
             const mastodonInput = document.getElementById('mastodon-instance');
             const lemmyInput = document.getElementById('lemmy-instance');
             mastodonInput.value = settings.mastodonInstance;
             lemmyInput.value = settings.lemmyInstance;
-            
             const settingsToggleBtn = document.getElementById('settings-toggle-btn');
             const settingsPanel = document.getElementById('settings-panel');
             const saveSettingsBtn = document.getElementById('save-settings-btn');
-
             settingsToggleBtn.addEventListener('click', () => {
                 settingsPanel.classList.toggle('is-visible');
             });
-            
             saveSettingsBtn.addEventListener('click', () => {
                 const newMastodon = mastodonInput.value.trim() || defaults.mastodonInstance;
                 const newLemmy = lemmyInput.value.trim() || defaults.lemmyInstance;
-                
                 localStorage.setItem('mastodonInstance', newMastodon);
                 localStorage.setItem('lemmyInstance', newLemmy);
-                
                 settings.mastodonInstance = newMastodon;
                 settings.lemmyInstance = newLemmy;
-
                 alert('Settings saved!');
-                updateShareLinks(); // Re-render links with new settings
+                updateShareLinks();
                 settingsPanel.classList.remove('is-visible');
             });
 
             // --- 3. RENDER PAGE CONTENT & UPDATE SHARE LINKS ---
-            // This function uses the `url` and `text` variables (from step 1) to build all the share links.
             const updateShareLinks = () => {
                 const encodedUrl = encodeURIComponent(url);
                 const encodedText = encodeURIComponent(text);
-
                 document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                 document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
                 document.getElementById('bluesky-share').href = `https://bsky.app/intent/compose?text=${encodedText} ${encodedUrl}`;
@@ -345,7 +326,6 @@
                 document.getElementById('mastodon-share').href = `https://${settings.mastodonInstance}/share?text=${encodedText}%20${encodedUrl}`;
                 document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
                 document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
-                
                 const userAgent = navigator.userAgent || navigator.vendor || window.opera;
                 let smsLink;
                 if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
@@ -355,14 +335,11 @@
                 }
                 document.getElementById('sms-share').href = smsLink;
             };
-
-            // This function populates the "PREVIEW" card with the `url` and `text` from step 1.
             const updatePreview = () => {
                 document.getElementById('textContent').textContent = text;
                 document.getElementById('urlContent').textContent = url;
                 document.getElementById('url-link').href = url;
                 try {
-                    // Prepend "https://" if missing for the URL constructor to work reliably.
                     const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
                     document.getElementById('urlHostname').textContent = new URL(fullUrl).hostname;
                 } catch (e) {
@@ -370,14 +347,10 @@
                     console.error("Could not parse URL:", url, e);
                 }
             };
-            
-            // Initial calls to populate the page on load.
             updatePreview();
             updateShareLinks();
 
             // --- 4. BUTTON EVENT LISTENERS ---
-            
-            // Main "Copy Text & Link" button
             const copyBtn = document.getElementById('copy-btn');
             copyBtn.addEventListener('click', () => {
                 const combinedText = `${text}\n${url}`;
@@ -388,8 +361,6 @@
                     setTimeout(() => { textHolder.textContent = originalText; }, 2000);
                 });
             });
-
-            // Discord Button (copies to clipboard)
             const discordBtn = document.getElementById('discord-share');
             discordBtn.addEventListener('click', () => {
                 const combinedText = `${text}\n${url}`;
@@ -399,14 +370,11 @@
                     setTimeout(() => { discordBtn.textContent = originalText; }, 2000);
                 });
             });
-
-            // Native Share API
             if (navigator.share) {
                 const nativeShareBtn = document.getElementById('native-share');
                 nativeShareBtn.style.display = 'inline-flex';
                 nativeShareBtn.addEventListener('click', async () => {
                     try {
-                        // Use the url and text variables from the query string
                         await navigator.share({ title: text, text: text, url: url });
                     } catch (err) {
                         console.info("Navigator.share dialog info:", err);
@@ -415,8 +383,6 @@
             }
 
             // --- 5. "HOW TO USE" & LINK GENERATOR ---
-            
-            // Generic Copy Function
             const setupCopyButton = (buttonId, getText, feedback) => {
                 const button = document.getElementById(buttonId);
                 if (!button) return;
@@ -428,11 +394,8 @@
                     });
                 });
             };
-
-            // Copy HTML Sample Button
             setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
-
-            // Link Generator Form
+            
             const generateBtn = document.getElementById('generate-link-btn');
             const outputArea = document.getElementById('output-area');
             const outputInput = document.getElementById('generated-link-output');
@@ -443,16 +406,12 @@
             generateBtn.addEventListener('click', () => {
                 const urlToShare = document.getElementById('input-url').value;
                 const textToShare = document.getElementById('input-text').value;
-
                 if (!urlToShare) {
                     alert('Please enter a URL to share.');
                     return;
                 }
-
                 const encodedUrlParam = encodeURIComponent(urlToShare);
                 const encodedTextParam = encodeURIComponent(textToShare);
-                
-                // Dynamically create the base URL from the current page's location.
                 const baseAppUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
                 const finalLink = `${baseAppUrl}?url=${encodedUrlParam}&text=${encodedTextParam}`;
                 
@@ -471,13 +430,13 @@
                         correctLevel : QRCode.CorrectLevel.H
                     });
                     
-                    // Make it downloadable
+                    // Make it downloadable after a short delay for rendering
                     setTimeout(() => {
                         const canvas = qrcodeContainer.querySelector('canvas');
                         if (canvas) {
                             qrcodeDownload.href = canvas.toDataURL("image/png");
                         }
-                    }, 100); // Give canvas time to draw
+                    }, 100);
 
                     qrcodeOutput.style.display = 'block';
                 } catch (e) {
@@ -485,8 +444,6 @@
                     qrcodeOutput.style.display = 'none';
                 }
             });
-
-            // Copy Generated Link Button
             setupCopyButton('copy-generated-link-btn', () => outputInput.value, 'Copied!');
         });
     </script>
