@@ -374,6 +374,33 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- 0. UTILITIES ---
+        function copyTextToClipboard(text) {
+            return new Promise((resolve, reject) => {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(resolve).catch(reject);
+                } else {
+                    try {
+                        const textArea = document.createElement("textarea");
+                        textArea.value = text;
+                        textArea.style.position = 'fixed';
+                        textArea.style.top = '-9999px';
+                        textArea.style.left = '-9999px';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        const successful = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        if (successful) resolve();
+                        else reject(new Error('Copy command failed.'));
+                    } catch (err) {
+                        reject(err);
+                    }
+                }
+            });
+        }
+
+        // --- 1. SETTINGS & DEFAULTS ---
         const defaults = {
             url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool',
             text: 'Check out CloudBreak!',
@@ -398,8 +425,7 @@
         };
 
         const setSetting = (key, value) => {
-            const valueToStore = typeof value === 'object' ? JSON.stringify(value) : value;
-            localStorage.setItem(key, valueToStore);
+            localStorage.setItem(key, JSON.stringify(value));
         };
 
         let settings = {
@@ -503,8 +529,8 @@
             const lemmyInput = document.getElementById('lemmy-instance');
             settings.mastodonInstance = mastodonInput.value.trim() || defaults.mastodonInstance;
             settings.lemmyInstance = lemmyInput.value.trim() || defaults.lemmyInstance;
-            setSetting('mastodonInstance', settings.mastodonInstance);
-            setSetting('lemmyInstance', settings.lemmyInstance);
+            localStorage.setItem('mastodonInstance', settings.mastodonInstance);
+            localStorage.setItem('lemmyInstance', settings.lemmyInstance);
 
             const visibleButtons = Array.from(document.querySelectorAll('.share-toggle:checked')).map(cb => cb.value);
             settings.visibleShareButtons = visibleButtons;
@@ -560,18 +586,42 @@
             document.getElementById('generate-link-btn').click();
         });
 
+        // --- Event Listeners for Copy Buttons ---
+        const copyBtn = document.getElementById('copy-btn');
+        copyBtn.addEventListener('click', () => {
+            const combinedText = `${text}\n${url}`;
+            const textHolder = copyBtn.querySelector('span');
+            const originalText = textHolder.textContent;
+            copyTextToClipboard(combinedText).then(() => {
+                textHolder.textContent = 'Copied!';
+                setTimeout(() => { textHolder.textContent = originalText; }, 2000);
+            }).catch(err => console.error('Failed to copy: ', err));
+        });
+
+        const discordBtn = document.getElementById('discord-share');
+        discordBtn.addEventListener('click', () => {
+            const combinedText = `${text}\n${url}`;
+            const originalText = discordBtn.textContent;
+            copyTextToClipboard(combinedText).then(() => {
+                discordBtn.textContent = 'Copied!';
+                setTimeout(() => { discordBtn.textContent = originalText; }, 2000);
+            }).catch(err => console.error('Failed to copy for Discord: ', err));
+        });
+        
         const setupCopyButton = (buttonId, getText, feedback) => {
             const button = document.getElementById(buttonId);
             if (!button) return;
             const originalText = button.textContent;
-            button.addEventListener('click', () => {
-                navigator.clipboard.writeText(getText()).then(() => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent form submission if it's a button in a form
+                copyTextToClipboard(getText()).then(() => {
                     button.textContent = feedback;
                     setTimeout(() => { button.textContent = originalText; }, 2000);
-                });
+                }).catch(err => console.error(`Failed to copy for button #${buttonId}: `, err));
             });
         };
         setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
+        setupCopyButton('copy-generated-link-btn', () => document.getElementById('generated-link-output').value, 'Copied!');
         
         const generateBtn = document.getElementById('generate-link-btn');
         generateBtn.addEventListener('click', () => {
@@ -582,8 +632,7 @@
             document.getElementById('generated-link-output').value = finalLink;
             document.getElementById('output-area').style.display = 'block';
         });
-        setupCopyButton('copy-generated-link-btn', () => document.getElementById('generated-link-output').value, 'Copied!');
-
+        
         document.getElementById('export-settings-btn').addEventListener('click', () => {
             const settingsToExport = {
                 mastodonInstance: getSetting('mastodonInstance'),
@@ -612,7 +661,7 @@
                     if (!hasAllKeys) throw new Error("File is missing required settings keys.");
 
                     requiredKeys.forEach(key => {
-                        setSetting(key, importedSettings[key]);
+                        localStorage.setItem(key, JSON.stringify(importedSettings[key]));
                     });
                     
                     alert('Settings imported successfully! The page will now reload.');
