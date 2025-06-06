@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sharelette</title>
+    <script type="text/javascript">
+    var qrcode=function(){function r(a){this.mode=s.MODE_8BIT_BYTE;this.data=a}function s(a,b){this.typeNumber=a;this.errorCorrectLevel=b;this.modules=null;this.moduleCount=0;this.dataCache=null;this.dataList=[]}function t(a,b){if(void 0===a.length)throw Error(a.length+"/"+b);for(var c=0;c<a.length&&0==a[c];)c++;this.num=Array(a.length-c+b);for(var d=0;d<a.length-c;d++)this.num[d]=a[d+c]}function u(a,b){this.buffer=a;this.length=b}function v(a,b){switch(b){case w.MODE_NUMBER:return new x(a);case w.MODE_ALPHA_NUM:return new y(a);case w.MODE_8BIT_BYTE:return new r(a);case w.MODE_KANJI:return new z(a);default:throw Error("mode:"+b)}return}function A(a,b,c){var d=B[b],e=new u([],0);e=C(d,c,e);for(var f=0;f<a.length;f++){var g=a[f];e=C(g.mode,g.getLength(),e);e=g.write(e)}for(f=0;f<4;f++)e=C(w.MODE_EOF,0,e);if(8<e.length)throw Error(e.length);for(;e.length<8;)e=C(w.MODE_EOF,0,e);var h=Array(e.length);for(f=0;f<e.length;f++)h[f]=e.buffer[f];e=h;for(f=0;f<d.length-e.length;f++)e.push(d[f]);return e}function D(a){for(var b=new t(a,[0]),c=0;c<8;c++)b=b.multiply(new t([1,E[c]],0));for(var d=Array(b.num.length),c=0;c<b.num.length;c++)d[c]=b.num[c];for(c=0;c<8;c++)d[c]^=a[c];return d}function F(a,b,c,d){for(var e=Array(c),f=0;f<c;f++)e[f]=Array(d);for(var g=0;g<d;g++)for(var h=0;h<c;h++)e[h][g]=null;for(h=0;h<c;h++)for(g=0;g<d;g++)a[h][g]&&(e[h][g]=!0);for(h=0;h<c;h++)for(g=0;g<d;g++)b[h][g]&&(e[h][g]=!0);return e}function G(a){for(var b=0,c=0,d=0;d<a.length;d++){var e=a[d];if(null==e)continue;d>b&&(b=d);for(var f=0;f<e.length;f++){var g=e[f];null!=g&&f>c&&(c=f)}}b++;c++;var h=Array(b);for(d=0;d<b;d++)h[d]=Array(c);for(d=0;d<b;d++)for(f=0;f<c;f++)h[d][f]=a[d][f];return h}function x(a){this.mode=w.MODE_NUMBER;this.data=a}function y(a){this.mode=w.MODE_ALPHA_NUM;this.data=a}function z(a){this.mode=w.MODE_KANJI;this.data=a}r.prototype={getLength:function(){return this.data.length},write:function(a){for(var b=0;b<this.data.length;b++)a=C(this.data.charCodeAt(b),8,a);return a}};var H={};H.PAD0=236;H.PAD1=17;s.prototype={addData:function(a){this.dataList.push(v(a,this.mode))},isDark:function(a,b){if(0>a||this.moduleCount<=a||0>b||this.moduleCount<=b)throw Error(a+","+b);return this.modules[a][b]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(a,b){this.moduleCount=4*this.typeNumber+17;this.modules=Array(this.moduleCount);for(var c=0;c<this.moduleCount;c++)this.modules[c]=Array(this.moduleCount);this.setupPositionProbePattern(0,0);this.setupPositionProbePattern(this.moduleCount-7,0);this.setupPositionProbePattern(0,this.moduleCount-7);this.setupPositionAdjustPattern();this.setupTimingPattern();this.setupTypeInfo(a,b);7<=this.typeNumber&&this.setupTypeNumber(a);null==this.dataCache&&(this.dataCache=A(this.dataList,this.errorCorrectLevel,this.typeNumber));this.mapData(this.dataCache,b)},setupPositionProbePattern:function(a,b){for(var c=-1;7>=c;c++)if(!(-1>=a+c||this.moduleCount<=a+c))for(var d=-1;7>=d;d++)-1>=b+d||this.moduleCount<=b+d||(this.modules[a+c][b+d]=0<=c&&6>=c&&(0==d||6==d)||0<=d&&6>=d&&(0==c||6==c)||2<=c&&4>=c&&2<=d&&4>=d)},getBestMaskPattern:function(){for(var a=0,b=0,c=0;8>c;c++){this.makeImpl(!0,c);var d=I.getLostPoint(this);(0==c||a>d)&&(a=d,b=c)}return b},setupTimingPattern:function(){for(var a=8;a<this.moduleCount-8;a++)null==this.modules[a][6]&&(this.modules[a][6]=0==a%2);for(var b=8;b<this.moduleCount-8;b++)null==this.modules[6][b]&&(this.modules[6][b]=0==b%2)},setupPositionAdjustPattern:function(){for(var a=I.PATTERNS[this.typeNumber-1],b=0;b<a.length;b++)for(var c=0;c<a.length;c++){var d=a[b],e=a[c];if(null==this.modules[d][e])for(var f=-2;2>=f;f++)for(var g=-2;2>=g;g++)this.modules[d+f][e+g]=-2==f||2==f||-2==g||2==g||0==f&&0==g}},setupTypeNumber:function(a){for(var b=I.getBCHTypeNumber(this.typeNumber),c=0;18>c;c++){var d=!a&&1==(b>>c&1);this.modules[Math.floor(c/3)][c%3+this.moduleCount-8-3]=d}for(c=0;18>c;c++)d=!a&&1==(b>>c&1),this.modules[c%3+this.moduleCount-8-3][Math.floor(c/3)]=d},setupTypeInfo:function(a,b){for(var c=this.errorCo
+    </script>
     <style>
         :root {
             --brand-blue: #007bff;
@@ -31,9 +34,7 @@
             max-width: 500px;
             width: 100%;
         }
-        .header {
-            margin-bottom: 1.5rem;
-        }
+        .header { margin-bottom: 0.5rem; }
         .logo {
             width: 80px;
             height: 80px;
@@ -42,81 +43,40 @@
             margin: 0 auto 1rem auto;
             display: block;
         }
-        h1 {
-            margin: 0;
-            font-size: 2.5rem;
+        h1 { margin: 0; font-size: 2.5rem; font-weight: bold; }
+        h3 {
+            margin-bottom: 0.5rem;
+            margin-top: 2rem;
+            font-size: 1.1rem;
             font-weight: bold;
+            color: #333;
         }
-        .attribution {
-            margin: 0.25rem 0 0 0;
-            font-size: 0.9rem;
-        }
-        .attribution a {
-            color: #555;
-            text-decoration: none;
-        }
-        .attribution a:hover {
-            text-decoration: underline;
-        }
+        .attribution { margin: 0.25rem 0 0 0; font-size: 0.9rem; }
+        .attribution a { color: #555; text-decoration: none; }
+        .attribution a:hover { text-decoration: underline; }
         .content {
-            margin: 1.5rem 0 2rem 0;
+            margin-top: 1rem;
             background: #f9f9f9;
             padding: 1rem;
             border-radius: 0.25rem;
             text-align: left;
         }
-        .content h4 {
-            margin: 0 0 1rem 0;
-            color: #333;
-            font-weight: bold;
-        }
-        .content p {
-            margin: 0.5rem 0;
-            word-wrap: break-word;
-            line-height: 1.5;
-        }
-        .content a {
-            color: var(--brand-blue);
-        }
-        .share-on-label {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #333;
-        }
-        .share-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.75rem;
-        }
+        .content p { margin: 0.5rem 0; word-wrap: break-word; line-height: 1.5; }
+        .content a { color: var(--brand-blue); }
+        .share-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
         .share-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            padding: 0.6rem 1.2rem;
-            border: none;
-            border-radius: 0.25rem;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #fff;
-            cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.3s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+            padding: 0.6rem 1.2rem; border: none; border-radius: 0.25rem;
+            font-size: 1rem; font-weight: 500; color: #fff;
+            cursor: pointer; text-decoration: none; transition: opacity 0.3s;
         }
-        .share-btn:hover {
-            opacity: 0.9;
-        }
-        .share-btn svg {
-            width: 1.25em;
-            height: 1.25em;
-            fill: currentColor;
-        }
+        .share-btn:hover { opacity: 0.9; }
+        .share-btn svg { width: 1.25em; height: 1.25em; fill: currentColor; }
 
         /* Brand Colors */
         .facebook { background-color: #1877f2; }
-        .twitter { background-color: #1DA1F2; } /* Changed to light blue */
+        .twitter { background-color: #1DA1F2; }
+        .bluesky { background-color: #0078FF; }
         .linkedin { background-color: #0a66c2; }
         .reddit { background-color: #FF4500; }
         .mastodon { background-color: #6364FF; }
@@ -126,134 +86,52 @@
         .sms { background-color: #4CAF50; }
 
         /* Action Buttons */
-        .native-share, .copy {
-            width: 100%;
-            margin-top: 1rem;
-        }
+        .native-share, .copy { width: 100%; margin-top: 1rem; }
         .native-share { background-color: #25d366; }
         .copy { background-color: #ffc107; }
         
         /* --- How-to-Use Section --- */
-        .how-to-use {
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-            text-align: left;
-        }
-        .how-to-use h2 {
-            margin-top: 0;
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
-            text-align: center;
-        }
-        .how-to-use p {
-            margin-bottom: 1rem;
-            line-height: 1.6;
-            color: var(--code-text);
-        }
-        .code-block-container {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
+        .how-to-use { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); text-align: left; }
+        .how-to-use h2 { margin-top: 0; margin-bottom: 1rem; font-size: 1.25rem; text-align: center; }
+        .how-to-use p { margin-bottom: 1rem; line-height: 1.6; color: var(--code-text); }
+        .code-block-container { position: relative; margin-bottom: 1.5rem; }
         .copy-code-btn {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background-color: #d1d5db;
-            color: #1f2937;
-            border: none;
-            border-radius: 4px;
-            padding: 0.25rem 0.6rem;
-            font-size: 0.8rem;
-            cursor: pointer;
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            background-color: #d1d5db; color: #1f2937; border: none;
+            border-radius: 4px; padding: 0.25rem 0.6rem; font-size: 0.8rem; cursor: pointer;
         }
-        .copy-code-btn:hover {
-            background-color: #9ca3af;
-        }
-        pre {
-            background-color: var(--code-bg);
-            padding: 1em;
-            border-radius: 4px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            color: var(--code-text);
-        }
-        code {
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-            font-size: 0.9em;
-        }
-        .code-tag { color: #9d174d; }
-        .code-attr { color: #92400e; }
-        .code-value { color: #1d4ed8; }
+        .copy-code-btn:hover { background-color: #9ca3af; }
+        pre { background-color: var(--code-bg); padding: 1em; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; color: var(--code-text); }
+        code { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 0.9em; }
+        .code-tag { color: #9d174d; } .code-attr { color: #92400e; } .code-value { color: #1d4ed8; }
 
-        /* Link Generator Form */
-        .link-generator {
-            background-color: var(--code-bg);
-            padding: 1.5rem;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
+        /* Form & Settings Styles */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--code-text); }
+        .form-group input { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn {
+            width: 100%; padding: 0.75rem; color: white; border: none;
+            border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer;
         }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--code-text);
-        }
-        .form-group input {
-            width: 100%;
-            padding: 0.6rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .generate-btn {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--brand-blue);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .generate-btn:hover {
-            opacity: 0.9;
-        }
-        #output-area {
-            margin-top: 1.5rem;
-            display: none; /* Hidden by default */
-        }
-        .output-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-        #generated-link-output {
-            flex-grow: 1;
-            background-color: #fff;
-            color: #555;
-        }
-        #copy-generated-link-btn {
-            padding: 0 1rem;
-            background-color: #6b7280;
-            color: white;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-        }
-        #copy-generated-link-btn:hover {
-            background-color: #4b5563;
-        }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background-color: var(--brand-blue); }
+        .btn-secondary { background-color: #6b7280; margin-top: 1rem; }
+        #output-area { margin-top: 1.5rem; display: none; }
+        .output-group { display: flex; gap: 0.5rem; }
+        #generated-link-output { flex-grow: 1; background-color: #fff; color: #555; }
+        #copy-generated-link-btn { padding: 0 1rem; background-color: #6b7280; color: white; border-radius: 4px; border: none; cursor: pointer; }
+        #copy-generated-link-btn:hover { background-color: #4b5563; }
+        #qrcode-output { margin-top: 1rem; text-align: center; display: none; }
+        #qrcode-container img { max-width: 150px; height: auto; margin: 0 auto; }
+        #qrcode-download { display: inline-block; margin-top: 0.5rem; color: var(--brand-blue); }
+
+        /* Settings Panel */
+        .settings-panel { display: none; margin-top: 1.5rem; padding: 1.5rem; background-color: #f9fafb; border-radius: 4px; border: 1px solid var(--border-color); }
+        .settings-panel.is-visible { display: block; }
 
         /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 600px) {
-            body {
-                align-items: flex-start;
-                padding: 1rem;
-            }
+            body { align-items: flex-start; padding: 1rem; }
             .container { padding: 1.5rem; }
             h1 { font-size: 2rem; }
             .logo { width: 60px; height: 60px; }
@@ -269,17 +147,18 @@
                 <a href="https://cloudbreak.app" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
             </p>
         </div>
+
+        <h3>You are sharing</h3>
         <div class="content">
-            <h4>This is what you're sharing</h4>
             <p><strong>Text:</strong> <span id="textContent"></span></p>
             <p><strong>URL:</strong> <a href="#" id="urlContent" target="_blank" rel="noopener noreferrer"></a></p>
         </div>
 
-        <h3 class="share-on-label">Share on</h3>
-
+        <h3>Share on</h3>
         <div class="share-buttons">
             <a href="#" id="facebook-share" class="share-btn facebook" target="_blank">Facebook</a>
             <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
+            <a href="#" id="bluesky-share" class="share-btn bluesky" target="_blank">Bluesky</a>
             <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank">LinkedIn</a>
             <a href="#" id="reddit-share" class="share-btn reddit" target="_blank">Reddit</a>
             <a href="#" id="mastodon-share" class="share-btn mastodon" target="_blank">Mastodon</a>
@@ -298,9 +177,8 @@
             <h2>Use This Tool for Free</h2>
             <p>You don't need to download anything! Just create a link to our free, hosted service and add what you want to share.</p>
             
-            <p>Here’s the HTML to add a "Share" link on your site. Just change the URL and text to your own.</p>
             <div class="code-block-container">
-                <button class="copy-code-btn" id="copy-html-btn" data-feedback-text="Copied HTML!">Copy</button>
+                <button class="copy-code-btn" id="copy-html-btn">Copy</button>
                 <pre><code id="html-code-sample">&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"https://cloudbreak.app/sharelette/?url=https%3A%2F%2Fcloudbreak.app&text=Check%20out%20CloudBreak!"</span>&gt;
   Share this on social media
 &lt;/<span class="code-tag">a</span>&gt;</code></pre>
@@ -317,72 +195,122 @@
                         <label for="input-text">Text to share</label>
                         <input type="text" id="input-text" placeholder="Check out this awesome site!">
                     </div>
-                    <button type="button" class="generate-btn" id="generate-link-btn">Generate Link</button>
+                    <button type="button" class="btn btn-primary" id="generate-link-btn">Generate Link & QR Code</button>
                 </form>
                 <div id="output-area">
                      <label for="generated-link-output">Your Sharelette Link</label>
                     <div class="output-group">
                         <input type="text" id="generated-link-output" readonly>
-                        <button id="copy-generated-link-btn" data-feedback-text="Copied Link!">Copy</button>
+                        <button id="copy-generated-link-btn">Copy</button>
+                    </div>
+                    <div id="qrcode-output">
+                        <div id="qrcode-container"></div>
+                        <a id="qrcode-download" download="sharelette-qr.png">Download QR Code</a>
                     </div>
                 </div>
+            </div>
+
+            <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
+            <div class="settings-panel" id="settings-panel">
+                 <h3>Personal Server Settings</h3>
+                 <p>Set your preferred servers for federated networks. These are saved in your browser.</p>
+                 <form id="settings-form">
+                    <div class="form-group">
+                        <label for="mastodon-instance">Mastodon Server</label>
+                        <input type="text" id="mastodon-instance" placeholder="mastodon.social">
+                    </div>
+                    <div class="form-group">
+                        <label for="lemmy-instance">Lemmy Server</label>
+                        <input type="text" id="lemmy-instance" placeholder="lemmy.world">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+                 </form>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- 1. INITIAL SETUP & DEFAULTS ---
+            const defaults = {
+                url: 'https://cloudbreak.app',
+                text: 'Check out CloudBreak!',
+                mastodonInstance: 'mastodon.social',
+                lemmyInstance: 'lemmy.world'
+            };
+
             const params = new URLSearchParams(window.location.search);
-            const url = params.get('url') || 'https://cloudbreak.app';
-            const text = params.get('text') || 'Check out CloudBreak!';
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const url = params.get('url') || defaults.url;
+            const text = params.get('text') || defaults.text;
+            
+            // --- 2. LOCAL STORAGE & SETTINGS ---
+            const settings = {
+                mastodonInstance: localStorage.getItem('mastodonInstance') || defaults.mastodonInstance,
+                lemmyInstance: localStorage.getItem('lemmyInstance') || defaults.lemmyInstance
+            };
+
+            const mastodonInput = document.getElementById('mastodon-instance');
+            const lemmyInput = document.getElementById('lemmy-instance');
+            mastodonInput.value = settings.mastodonInstance;
+            lemmyInput.value = settings.lemmyInstance;
+            
+            const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+            const settingsPanel = document.getElementById('settings-panel');
+            const saveSettingsBtn = document.getElementById('save-settings-btn');
+
+            settingsToggleBtn.addEventListener('click', () => {
+                settingsPanel.classList.toggle('is-visible');
+            });
+            
+            saveSettingsBtn.addEventListener('click', () => {
+                const newMastodon = mastodonInput.value.trim() || defaults.mastodonInstance;
+                const newLemmy = lemmyInput.value.trim() || defaults.lemmyInstance;
+                
+                localStorage.setItem('mastodonInstance', newMastodon);
+                localStorage.setItem('lemmyInstance', newLemmy);
+                
+                settings.mastodonInstance = newMastodon;
+                settings.lemmyInstance = newLemmy;
+
+                alert('Settings saved!');
+                updateShareLinks(); // Re-render links with new settings
+                settingsPanel.classList.remove('is-visible');
+            });
+
+            // --- 3. RENDER PAGE CONTENT ---
+            const updateShareLinks = () => {
+                const encodedUrl = encodeURIComponent(url);
+                const encodedText = encodeURIComponent(text);
+
+                document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
+                document.getElementById('bluesky-share').href = `https://bsky.app/intent/compose?text=${encodedText} ${encodedUrl}`;
+                document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
+                document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
+                document.getElementById('mastodon-share').href = `https://${settings.mastodonInstance}/share?text=${encodedText}%20${encodedUrl}`;
+                document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
+                document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
+                
+                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+                let smsLink;
+                if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                    smsLink = `sms:?&body=${encodedText}%20${encodedUrl}`;
+                } else {
+                    smsLink = `sms:?body=${encodedText}%20${encodedUrl}`;
+                }
+                document.getElementById('sms-share').href = smsLink;
+            };
 
             // Populate the "what you're sharing" section
-            const textContentSpan = document.getElementById('textContent');
+            document.getElementById('textContent').textContent = text;
             const urlContentAnchor = document.getElementById('urlContent');
-            textContentSpan.textContent = text;
             urlContentAnchor.textContent = url;
             urlContentAnchor.href = url;
 
-            const encodedUrl = encodeURIComponent(url);
-            const encodedText = encodeURIComponent(text);
+            // Initial call to set links
+            updateShareLinks();
 
-            // Set hrefs for all share links
-            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-            document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
-            document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
-            document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
-            document.getElementById('mastodon-share').href = `https://mastodon.social/share?text=${encodedText}%20${encodedUrl}`;
-            document.getElementById('lemmy-share').href = `https://lemmy.world/create_post?title=${encodedText}&url=${encodedUrl}`;
-            document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
-            
-            let smsLink;
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                smsLink = `sms:?&body=${encodedText}%20${encodedUrl}`;
-            } else {
-                smsLink = `sms:?body=${encodedText}%20${encodedUrl}`;
-            }
-            document.getElementById('sms-share').href = smsLink;
-
-            // --- Generic Copy Function ---
-            const setupCopyButton = (buttonId, targetElement, isInput = false) => {
-                const button = document.getElementById(buttonId);
-                if (!button) return;
-                const originalText = button.textContent;
-                button.addEventListener('click', () => {
-                    const textToCopy = isInput ? targetElement.value : targetElement.innerText;
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        button.textContent = 'Copied!';
-                        setTimeout(() => {
-                            button.textContent = originalText;
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Failed to copy: ', err);
-                        alert('Failed to copy text.');
-                    });
-                });
-            };
-
+            // --- 4. BUTTON EVENT LISTENERS ---
             // Main "Copy Text & Link" button
             const copyBtn = document.getElementById('copy-btn');
             copyBtn.addEventListener('click', () => {
@@ -391,9 +319,7 @@
                 const originalText = textHolder.textContent;
                 navigator.clipboard.writeText(combinedText).then(() => {
                     textHolder.textContent = 'Copied!';
-                    setTimeout(() => {
-                        textHolder.textContent = originalText;
-                    }, 2000);
+                    setTimeout(() => { textHolder.textContent = originalText; }, 2000);
                 });
             });
 
@@ -404,15 +330,13 @@
                 const originalText = discordBtn.textContent;
                 navigator.clipboard.writeText(combinedText).then(() => {
                     discordBtn.textContent = 'Copied!';
-                    setTimeout(() => {
-                        discordBtn.textContent = originalText;
-                    }, 2000);
+                    setTimeout(() => { discordBtn.textContent = originalText; }, 2000);
                 });
             });
 
             // Native Share
-            const nativeShareBtn = document.getElementById('native-share');
             if (navigator.share) {
+                const nativeShareBtn = document.getElementById('native-share');
                 nativeShareBtn.style.display = 'inline-flex';
                 nativeShareBtn.addEventListener('click', async () => {
                     try {
@@ -423,28 +347,64 @@
                 });
             }
 
-            // --- "How to Use" Section Logic ---
-            setupCopyButton('copy-html-btn', document.getElementById('html-code-sample'), false);
+            // --- 5. "HOW TO USE" SECTION LOGIC ---
+            // Generic Copy Function
+            const setupCopyButton = (buttonId, getText, feedback) => {
+                const button = document.getElementById(buttonId);
+                const originalText = button.textContent;
+                button.addEventListener('click', () => {
+                    navigator.clipboard.writeText(getText()).then(() => {
+                        button.textContent = feedback;
+                        setTimeout(() => { button.textContent = originalText; }, 2000);
+                    });
+                });
+            };
 
+            // Copy HTML Sample Button
+            setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
+
+            // Link Generator Form
             const generateBtn = document.getElementById('generate-link-btn');
             const outputArea = document.getElementById('output-area');
             const outputInput = document.getElementById('generated-link-output');
+            const qrcodeOutput = document.getElementById('qrcode-output');
+            const qrcodeContainer = document.getElementById('qrcode-container');
+            const qrcodeDownload = document.getElementById('qrcode-download');
 
             generateBtn.addEventListener('click', () => {
                 const urlToShare = document.getElementById('input-url').value;
                 const textToShare = document.getElementById('input-text').value;
+
                 if (!urlToShare) {
                     alert('Please enter a URL to share.');
                     return;
                 }
+
                 const encodedUrlParam = encodeURIComponent(urlToShare);
                 const encodedTextParam = encodeURIComponent(textToShare);
                 const finalLink = `https://cloudbreak.app/sharelette/?url=${encodedUrlParam}&text=${encodedTextParam}`;
+                
                 outputInput.value = finalLink;
                 outputArea.style.display = 'block';
+
+                // Generate and display QR Code
+                qrcodeContainer.innerHTML = ''; // Clear previous QR
+                try {
+                    const qr = qrcode(0, 'L');
+                    qr.addData(finalLink);
+                    qr.make();
+                    const qrImgTag = qr.createImgTag(4, 8); // (cellSize, margin)
+                    qrcodeContainer.innerHTML = qrImgTag;
+                    qrcodeDownload.href = qrImgTag.src;
+                    qrcodeOutput.style.display = 'block';
+                } catch (e) {
+                    console.error("QR Code generation failed:", e);
+                    qrcodeOutput.style.display = 'none';
+                }
             });
 
-            setupCopyButton('copy-generated-link-btn', outputInput, true);
+            // Copy Generated Link Button
+            setupCopyButton('copy-generated-link-btn', () => outputInput.value, 'Copied!');
         });
     </script>
 </body>
