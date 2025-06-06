@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sharelette</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="text/javascript" src="/qrcode.min.js"></script>
     <style>
         :root {
             --brand-blue: #007bff;
@@ -688,6 +688,25 @@
   Share this on social media
 &lt;/<span class="code-tag">a</span>&gt;`;
             document.getElementById('code-preview-wrapper').style.display = 'block';
+
+            const qrcodeOutput = document.getElementById('qrcode-output');
+            const qrcodeContainer = document.getElementById('qrcode-container');
+            const qrcodeDownload = document.getElementById('qrcode-download');
+            qrcodeContainer.innerHTML = '';
+            qrcodeOutput.style.display = 'none';
+            try {
+                new QRCode(qrcodeContainer, { text: finalLink, width: 128, height: 128, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+                setTimeout(() => {
+                    const canvas = qrcodeContainer.querySelector('canvas');
+                    if (canvas) {
+                        qrcodeDownload.href = canvas.toDataURL("image/png");
+                        qrcodeOutput.style.display = 'block';
+                    }
+                }, 100);
+            } catch (e) {
+                console.error("QR Code generation failed:", e);
+            }
+
         });
         
         document.getElementById('export-settings-btn').addEventListener('click', () => {
