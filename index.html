@@ -53,9 +53,31 @@
         .attribution a { color: var(--text-secondary); text-decoration: none; }
         .attribution a:hover { text-decoration: underline; }
         
-        /* --- Content Preview Card --- */
-        .preview-label {
+        .coupon-code {
+            font-size: 0.9rem;
+            color: #1e40af;
+            background-color: #dbeafe;
+            border: 1px solid #93c5fd;
+            border-radius: 6px;
+            padding: 0.6rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* --- Preview Card --- */
+        .preview-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-top: 1rem;
             text-align: left;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .preview-card h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .preview-label {
             color: var(--text-secondary);
             font-weight: bold;
             text-transform: uppercase;
@@ -64,7 +86,6 @@
         }
         .content-preview {
             margin-top: 1rem;
-            text-align: left;
         }
         .preview-text {
             margin-bottom: 0.75rem;
@@ -176,21 +197,25 @@
             <img src="sharelette.jpeg" alt="Sharelette Logo" class="logo">
             <h1>Sharelette</h1>
             <p class="attribution">
-                <a href="https://cloudbreak.app" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
+                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
             </p>
+            <p class="coupon-code">Use code <strong>SHARELETTE</strong> for $2 off any CloudBreak service!</p>
         </div>
 
-        <h3>You are sharing</h3>
-        <h4 class="preview-label">PREVIEW</h4>
-        <div class="content-preview">
-            <p class="preview-text" id="textContent"></p>
-            <div class="preview-link-card">
-                <a href="#" id="url-link" target="_blank" rel="noopener noreferrer">
-                    <div class="hostname" id="urlHostname"></div>
-                    <div class="url-text" id="urlContent"></div>
-                </a>
+        <div class="preview-card">
+            <h3>You are sharing</h3>
+            <h4 class="preview-label">PREVIEW</h4>
+            <div class="content-preview">
+                <p class="preview-text" id="textContent"></p>
+                <div class="preview-link-card">
+                    <a href="#" id="url-link" target="_blank" rel="noopener noreferrer">
+                        <div class="hostname" id="urlHostname"></div>
+                        <div class="url-text" id="urlContent"></div>
+                    </a>
+                </div>
             </div>
         </div>
+
 
         <h3>Share on</h3>
         <div class="action-links">
@@ -210,6 +235,23 @@
             <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
             <span>Copy Text & Link</span>
         </button>
+        
+        <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
+        <div class="settings-panel" id="settings-panel">
+            <h3>Personal Server Settings</h3>
+            <p>Set your preferred servers for federated networks. These are saved in your browser.</p>
+            <form id="settings-form">
+                <div class="form-group">
+                    <label for="mastodon-instance">Mastodon Server</label>
+                    <input type="text" id="mastodon-instance" placeholder="mastodon.social">
+                </div>
+                <div class="form-group">
+                    <label for="lemmy-instance">Lemmy Server</label>
+                    <input type="text" id="lemmy-instance" placeholder="lemmy.world">
+                </div>
+                <button type="button" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+            </form>
+        </div>
 
         <div class="how-to-use">
             <h2>Use This Tool for Free</h2>
@@ -217,7 +259,7 @@
             
             <div class="code-block-container">
                 <button class="copy-code-btn" id="copy-html-btn">Copy</button>
-                <pre><code id="html-code-sample">&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"https://cloudbreak.app/sharelette/?url=https%3A%2F%2Fcloudbreak.app&text=Check%20out%20CloudBreak!"</span>&gt;
+                <pre><code id="html-code-sample">&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"https://cloudbreak.app/sharelette/?url=https%3A%2F%2Fcloudbreak.app%3Futm_source%3Dsharelette%26utm_medium%3Dwebapp%26utm_campaign%3Dsharelette_tool&text=Check%20out%20CloudBreak!"</span>&gt;
   Share this on social media
 &lt;/<span class="code-tag">a</span>&gt;</code></pre>
             </div>
@@ -244,22 +286,6 @@
                 </div>
             </div>
 
-            <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
-            <div class="settings-panel" id="settings-panel">
-                <h3>Personal Server Settings</h3>
-                <p>Set your preferred servers for federated networks. These are saved in your browser.</p>
-                <form id="settings-form">
-                    <div class="form-group">
-                        <label for="mastodon-instance">Mastodon Server</label>
-                        <input type="text" id="mastodon-instance" placeholder="mastodon.social">
-                    </div>
-                    <div class="form-group">
-                        <label for="lemmy-instance">Lemmy Server</label>
-                        <input type="text" id="lemmy-instance" placeholder="lemmy.world">
-                    </div>
-                    <button type="button" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
-                </form>
-            </div>
         </div>
     </div>
 
@@ -267,7 +293,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // --- 1. CORE LOGIC: Get URL and Text from Query String ---
             const defaults = {
-                url: 'https://cloudbreak.app',
+                url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool',
                 text: 'Check out CloudBreak!',
                 mastodonInstance: 'mastodon.social',
                 lemmyInstance: 'lemmy.world'
@@ -385,12 +411,10 @@
             };
             setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
             
-            // Get all elements for the generator
             const generateBtn = document.getElementById('generate-link-btn');
             const outputArea = document.getElementById('output-area');
             const outputInput = document.getElementById('generated-link-output');
 
-            // Attach event listener to the "Generate" button
             generateBtn.addEventListener('click', () => {
                 const urlToShare = document.getElementById('input-url').value;
                 const textToShare = document.getElementById('input-text').value;
@@ -399,13 +423,11 @@
                     return;
                 }
 
-                // Create the final Sharelette link
                 const encodedUrlParam = encodeURIComponent(urlToShare);
                 const encodedTextParam = encodeURIComponent(textToShare);
                 const baseAppUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
                 const finalLink = `${baseAppUrl}?url=${encodedUrlParam}&text=${encodedTextParam}`;
                 
-                // Show the output area and populate the link
                 outputInput.value = finalLink;
                 outputArea.style.display = 'block';
             });
