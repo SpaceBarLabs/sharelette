@@ -16,7 +16,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center; /* Vertically centers on desktop */
+            align-items: center;
             min-height: 100vh;
             margin: 0;
             background-color: #f0f2f5;
@@ -42,12 +42,18 @@
             display: block;
         }
         h1 { margin: 0; font-size: 2.5rem; font-weight: bold; }
-        h3 {
+        h3, h4 {
             margin-bottom: 0.75rem;
             margin-top: 2rem;
             font-size: 1.1rem;
             font-weight: bold;
             color: #333;
+        }
+        h4 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+             margin-top: 1.5rem;
         }
         .attribution { margin: 0.25rem 0 0 0; font-size: 0.9rem; }
         .attribution a { color: var(--text-secondary); text-decoration: none; }
@@ -71,7 +77,6 @@
             color: var(--code-text);
         }
 
-        /* --- Preview Card --- */
         .preview-card {
             border: 1px solid var(--border-color);
             border-radius: 0.75rem;
@@ -86,6 +91,7 @@
             text-transform: uppercase;
             font-size: 0.8rem;
             margin-bottom: 0.5rem;
+            margin-top: 0;
         }
         .content-preview {
             margin-top: 1rem;
@@ -132,7 +138,6 @@
         .action-item:hover { opacity: 0.9; }
         .action-item svg { width: 1.25em; height: 1.25em; fill: currentColor; }
 
-        /* Brand Colors */
         .facebook { background-color: #1877f2; }
         .twitter { background-color: #1DA1F2; }
         .bluesky { background-color: #0078FF; }
@@ -143,13 +148,12 @@
         .discord { background-color: #5865F2; }
         .email { background-color: #7d7d7d; }
         .sms { background-color: #4CAF50; }
+        .custom-share-btn { background-color: #57534e; }
 
-        /* Action Buttons */
         .native-share, .copy { width: 100%; margin-top: 1rem; }
         .native-share { background-color: #25d366; }
         .copy { background-color: #ffc107; }
         
-        /* --- How-to-Use Section --- */
         .how-to-use { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); text-align: left; }
         .how-to-use h2 { margin-top: 0; margin-bottom: 1rem; font-size: 1.25rem; text-align: center; }
         .how-to-use p { margin-bottom: 1rem; line-height: 1.6; color: var(--code-text); }
@@ -164,10 +168,9 @@
         code { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 0.9em; }
         .code-tag { color: #9d174d; } .code-attr { color: #92400e; } .code-value { color: #1d4ed8; }
 
-        /* Form & Settings Styles */
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--code-text); }
-        .form-group input { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .form-group input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         .btn {
             width: 100%; padding: 0.75rem; color: white; border: none;
             border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer;
@@ -181,11 +184,44 @@
         #copy-generated-link-btn { padding: 0 1rem; background-color: #6b7280; color: white; border-radius: 4px; border: none; cursor: pointer; }
         #copy-generated-link-btn:hover { background-color: #4b5563; }
 
-        /* Settings Panel */
-        .settings-panel { display: none; margin-top: 1.5rem; padding: 1.5rem; background-color: #f9fafb; border-radius: 4px; border: 1px solid var(--border-color); }
+        .settings-panel { 
+            display: none; 
+            margin-top: 1.5rem; 
+            padding: 1.5rem; 
+            background-color: #f9fafb; 
+            border-radius: 4px; 
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
         .settings-panel.is-visible { display: block; }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+        .checkbox-group label { font-weight: normal; }
+        .custom-share-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+        }
+        .custom-share-item span { flex-grow: 1; word-break: break-all; }
+        .remove-custom-btn, .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .remove-custom-btn { background-color: #dc2626; }
+        .btn-sm { background-color: var(--brand-blue); }
+        .settings-io-buttons { margin-top: 1.5rem; display: flex; gap: 0.5rem; }
 
-        /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 600px) {
             body { align-items: flex-start; padding: 1rem; }
             .container { padding: 1.5rem; }
@@ -243,9 +279,8 @@
         
         <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
         <div class="settings-panel" id="settings-panel">
-            <h3>Personal Server Settings</h3>
-            <p>Set your preferred servers for federated networks. These are saved in your browser.</p>
             <form id="settings-form">
+                <h4>Personal Server Settings</h4>
                 <div class="form-group">
                     <label for="mastodon-instance">Mastodon Server</label>
                     <input type="text" id="mastodon-instance" placeholder="mastodon.social">
@@ -254,21 +289,51 @@
                     <label for="lemmy-instance">Lemmy Server</label>
                     <input type="text" id="lemmy-instance" placeholder="lemmy.world">
                 </div>
-                <button type="button" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+
+                <h4>Visible Share Buttons</h4>
+                <div class="form-group">
+                    <div id="share-visibility-group" class="checkbox-group"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
             </form>
+            
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+
+            <h4>Custom Share Buttons</h4>
+            <div id="custom-share-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"></div>
+            <form id="custom-share-form">
+                <div class="form-group">
+                    <label for="custom-name">Button Name</label>
+                    <input type="text" id="custom-name" placeholder="My Forum" required>
+                </div>
+                <div class="form-group">
+                    <label for="custom-url">Share URL Template</label>
+                    <input type="text" id="custom-url" placeholder="https://myforum.com/submit?url=%URL%&title=%TEXT%" required>
+                    <small>Use <code>%URL%</code> for the link and <code>%TEXT%</code> for the text.</small>
+                </div>
+                <button type="submit" class="btn btn-sm" id="add-custom-btn">Add Custom Button</button>
+            </form>
+            
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+            
+            <h4>Manage Settings File</h4>
+            <div class="settings-io-buttons">
+                <button type="button" class="btn btn-secondary" id="export-settings-btn" style="width: 50%;">Export</button>
+                <button type="button" class="btn btn-secondary" id="import-settings-btn" style="width: 50%;">Import</button>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;">
+            </div>
         </div>
 
         <div class="how-to-use">
             <h2>Use This Tool for Free</h2>
             <p>You don't need to download anything! Just create a link to our free, hosted service and add what you want to share.</p>
-            
             <div class="code-block-container">
                 <button class="copy-code-btn" id="copy-html-btn">Copy</button>
                 <pre><code id="html-code-sample">&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"https://cloudbreak.app/sharelette/?url=https%3A%2F%2Fcloudbreak.app%3Futm_source%3Dsharelette%26utm_medium%3Dwebapp%26utm_campaign%3Dsharelette_tool&text=Check%20out%20CloudBreak!"</span>&gt;
   Share this on social media
 &lt;/<span class="code-tag">a</span>&gt;</code></pre>
             </div>
-
             <h3>Generate Your Own Link</h3>
             <div class="link-generator">
                 <form id="link-generator-form">
@@ -280,7 +345,7 @@
                         <label for="input-text">Text to share</label>
                         <input type="text" id="input-text" placeholder="Check out this awesome site!">
                     </div>
-                    <button type="button" class="btn btn-primary" id="generate-link-btn">Generate Link</button>
+                    <button type="submit" class="btn btn-primary" id="generate-link-btn">Generate Link</button>
                 </form>
                 <div id="output-area">
                      <label for="generated-link-output">Your Sharelette Link</label>
@@ -290,155 +355,270 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- 1. CORE LOGIC: Get URL and Text from Query String ---
-            const defaults = {
-                url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool',
-                text: 'Check out CloudBreak!',
-                mastodonInstance: 'mastodon.social',
-                lemmyInstance: 'lemmy.world'
-            };
-            const params = new URLSearchParams(window.location.search);
-            const url = params.get('url') || defaults.url;
-            const text = params.get('text') || defaults.text;
+    document.addEventListener('DOMContentLoaded', () => {
+        const defaults = {
+            url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool',
+            text: 'Check out CloudBreak!',
+            mastodonInstance: 'mastodon.social',
+            lemmyInstance: 'lemmy.world',
+            visibleShareButtons: [
+                'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
+                'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
+                'email-share', 'sms-share'
+            ],
+            customShareButtons: []
+        };
 
-            // --- 2. LOCAL STORAGE & SETTINGS (Federated Networks) ---
-            const settings = {
-                mastodonInstance: localStorage.getItem('mastodonInstance') || defaults.mastodonInstance,
-                lemmyInstance: localStorage.getItem('lemmyInstance') || defaults.lemmyInstance
-            };
+        const getSetting = (key) => {
+            const saved = localStorage.getItem(key);
+            if (saved === null) return defaults[key];
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return saved; // For non-JSON settings
+            }
+        };
+
+        const setSetting = (key, value) => {
+            const valueToStore = typeof value === 'object' ? JSON.stringify(value) : value;
+            localStorage.setItem(key, valueToStore);
+        };
+
+        let settings = {
+            mastodonInstance: getSetting('mastodonInstance'),
+            lemmyInstance: getSetting('lemmyInstance'),
+            visibleShareButtons: getSetting('visibleShareButtons'),
+            customShareButtons: getSetting('customShareButtons')
+        };
+        
+        const params = new URLSearchParams(window.location.search);
+        const url = params.get('url') || defaults.url;
+        const text = params.get('text') || defaults.text;
+
+        const allShareButtons = Array.from(document.querySelectorAll('.action-links > .action-item'));
+        const shareVisibilityGroup = document.getElementById('share-visibility-group');
+
+        const renderShareVisibilityCheckboxes = () => {
+            shareVisibilityGroup.innerHTML = '';
+            allShareButtons.forEach(btn => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'share-toggle';
+                checkbox.value = btn.id;
+                checkbox.checked = settings.visibleShareButtons.includes(btn.id);
+                label.appendChild(checkbox);
+                label.append(` ${btn.textContent}`);
+                shareVisibilityGroup.appendChild(label);
+            });
+        };
+
+        const applyShareVisibility = () => {
+            allShareButtons.forEach(btn => {
+                btn.style.display = settings.visibleShareButtons.includes(btn.id) ? 'inline-flex' : 'none';
+            });
+        };
+
+        const renderCustomShareButtons = () => {
+            document.querySelectorAll('.custom-share-btn').forEach(btn => btn.remove());
+            const actionLinksContainer = document.querySelector('.action-links');
+            settings.customShareButtons.forEach((customBtn, index) => {
+                const btn = document.createElement('a');
+                btn.className = 'action-item custom-share-btn';
+                btn.textContent = customBtn.name;
+                btn.target = '_blank';
+                btn.dataset.index = index;
+                actionLinksContainer.appendChild(btn);
+            });
+            updateShareLinks(); 
+        };
+
+        const updateShareLinks = () => {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+            document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
+            document.getElementById('bluesky-share').href = `https://bsky.app/intent/compose?text=${encodedText} ${encodedUrl}`;
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('mastodon-share').href = `https://${settings.mastodonInstance}/share?text=${encodedText}%20${encodedUrl}`;
+            document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
+            document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
+            
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            document.getElementById('sms-share').href = `sms:?body=${encodedText}%20${encodedUrl}`;
+
+            document.querySelectorAll('.custom-share-btn').forEach(btn => {
+                const index = parseInt(btn.dataset.index, 10);
+                const customBtnData = settings.customShareButtons[index];
+                if (customBtnData) {
+                    const customHref = customBtnData.url
+                        .replace(/%URL%/g, encodedUrl)
+                        .replace(/%TEXT%/g, encodedText);
+                    btn.href = customHref;
+                }
+            });
+            applyShareVisibility();
+        };
+
+        const updatePreview = () => {
+            document.getElementById('textContent').textContent = text;
+            document.getElementById('urlContent').textContent = url;
+            document.getElementById('url-link').href = url;
+            try {
+                const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+                document.getElementById('urlHostname').textContent = new URL(fullUrl).hostname;
+            } catch (e) {
+                document.getElementById('urlHostname').textContent = 'Invalid URL';
+            }
+        };
+
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        settingsToggleBtn.addEventListener('click', () => {
+            settingsPanel.classList.toggle('is-visible');
+        });
+        
+        document.getElementById('settings-form').addEventListener('submit', (e) => {
+            e.preventDefault();
             const mastodonInput = document.getElementById('mastodon-instance');
             const lemmyInput = document.getElementById('lemmy-instance');
-            mastodonInput.value = settings.mastodonInstance;
-            lemmyInput.value = settings.lemmyInstance;
-            const settingsToggleBtn = document.getElementById('settings-toggle-btn');
-            const settingsPanel = document.getElementById('settings-panel');
-            const saveSettingsBtn = document.getElementById('save-settings-btn');
-            settingsToggleBtn.addEventListener('click', () => {
-                settingsPanel.classList.toggle('is-visible');
-            });
-            saveSettingsBtn.addEventListener('click', () => {
-                const newMastodon = mastodonInput.value.trim() || defaults.mastodonInstance;
-                const newLemmy = lemmyInput.value.trim() || defaults.lemmyInstance;
-                localStorage.setItem('mastodonInstance', newMastodon);
-                localStorage.setItem('lemmyInstance', newLemmy);
-                settings.mastodonInstance = newMastodon;
-                settings.lemmyInstance = newLemmy;
-                alert('Settings saved!');
-                updateShareLinks();
-                settingsPanel.classList.remove('is-visible');
-            });
+            settings.mastodonInstance = mastodonInput.value.trim() || defaults.mastodonInstance;
+            settings.lemmyInstance = lemmyInput.value.trim() || defaults.lemmyInstance;
+            setSetting('mastodonInstance', settings.mastodonInstance);
+            setSetting('lemmyInstance', settings.lemmyInstance);
 
-            // --- 3. RENDER PAGE CONTENT & UPDATE SHARE LINKS ---
-            const updateShareLinks = () => {
-                const encodedUrl = encodeURIComponent(url);
-                const encodedText = encodeURIComponent(text);
-                document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-                document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
-                document.getElementById('bluesky-share').href = `https://bsky.app/intent/compose?text=${encodedText} ${encodedUrl}`;
-                document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
-                document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
-                document.getElementById('mastodon-share').href = `https://${settings.mastodonInstance}/share?text=${encodedText}%20${encodedUrl}`;
-                document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
-                document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
-                const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-                let smsLink;
-                if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                    smsLink = `sms:?&body=${encodedText}%20${encodedUrl}`;
-                } else {
-                    smsLink = `sms:?body=${encodedText}%20${encodedUrl}`;
-                }
-                document.getElementById('sms-share').href = smsLink;
-            };
-            const updatePreview = () => {
-                document.getElementById('textContent').textContent = text;
-                document.getElementById('urlContent').textContent = url;
-                document.getElementById('url-link').href = url;
-                try {
-                    const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
-                    document.getElementById('urlHostname').textContent = new URL(fullUrl).hostname;
-                } catch (e) {
-                    document.getElementById('urlHostname').textContent = 'Invalid URL';
-                    console.error("Could not parse URL:", url, e);
-                }
-            };
-            updatePreview();
-            updateShareLinks();
-
-            // --- 4. BUTTON EVENT LISTENERS ---
-            const copyBtn = document.getElementById('copy-btn');
-            copyBtn.addEventListener('click', () => {
-                const combinedText = `${text}\n${url}`;
-                const textHolder = copyBtn.querySelector('span');
-                const originalText = textHolder.textContent;
-                navigator.clipboard.writeText(combinedText).then(() => {
-                    textHolder.textContent = 'Copied!';
-                    setTimeout(() => { textHolder.textContent = originalText; }, 2000);
-                });
-            });
-            const discordBtn = document.getElementById('discord-share');
-            discordBtn.addEventListener('click', () => {
-                const combinedText = `${text}\n${url}`;
-                const originalText = discordBtn.textContent;
-                navigator.clipboard.writeText(combinedText).then(() => {
-                    discordBtn.textContent = 'Copied!';
-                    setTimeout(() => { discordBtn.textContent = originalText; }, 2000);
-                });
-            });
-            if (navigator.share) {
-                const nativeShareBtn = document.getElementById('native-share');
-                nativeShareBtn.style.display = 'inline-flex';
-                nativeShareBtn.addEventListener('click', async () => {
-                    try {
-                        await navigator.share({ title: text, text: text, url: url });
-                    } catch (err) {
-                        console.info("Navigator.share dialog info:", err);
-                    }
-                });
-            }
-
-            // --- 5. "HOW TO USE" & LINK GENERATOR ---
-            const setupCopyButton = (buttonId, getText, feedback) => {
-                const button = document.getElementById(buttonId);
-                if (!button) return;
-                const originalText = button.textContent;
-                button.addEventListener('click', () => {
-                    navigator.clipboard.writeText(getText()).then(() => {
-                        button.textContent = feedback;
-                        setTimeout(() => { button.textContent = originalText; }, 2000);
-                    });
-                });
-            };
-            setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
+            const visibleButtons = Array.from(document.querySelectorAll('.share-toggle:checked')).map(cb => cb.value);
+            settings.visibleShareButtons = visibleButtons;
+            setSetting('visibleShareButtons', settings.visibleShareButtons);
             
-            const generateBtn = document.getElementById('generate-link-btn');
-            const outputArea = document.getElementById('output-area');
-            const outputInput = document.getElementById('generated-link-output');
-
-            generateBtn.addEventListener('click', () => {
-                const urlToShare = document.getElementById('input-url').value;
-                const textToShare = document.getElementById('input-text').value;
-                if (!urlToShare) {
-                    alert('Please enter a URL to share.');
-                    return;
-                }
-
-                const encodedUrlParam = encodeURIComponent(urlToShare);
-                const encodedTextParam = encodeURIComponent(textToShare);
-                const baseAppUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-                const finalLink = `${baseAppUrl}?url=${encodedUrlParam}&text=${encodedTextParam}`;
-                
-                outputInput.value = finalLink;
-                outputArea.style.display = 'block';
-            });
-
-            setupCopyButton('copy-generated-link-btn', () => outputInput.value, 'Copied!');
+            alert('Settings saved!');
+            updateShareLinks();
+            settingsPanel.classList.remove('is-visible');
         });
+        
+        const customShareList = document.getElementById('custom-share-list');
+        const renderCustomShareList = () => {
+            customShareList.innerHTML = '';
+            settings.customShareButtons.forEach((btn, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-share-item';
+                item.innerHTML = `<span><strong>${btn.name}:</strong> ${btn.url}</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
+                customShareList.appendChild(item);
+            });
+        };
+
+        customShareList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-custom-btn')) {
+                const index = parseInt(e.target.dataset.index, 10);
+                settings.customShareButtons.splice(index, 1);
+                setSetting('customShareButtons', settings.customShareButtons);
+                renderCustomShareList();
+                renderCustomShareButtons();
+            }
+        });
+
+        document.getElementById('custom-share-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('custom-name');
+            const urlInput = document.getElementById('custom-url');
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+            
+            if (name && url && (url.includes('%URL%') || url.includes('%TEXT%'))) {
+                settings.customShareButtons.push({ name, url });
+                setSetting('customShareButtons', settings.customShareButtons);
+                renderCustomShareList();
+                renderCustomShareButtons();
+                nameInput.value = '';
+                urlInput.value = '';
+            } else {
+                alert('Please provide a name and a URL template containing %URL% or %TEXT%.');
+            }
+        });
+
+        document.getElementById('link-generator-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('generate-link-btn').click();
+        });
+
+        const setupCopyButton = (buttonId, getText, feedback) => {
+            const button = document.getElementById(buttonId);
+            if (!button) return;
+            const originalText = button.textContent;
+            button.addEventListener('click', () => {
+                navigator.clipboard.writeText(getText()).then(() => {
+                    button.textContent = feedback;
+                    setTimeout(() => { button.textContent = originalText; }, 2000);
+                });
+            });
+        };
+        setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
+        
+        const generateBtn = document.getElementById('generate-link-btn');
+        generateBtn.addEventListener('click', () => {
+            const urlToShare = document.getElementById('input-url').value;
+            const textToShare = document.getElementById('input-text').value;
+            if (!urlToShare) { alert('Please enter a URL to share.'); return; }
+            const finalLink = `${window.location.protocol}//${window.location.host}${window.location.pathname}?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(textToShare)}`;
+            document.getElementById('generated-link-output').value = finalLink;
+            document.getElementById('output-area').style.display = 'block';
+        });
+        setupCopyButton('copy-generated-link-btn', () => document.getElementById('generated-link-output').value, 'Copied!');
+
+        document.getElementById('export-settings-btn').addEventListener('click', () => {
+            const settingsToExport = {
+                mastodonInstance: getSetting('mastodonInstance'),
+                lemmyInstance: getSetting('lemmyInstance'),
+                visibleShareButtons: getSetting('visibleShareButtons'),
+                customShareButtons: getSetting('customShareButtons')
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settingsToExport, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "sharelette-settings.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
+        
+        const importFileInput = document.getElementById('import-file-input');
+        document.getElementById('import-settings-btn').addEventListener('click', () => importFileInput.click());
+        importFileInput.addEventListener('change', (event) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedSettings = JSON.parse(e.target.result);
+                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'visibleShareButtons', 'customShareButtons'];
+                    const hasAllKeys = requiredKeys.every(key => key in importedSettings);
+                    if (!hasAllKeys) throw new Error("File is missing required settings keys.");
+
+                    requiredKeys.forEach(key => {
+                        setSetting(key, importedSettings[key]);
+                    });
+                    
+                    alert('Settings imported successfully! The page will now reload.');
+                    location.reload();
+                } catch (err) {
+                    alert(`Failed to import settings: ${err.message}`);
+                }
+            };
+            reader.readAsText(event.target.files[0]);
+        });
+
+        // Initial Page Setup
+        document.getElementById('mastodon-instance').value = settings.mastodonInstance;
+        document.getElementById('lemmy-instance').value = settings.lemmyInstance;
+        updatePreview();
+        renderShareVisibilityCheckboxes();
+        renderCustomShareList();
+        renderCustomShareButtons();
+    });
     </script>
 </body>
 </html>
