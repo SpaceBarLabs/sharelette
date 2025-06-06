@@ -175,10 +175,7 @@
         .instapaper { background-color: #1f1f1f; }
         .wallabag { background-color: #333; }
         .raindrop { background-color: #3B4E70; }
-        .linkding { background-color: #333333; }
-        .shiori { background-color: #4A4A4A; }
         .feedbin { background-color: #000000; }
-        .readeck { background-color: #3D4C5C; }
         .custom-share-btn { background-color: #57534e; }
 
         .native-share, .copy { width: 100%; margin-top: 1rem; }
@@ -391,9 +388,6 @@
             <a href="#" id="wallabag-save" class="action-item wallabag" target="_blank">Wallabag</a>
             <a href="#" id="raindrop-save" class="action-item raindrop" target="_blank">Raindrop.io</a>
             <a href="#" id="feedbin-save" class="action-item feedbin" target="_blank">Feedbin</a>
-            <a href="#" id="linkding-save" class="action-item linkding" target="_blank">Linkding</a>
-            <a href="#" id="shiori-save" class="action-item shiori" target="_blank">Shiori</a>
-            <a href="#" id="readeck-save" class="action-item readeck" target="_blank">Readeck</a>
         </div>
 
         <div class="callout-warning">
@@ -416,18 +410,6 @@
                 <div class="form-group">
                     <label for="wallabag-instance">Wallabag Server</label>
                     <input type="text" id="wallabag-instance" placeholder="wallabag.cloudbreak.app">
-                </div>
-                <div class="form-group">
-                    <label for="linkding-instance">Linkding Server</label>
-                    <input type="text" id="linkding-instance" placeholder="linkding.example.com">
-                </div>
-                <div class="form-group">
-                    <label for="shiori-instance">Shiori Server</label>
-                    <input type="text" id="shiori-instance" placeholder="shiori.example.com">
-                </div>
-                <div class="form-group">
-                    <label for="readeck-instance">Readeck Server</label>
-                    <input type="text" id="readeck-instance" placeholder="readeck.example.com">
                 </div>
 
                 <h4>Visible Share Buttons</h4>
@@ -547,14 +529,11 @@
             mastodonInstance: 'mastodon.social',
             lemmyInstance: 'lemmy.world',
             wallabagInstance: 'wallabag.cloudbreak.app',
-            linkdingInstance: 'linkding.example.com',
-            shioriInstance: 'shiori.example.com',
-            readeckInstance: 'readeck.example.com',
             visibleShareButtons: [
                 'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
                 'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
                 'email-share', 'sms-share', 'pocket-save', 'instapaper-save', 'wallabag-save',
-                'raindrop-save', 'feedbin-save', 'linkding-save', 'shiori-save', 'readeck-save'
+                'raindrop-save', 'feedbin-save'
             ],
             customShareButtons: []
         };
@@ -573,9 +552,6 @@
             mastodonInstance: getSetting('mastodonInstance'),
             lemmyInstance: getSetting('lemmyInstance'),
             wallabagInstance: getSetting('wallabagInstance'),
-            linkdingInstance: getSetting('linkdingInstance'),
-            shioriInstance: getSetting('shioriInstance'),
-            readeckInstance: getSetting('readeckInstance'),
             visibleShareButtons: getSetting('visibleShareButtons'),
             customShareButtons: getSetting('customShareButtons')
         };
@@ -642,9 +618,6 @@
             document.getElementById('wallabag-save').href = `https://${settings.wallabagInstance}/bookmarklet?url=${encodedUrl}`;
             document.getElementById('raindrop-save').href = `https://app.raindrop.io/add?link=${encodedUrl}&title=${encodedText}`;
             document.getElementById('feedbin-save').href = `https://feedbin.com/pages/new?url=${encodedUrl}`;
-            document.getElementById('linkding-save').href = `https://${settings.linkdingInstance}/bookmarks/new?url=${encodedUrl}&title=${encodedText}&auto_close`;
-            document.getElementById('shiori-save').href = `https://${settings.shioriInstance}/bookmark/new?url=${encodedUrl}&title=${encodedText}`;
-            document.getElementById('readeck-save').href = `https://${settings.readeckInstance}/add?url=${encodedUrl}`;
             document.querySelectorAll('.custom-share-btn').forEach(btn => {
                 const index = parseInt(btn.dataset.index, 10);
                 const customBtnData = settings.customShareButtons[index];
@@ -678,23 +651,14 @@
             const mastodonInput = document.getElementById('mastodon-instance');
             const lemmyInput = document.getElementById('lemmy-instance');
             const wallabagInput = document.getElementById('wallabag-instance');
-            const linkdingInput = document.getElementById('linkding-instance');
-            const shioriInput = document.getElementById('shiori-instance');
-            const readeckInput = document.getElementById('readeck-instance');
 
             settings.mastodonInstance = mastodonInput.value.trim() || defaults.mastodonInstance;
             settings.lemmyInstance = lemmyInput.value.trim() || defaults.lemmyInstance;
             settings.wallabagInstance = wallabagInput.value.trim() || defaults.wallabagInstance;
-            settings.linkdingInstance = linkdingInput.value.trim() || defaults.linkdingInstance;
-            settings.shioriInstance = shioriInput.value.trim() || defaults.shioriInstance;
-            settings.readeckInstance = readeckInput.value.trim() || defaults.readeckInstance;
 
             localStorage.setItem('mastodonInstance', settings.mastodonInstance);
             localStorage.setItem('lemmyInstance', settings.lemmyInstance);
             localStorage.setItem('wallabagInstance', settings.wallabagInstance);
-            localStorage.setItem('linkdingInstance', settings.linkdingInstance);
-            localStorage.setItem('shioriInstance', settings.shioriInstance);
-            localStorage.setItem('readeckInstance', settings.readeckInstance);
 
             const visibleButtons = Array.from(document.querySelectorAll('.share-toggle:checked')).map(cb => cb.value);
             settings.visibleShareButtons = visibleButtons;
@@ -827,9 +791,6 @@
                 mastodonInstance: getSetting('mastodonInstance'),
                 lemmyInstance: getSetting('lemmyInstance'),
                 wallabagInstance: getSetting('wallabagInstance'),
-                linkdingInstance: getSetting('linkdingInstance'),
-                shioriInstance: getSetting('shioriInstance'),
-                readeckInstance: getSetting('readeckInstance'),
                 visibleShareButtons: getSetting('visibleShareButtons'),
                 customShareButtons: getSetting('customShareButtons')
             };
@@ -849,7 +810,7 @@
             reader.onload = (e) => {
                 try {
                     const importedSettings = JSON.parse(e.target.result);
-                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'linkdingInstance', 'shioriInstance', 'readeckInstance', 'visibleShareButtons', 'customShareButtons'];
+                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'visibleShareButtons', 'customShareButtons'];
                     if (!requiredKeys.every(key => key in importedSettings)) throw new Error("File is missing required settings keys.");
                     requiredKeys.forEach(key => {
                         if(importedSettings[key] !== null && importedSettings[key] !== undefined) {
@@ -904,9 +865,6 @@
         document.getElementById('mastodon-instance').value = settings.mastodonInstance;
         document.getElementById('lemmy-instance').value = settings.lemmyInstance;
         document.getElementById('wallabag-instance').value = settings.wallabagInstance;
-        document.getElementById('linkding-instance').value = settings.linkdingInstance;
-        document.getElementById('shiori-instance').value = settings.shioriInstance;
-        document.getElementById('readeck-instance').value = settings.readeckInstance;
         updatePreview();
         renderShareVisibilityCheckboxes();
         renderCustomShareList();
