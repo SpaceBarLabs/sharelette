@@ -55,13 +55,20 @@
         
         .coupon-code {
             font-size: 0.9rem;
-            color: #1e40af;
-            background-color: #dbeafe;
-            border: 1px solid #93c5fd;
+            color: var(--text-secondary);
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 0.6rem;
             margin-top: 1rem;
             text-align: center;
+        }
+        .coupon-code a {
+            color: var(--brand-blue);
+            font-weight: 500;
+        }
+        .coupon-code strong {
+            color: var(--code-text);
         }
 
         /* --- Preview Card --- */
@@ -69,13 +76,9 @@
             border: 1px solid var(--border-color);
             border-radius: 0.75rem;
             padding: 1.25rem;
-            margin-top: 1rem;
+            margin-top: 0;
             text-align: left;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .preview-card h3 {
-            margin-top: 0;
-            text-align: center;
         }
         .preview-label {
             color: var(--text-secondary);
@@ -199,11 +202,14 @@
             <p class="attribution">
                 <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
             </p>
-            <p class="coupon-code">Use code <strong>SHARELETTE</strong> for $2 off any CloudBreak service!</p>
+            <p class="coupon-code">
+                Use code <strong>SHARELETTE</strong> for $2 off any 
+                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_coupon" target="_blank" rel="noopener noreferrer">CloudBreak service</a>!
+            </p>
         </div>
 
+        <h3>You are sharing</h3>
         <div class="preview-card">
-            <h3>You are sharing</h3>
             <h4 class="preview-label">PREVIEW</h4>
             <div class="content-preview">
                 <p class="preview-text" id="textContent"></p>
@@ -215,7 +221,6 @@
                 </div>
             </div>
         </div>
-
 
         <h3>Share on</h3>
         <div class="action-links">
