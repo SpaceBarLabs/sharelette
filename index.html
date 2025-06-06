@@ -31,8 +31,8 @@
             margin-bottom: 1.5rem;
         }
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
         }
         h1 {
             margin: 0;
@@ -53,80 +53,74 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         .share-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1rem;
             border: none;
             border-radius: 0.25rem;
             font-size: 1rem;
+            font-weight: 500;
             color: #fff;
             cursor: pointer;
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: opacity 0.3s;
         }
         .share-btn:hover {
             opacity: 0.9;
         }
-        /* Standard Share Buttons */
+        .share-btn svg {
+            width: 1.25em;
+            height: 1.25em;
+            fill: currentColor;
+        }
+
+        /* Brand Colors */
         .facebook { background-color: #1877f2; }
-        .twitter { background-color: #1da1f2; }
+        .twitter { background-color: #000000; }
         .linkedin { background-color: #0a66c2; }
+        .reddit { background-color: #FF4500; }
+        .mastodon { background-color: #6364FF; }
+        .lemmy { background-color: #00C161; }
+        .discord { background-color: #5865F2; }
         .email { background-color: #7d7d7d; }
         .sms { background-color: #4CAF50; }
 
-        /* New Share Buttons */
-        .reddit { background-color: #FF4500; }
-        .lemmy { background-color: #00C161; }
-        .mastodon { background-color: #6364FF; }
-        .discord { background-color: #5865F2; }
-
         /* Action Buttons */
         .native-share, .copy {
-            background-color: #25d366;
             width: 100%;
-            justify-content: center;
             margin-top: 1rem;
         }
-       .copy {
-            background-color: #ffc107;
-        }
+        .native-share { background-color: #25d366; }
+        .copy { background-color: #ffc107; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <style>
-                  .woman { fill: #4A4A4A; }
-                  .speech-bubble { fill: #F2F2F2; stroke: #4A4A4A; stroke-width: 2; }
-                </style>
-                <circle class="woman" cx="50" cy="30" r="10"/>
-                <path class="woman" d="M35,45 C35,55 65,55 65,45 Q65,40 50,40 Q35,40 35,45 Z"/>
-                <path class="woman" d="M50,50 L50,80 L60,80 L60,60 L40,60 L40,80 L50,80"/>
-                <path class="speech-bubble" d="M60,10 C40,10 20,25 20,40 C20,55 35,55 50,55 L50,65 L60,55 C75,55 90,45 90,30 C90,15 75,10 60,10 Z"/>
-            </svg>
+            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><style>.st1{fill:#f2f2f2;stroke:#4a4a4a;stroke-width:2}.st2{fill:#4a4a4a}</style><path class="st2" d="M50 40c-8.3 0-15 6.7-15 15v1.1c0 8.2 6.7 15 15 15s15-6.7 15-15V55c0-8.3-6.7-15-15-15z"/><circle class="st2" cx="50" cy="27" r="10"/><path class="st1" d="M60 10C42.2 10 25 21.9 25 37.5 25 48.1 35.8 55 50 55h5l10-10c0-16.5-12.2-25-30-25z"/></svg>
             <h1>Sharelette</h1>
         </div>
         <div class="content">
             <p id="textContent">Your content will appear here.</p>
         </div>
         <div class="share-buttons">
-            <a href="#" id="facebook-share" class="share-btn facebook" target="_blank">Facebook</a>
-            <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
-            <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank">LinkedIn</a>
-            <a href="#" id="reddit-share" class="share-btn reddit" target="_blank">Reddit</a>
-            <a href="#" id="mastodon-share" class="share-btn mastodon" target="_blank">Mastodon</a>
-            <a href="#" id="lemmy-share" class="share-btn lemmy" target="_blank">Lemmy</a>
-            <a href="#" id="email-share" class="share-btn email">Email</a>
-            <a href="#" id="sms-share" class="share-btn sms">SMS</a>
-            <button id="discord-share" class="share-btn discord">Discord</button>
+            <a href="#" id="facebook-share" class="share-btn facebook" target="_blank"><svg viewBox="0 0 24 24"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-.654-.083-.984-.12C16.018 2.002 15.024 2 14.02 2 11.9 2 10.5 3.2 10.5 5.5v3H8v4h2.5V22h4v-8.5z"/></svg> <span>Facebook</span></a>
+            <a href="#" id="twitter-share" class="share-btn twitter" target="_blank"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> <span>Twitter</span></a>
+            <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank"><svg viewBox="0 0 24 24"><path d="M6.5 21.5h-5v-13h5v13zM4 6.5C2.5 6.5 1.5 5.3 1.5 4s1-2.5 2.5-2.5c1.6 0 2.5 1.2 2.5 2.5 0 1.3-1 2.5-2.5 2.5zm11.5 6c-1 0-2 1-2 2v7h-5v-13h5v2.5c.8-1.1 2.1-2.5 4.5-2.5 3.2 0 6 3 6 8.5V21.5h-5v-7c0-1.5-0.5-2-1.5-2z"/></svg> <span>LinkedIn</span></a>
+            <a href="#" id="reddit-share" class="share-btn reddit" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5zM8.5 12c.83 0 1.5.67 1.5 1.5S9.33 15 8.5 15 7 14.33 7 13.5 7.67 12 8.5 12zm7 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.2 1.5-1.2zm-4.17 4.17c-1.17 1.17-3.07 1.17-4.24 0l-1.41-1.41c2.34-2.34 5.8-2.34 8.14 0l-1.41 1.41c-.58.59-1.35.88-2.08.88s-1.5-.29-2.08-.88z"/></svg> <span>Reddit</span></a>
+            <a href="#" id="mastodon-share" class="share-btn mastodon" target="_blank"><svg viewBox="0 0 24 24"><path d="M21.258 13.984c.321-1.282.253-2.583-.17-3.832-.486-1.42-1.25-2.61-2.228-3.518C17.165 4.88 15.115 3.42 12 3.42c-1.31 0-2.23.36-2.23.36s.21 1.47.78 3.55c1.47 5.37 6.25 5.42 6.25 5.42l-.01 1.9c-2.35 1.25-4.49 1.58-5.91 1.48-2.5-.18-4.25-1.12-4.25-1.12s.28.93 1.83 2.1c1.19.92 2.61 1.42 4.14 1.53 1.52.11 3.23-.39 3.23-.39s.42 2.21 2.39 2.45c1.32.16 2.1-.28 2.1-.28s-.39-1.05-.72-1.83c-1.25-2.85-2.12-6.05-2.02-9.35.03-.89.1-1.78.23-2.66.02-.13.04-.26.06-.39.11.23.22.46.33.69.41.86.72 1.76.93 2.69.23 1.01.35 2.05.35 3.1 0 .28-.01.56-.03.84z"/></svg> <span>Mastodon</span></a>
+            <a href="#" id="lemmy-share" class="share-btn lemmy" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.32 14.68L12 15.45l-3.32 1.23.64-3.69-2.68-2.61 3.7-.54L12 6.25l1.66 3.33 3.7.54-2.68 2.61.64 3.69z"/></svg> <span>Lemmy</span></a>
+            <button id="discord-share" class="share-btn discord"><svg viewBox="0 0 24 24"><path d="M19.54 5.32c-1.32-1.02-2.88-1.7-4.54-2.13-.24.44-.45.89-.63 1.36-1.39-.33-2.85-.33-4.24 0-.18-.47-.39-.92-.63-1.36-1.66.43-3.22 1.11-4.54 2.13-2.28 1.78-3.79 4.1-4.28 6.78h21.4c-.49-2.68-2-5-4.28-6.78zm-11.4 6.94c-1.02 0-1.85-.92-1.85-2.05s.83-2.05 1.85-2.05c1.02 0 1.85.92 1.85 2.05s-.83 2.05-1.85 2.05zm7.72 0c-1.02 0-1.85-.92-1.85-2.05s.83-2.05 1.85-2.05c1.02 0 1.85.92 1.85 2.05s-.83 2.05-1.85 2.05z"/></svg> <span>Discord</span></button>
+            <a href="#" id="email-share" class="share-btn email"><svg viewBox="0 0 24 24"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg> <span>Email</span></a>
+            <a href="#" id="sms-share" class="share-btn sms"><svg viewBox="0 0 24 24"><path d="M22 2H2v20l4-4h16V2zM6 9h12v2H6V9zm8 4H6v-2h8v2zm4-4h-2V9h2v2z"/></svg> <span>SMS</span></a>
         </div>
-        <button id="native-share" class="share-btn native-share" style="display: none;">Share</button>
-        <button id="copy-btn" class="share-btn copy">Copy Link</button>
+        <button id="native-share" class="share-btn native-share" style="display: none;"><svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 8.81C7.5 8.31 6.79 8 6 8c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/></svg> <span>Share...</span></button>
+        <button id="copy-btn" class="share-btn copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg> <span>Copy Text & Link</span></button>
     </div>
 
     <script>
@@ -140,7 +134,7 @@
             const encodedUrl = encodeURIComponent(url);
             const encodedText = encodeURIComponent(text);
 
-            // Standard & Federated Shares
+            // Set hrefs for all share links
             document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
             document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
             document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
@@ -157,42 +151,41 @@
             }
             document.getElementById('sms-share').href = smsLink;
 
+            // --- Event Listeners for Buttons ---
+
             // Clipboard-based Shares
             const discordBtn = document.getElementById('discord-share');
-            discordBtn.addEventListener('click', () => {
-                const discordText = `${text}\n${url}`;
-                navigator.clipboard.writeText(discordText).then(() => {
-                    discordBtn.textContent = 'Copied!';
+            const copyBtn = document.getElementById('copy-btn');
+            const combinedText = `${text}\n${url}`;
+
+            const copyToClipboard = (textToCopy, buttonElement, originalText) => {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    buttonElement.querySelector('span').textContent = 'Copied!';
                     setTimeout(() => {
-                        discordBtn.textContent = 'Discord';
+                        buttonElement.querySelector('span').textContent = originalText;
                     }, 2000);
                 }).catch(err => {
-                    console.error('Failed to copy for Discord: ', err);
+                    console.error('Failed to copy: ', err);
+                    alert('Failed to copy text.');
                 });
-            });
+            };
+            
+            discordBtn.addEventListener('click', () => copyToClipboard(combinedText, discordBtn, 'Discord'));
+            copyBtn.addEventListener('click', () => copyToClipboard(combinedText, copyBtn, 'Copy Text & Link'));
 
-            // Native & Copy Fallback
+            // Native Share
             const nativeShareBtn = document.getElementById('native-share');
             if (navigator.share) {
-                nativeShareBtn.style.display = 'block';
+                nativeShareBtn.style.display = 'inline-flex';
                 nativeShareBtn.addEventListener('click', async () => {
                     try {
                         await navigator.share({ title: text, text: text, url: url });
                     } catch (err) {
-                        console.error("Error using navigator.share:", err);
+                        // This error can happen if the user cancels the share dialog, so it's not always a problem.
+                        console.info("Navigator.share dialog info:", err);
                     }
                 });
             }
-
-            const copyBtn = document.getElementById('copy-btn');
-            copyBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(url).then(() => {
-                    copyBtn.textContent = 'Copied!';
-                    setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                });
-            });
         });
     </script>
 </body>
