@@ -38,8 +38,8 @@
         }
         .header { margin-bottom: 0.5rem; }
         .logo {
-            width: 80px;
-            height: 80px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 1rem auto;
@@ -273,12 +273,22 @@
         .footer a {
             color: var(--text-secondary);
         }
-
+        #footer-qrcode {
+            margin-top: 1.5rem;
+            display: inline-block;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
         @media (max-width: 600px) {
             body { align-items: flex-start; padding: 1rem; }
             .container { padding: 1.5rem; }
             h1 { font-size: 2rem; }
-            .logo { width: 60px; height: 60px; }
+            .logo {
+                width: 180px;
+                height: 180px;
+            }
         }
     </style>
 </head>
@@ -678,24 +688,6 @@
   Share this on social media
 &lt;/<span class="code-tag">a</span>&gt;`;
             document.getElementById('code-preview-wrapper').style.display = 'block';
-            
-            const qrcodeOutput = document.getElementById('qrcode-output');
-            const qrcodeContainer = document.getElementById('qrcode-container');
-            const qrcodeDownload = document.getElementById('qrcode-download');
-            qrcodeContainer.innerHTML = '';
-            qrcodeOutput.style.display = 'none';
-            try {
-                new QRCode(qrcodeContainer, { text: finalLink, width: 128, height: 128, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
-                setTimeout(() => {
-                    const canvas = qrcodeContainer.querySelector('canvas');
-                    if (canvas) {
-                        qrcodeDownload.href = canvas.toDataURL("image/png");
-                        qrcodeOutput.style.display = 'block';
-                    }
-                }, 100);
-            } catch (e) {
-                console.error("QR Code generation failed:", e);
-            }
         });
         
         document.getElementById('export-settings-btn').addEventListener('click', () => {
@@ -745,6 +737,7 @@
             }
         });
 
+        // Initial Page Setup
         document.getElementById('mastodon-instance').value = settings.mastodonInstance;
         document.getElementById('lemmy-instance').value = settings.lemmyInstance;
         updatePreview();
