@@ -12,6 +12,9 @@
             --border-color: #e5e7eb;
             --text-secondary: #6b7280;
         }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
@@ -21,7 +24,6 @@
             margin: 0;
             background-color: #f0f2f5;
             padding: 2rem 1rem;
-            box-sizing: border-box;
         }
         .container {
             background-color: #fff;
@@ -164,13 +166,21 @@
             border-radius: 4px; padding: 0.25rem 0.6rem; font-size: 0.8rem; cursor: pointer;
         }
         .copy-code-btn:hover { background-color: #9ca3af; }
-        pre { background-color: var(--code-bg); padding: 1em; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; color: var(--code-text); }
+        pre { 
+            background-color: var(--code-bg); 
+            padding: 1em; 
+            border-radius: 4px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            word-break: break-all;
+            color: var(--code-text); 
+        }
         code { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 0.9em; }
         .code-tag { color: #9d174d; } .code-attr { color: #92400e; } .code-value { color: #1d4ed8; }
 
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--code-text); }
-        .form-group input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .form-group input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; }
         .btn {
             width: 100%; padding: 0.75rem; color: white; border: none;
             border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer;
@@ -178,6 +188,9 @@
         .btn:hover { opacity: 0.9; }
         .btn-primary { background-color: var(--brand-blue); }
         .btn-secondary { background-color: #6b7280; margin-top: 1rem; }
+        .btn-danger { background-color: #dc2626; margin-top: 0.5rem; }
+        .btn-danger:hover { background-color: #b91c1c; }
+        
         #output-area { margin-top: 1.5rem; display: none; }
         .output-group { display: flex; gap: 0.5rem; }
         #generated-link-output { flex-grow: 1; background-color: #fff; color: #555; }
@@ -239,7 +252,7 @@
                 <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
             </p>
             <p class="coupon-code">
-                Use code <strong>SHARELETTE</strong> for $2 off any 
+                Use code <strong>SHARELETTE</strong> for $2 USD off any 
                 <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_coupon" target="_blank" rel="noopener noreferrer">CloudBreak service</a>!
             </p>
         </div>
@@ -323,6 +336,7 @@
                 <button type="button" class="btn btn-secondary" id="import-settings-btn" style="width: 50%;">Import</button>
                 <input type="file" id="import-file-input" accept=".json" style="display: none;">
             </div>
+            <button type="button" class="btn btn-danger" id="reset-settings-btn">Reset All Settings</button>
         </div>
 
         <div class="how-to-use">
@@ -379,7 +393,7 @@
             try {
                 return JSON.parse(saved);
             } catch (e) {
-                return saved; // For non-JSON settings
+                return saved;
             }
         };
 
@@ -450,7 +464,6 @@
             document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
             document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
             
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             document.getElementById('sms-share').href = `sms:?body=${encodedText}%20${encodedUrl}`;
 
             document.querySelectorAll('.custom-share-btn').forEach(btn => {
@@ -609,6 +622,14 @@
                 }
             };
             reader.readAsText(event.target.files[0]);
+        });
+        
+        document.getElementById('reset-settings-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all settings? This action cannot be undone.')) {
+                Object.keys(defaults).forEach(key => localStorage.removeItem(key));
+                alert('All settings have been reset. The page will now reload.');
+                location.reload();
+            }
         });
 
         // Initial Page Setup
