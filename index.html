@@ -171,6 +171,7 @@
         .discord { background-color: #5865F2; }
         .email { background-color: #7d7d7d; }
         .sms { background-color: #4CAF50; }
+        .pocket { background-color: #EF3F56; }
         .instapaper { background-color: #1f1f1f; }
         .wallabag { background-color: #333; }
         .custom-share-btn { background-color: #57534e; }
@@ -380,6 +381,7 @@
         
         <h3>Save for Later</h3>
         <div class="action-links">
+            <a href="#" id="pocket-save" class="action-item pocket" target="_blank">Pocket</a>
             <a href="#" id="instapaper-save" class="action-item instapaper" target="_blank">Instapaper</a>
             <a href="#" id="wallabag-save" class="action-item wallabag" target="_blank">Wallabag</a>
         </div>
@@ -526,7 +528,7 @@
             visibleShareButtons: [
                 'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
                 'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
-                'email-share', 'sms-share', 'instapaper-save', 'wallabag-save'
+                'email-share', 'sms-share', 'pocket-save', 'instapaper-save', 'wallabag-save'
             ],
             customShareButtons: []
         };
@@ -606,6 +608,7 @@
             document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
             document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
             document.getElementById('sms-share').href = `sms:?body=${encodedText}%20${encodedUrl}`;
+            document.getElementById('pocket-save').href = `https://getpocket.com/save?url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('instapaper-save').href = `https://www.instapaper.com/hello2?url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('wallabag-save').href = `https://${settings.wallabagInstance}/bookmarklet?url=${encodedUrl}`;
             document.querySelectorAll('.custom-share-btn').forEach(btn => {
