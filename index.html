@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sharelette</title>
     <script type="text/javascript">
-    var qrcode=function(){function r(a){this.mode=s.MODE_8BIT_BYTE;this.data=a}function s(a,b){this.typeNumber=a;this.errorCorrectLevel=b;this.modules=null;this.moduleCount=0;this.dataCache=null;this.dataList=[]}function t(a,b){if(void 0===a.length)throw Error(a.length+"/"+b);for(var c=0;c<a.length&&0==a[c];)c++;this.num=Array(a.length-c+b);for(var d=0;d<a.length-c;d++)this.num[d]=a[d+c]}function u(a,b){this.buffer=a;this.length=b}function v(a,b){switch(b){case w.MODE_NUMBER:return new x(a);case w.MODE_ALPHA_NUM:return new y(a);case w.MODE_8BIT_BYTE:return new r(a);case w.MODE_KANJI:return new z(a);default:throw Error("mode:"+b)}return}function A(a,b,c){var d=B[b],e=new u([],0);e=C(d,c,e);for(var f=0;f<a.length;f++){var g=a[f];e=C(g.mode,g.getLength(),e);e=g.write(e)}for(f=0;f<4;f++)e=C(w.MODE_EOF,0,e);if(8<e.length)throw Error(e.length);for(;e.length<8;)e=C(w.MODE_EOF,0,e);var h=Array(e.length);for(f=0;f<e.length;f++)h[f]=e.buffer[f];e=h;for(f=0;f<d.length-e.length;f++)e.push(d[f]);return e}function D(a){for(var b=new t(a,[0]),c=0;c<8;c++)b=b.multiply(new t([1,E[c]],0));for(var d=Array(b.num.length),c=0;c<b.num.length;c++)d[c]=b.num[c];for(c=0;c<8;c++)d[c]^=a[c];return d}function F(a,b,c,d){for(var e=Array(c),f=0;f<c;f++)e[f]=Array(d);for(var g=0;g<d;g++)for(var h=0;h<c;h++)e[h][g]=null;for(h=0;h<c;h++)for(g=0;g<d;g++)a[h][g]&&(e[h][g]=!0);for(h=0;h<c;h++)for(g=0;g<d;g++)b[h][g]&&(e[h][g]=!0);return e}function G(a){for(var b=0,c=0,d=0;d<a.length;d++){var e=a[d];if(null==e)continue;d>b&&(b=d);for(var f=0;f<e.length;f++){var g=e[f];null!=g&&f>c&&(c=f)}}b++;c++;var h=Array(b);for(d=0;d<b;d++)h[d]=Array(c);for(d=0;d<b;d++)for(f=0;f<c;f++)h[d][f]=a[d][f];return h}function x(a){this.mode=w.MODE_NUMBER;this.data=a}function y(a){this.mode=w.MODE_ALPHA_NUM;this.data=a}function z(a){this.mode=w.MODE_KANJI;this.data=a}r.prototype={getLength:function(){return this.data.length},write:function(a){for(var b=0;b<this.data.length;b++)a=C(this.data.charCodeAt(b),8,a);return a}};var H={};H.PAD0=236;H.PAD1=17;s.prototype={addData:function(a){this.dataList.push(v(a,this.mode))},isDark:function(a,b){if(0>a||this.moduleCount<=a||0>b||this.moduleCount<=b)throw Error(a+","+b);return this.modules[a][b]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(a,b){this.moduleCount=4*this.typeNumber+17;this.modules=Array(this.moduleCount);for(var c=0;c<this.moduleCount;c++)this.modules[c]=Array(this.moduleCount);this.setupPositionProbePattern(0,0);this.setupPositionProbePattern(this.moduleCount-7,0);this.setupPositionProbePattern(0,this.moduleCount-7);this.setupPositionAdjustPattern();this.setupTimingPattern();this.setupTypeInfo(a,b);7<=this.typeNumber&&this.setupTypeNumber(a);null==this.dataCache&&(this.dataCache=A(this.dataList,this.errorCorrectLevel,this.typeNumber));this.mapData(this.dataCache,b)},setupPositionProbePattern:function(a,b){for(var c=-1;7>=c;c++)if(!(-1>=a+c||this.moduleCount<=a+c))for(var d=-1;7>=d;d++)-1>=b+d||this.moduleCount<=b+d||(this.modules[a+c][b+d]=0<=c&&6>=c&&(0==d||6==d)||0<=d&&6>=d&&(0==c||6==c)||2<=c&&4>=c&&2<=d&&4>=d)},getBestMaskPattern:function(){for(var a=0,b=0,c=0;8>c;c++){this.makeImpl(!0,c);var d=I.getLostPoint(this);(0==c||a>d)&&(a=d,b=c)}return b},setupTimingPattern:function(){for(var a=8;a<this.moduleCount-8;a++)null==this.modules[a][6]&&(this.modules[a][6]=0==a%2);for(var b=8;b<this.moduleCount-8;b++)null==this.modules[6][b]&&(this.modules[6][b]=0==b%2)},setupPositionAdjustPattern:function(){for(var a=I.PATTERNS[this.typeNumber-1],b=0;b<a.length;b++)for(var c=0;c<a.length;c++){var d=a[b],e=a[c];if(null==this.modules[d][e])for(var f=-2;2>=f;f++)for(var g=-2;2>=g;g++)this.modules[d+f][e+g]=-2==f||2==f||-2==g||2==g||0==f&&0==g}},setupTypeNumber:function(a){for(var b=I.getBCHTypeNumber(this.typeNumber),c=0;18>c;c++){var d=!a&&1==(b>>c&1);this.modules[Math.floor(c/3)][c%3+this.moduleCount-8-3]=d}for(c=0;18>c;c++)d=!a&&1==(b>>c&1),this.modules[c%3+this.moduleCount-8-3][Math.floor(c/3)]=d},setupTypeInfo:function(a,b){for(var c=this.errorCo
+        var QRCode; (function() { function r(t) { this.mode = n.MODE_8BIT_BYTE, this.data = t, this.parsedData = []; for (var e = 0, r = this.data.length; e < r; e++) { var i = [], a = this.data.charCodeAt(e); a > 65536 ? (i[0] = 240 | (1835008 & a) >>> 18, i[1] = 128 | (258048 & a) >>> 12, i[2] = 128 | (4032 & a) >>> 6, i[3] = 128 | 63 & a) : a > 2048 ? (i[0] = 224 | (61440 & a) >>> 12, i[1] = 128 | (4032 & a) >>> 6, i[2] = 128 | 63 & a) : a > 128 ? (i[0] = 192 | (1984 & a) >>> 6, i[1] = 128 | 63 & a) : i[0] = a, this.parsedData = this.parsedData.concat(i) } this.parsedData.length != this.data.length && (this.parsedData.unshift(191), this.parsedData.unshift(187), this.parsedData.unshift(239)) } function i(t, e) { this.typeNumber = t, this.errorCorrectLevel = e, this.modules = null, this.moduleCount = 0, this.dataCache = null, this.dataList = [] } function a(t) { var e = new i(t, o.L); return e.addData(t), e.make(), e } function o(t, e) { if (void 0 === t.length) throw new Error(t.length + "/" + e); var r = 0; while (r < t.length && 0 == t[r]) r++; this.num = new Array(t.length - r + e); for (var i = 0; i < t.length - r; i++) this.num[i] = t[i + r] } function h(t, e) { this.buffer = t, this.length = e } function s(t, e) { switch (e) { case n.MODE_NUMBER: return new u(t); case n.MODE_ALPHA_NUM: return new c(t); case n.MODE_8BIT_BYTE: return new r(t); case n.MODE_KANJI: return new f(t); default: throw new Error("mode:" + e) } } function l(t) { return t } function u(t) { this.mode = n.MODE_NUMBER, this.data = t } function c(t) { this.mode = n.MODE_ALPHA_NUM, this.data = t } function f(t) { this.mode = n.MODE_KANJI, this.data = t } r.prototype = { getLength: function() { return this.parsedData.length }, write: function(t) { for (var e = 0, r = this.parsedData.length; e < r; e++) t.put(this.parsedData[e], 8) } }, i.prototype = { addData: function(t, e) { e || (e = n.MODE_8BIT_BYTE); var r = s(t, e); this.dataList.push(r), this.dataCache = null }, isDark: function(t, e) { if (t < 0 || this.moduleCount <= t || e < 0 || this.moduleCount <= e) throw new Error(t + "," + e); return this.modules[t][e] }, getModuleCount: function() { return this.moduleCount }, make: function() { this.makeImpl(!1, this.getBestMaskPattern()) }, makeImpl: function(t, e) { this.moduleCount = 4 * this.typeNumber + 17, this.modules = new Array(this.moduleCount); for (var r = 0; r < this.moduleCount; r++) { this.modules[r] = new Array(this.moduleCount); for (var n = 0; n < this.moduleCount; n++) this.modules[r][n] = null } this.setupPositionProbePattern(0, 0), this.setupPositionProbePattern(this.moduleCount - 7, 0), this.setupPositionProbePattern(0, this.moduleCount - 7), this.setupPositionAdjustPattern(), this.setupTimingPattern(), this.setupTypeInfo(t, e), this.typeNumber >= 7 && this.setupTypeNumber(t), null == this.dataCache && (this.dataCache = i.createData(this.typeNumber, this.errorCorrectLevel, this.dataList)), this.mapData(this.dataCache, e) }, setupPositionProbePattern: function(t, e) { for (var r = -1; r <= 7; r++) if (!(t + r <= -1 || this.moduleCount <= t + r)) for (var n = -1; n <= 7; n++) e + n <= -1 || this.moduleCount <= e + n || (r >= 0 && r <= 6 && (0 == n || 6 == n) || n >= 0 && n <= 6 && (0 == r || 6 == r) || r >= 2 && r <= 4 && n >= 2 && n <= 4 ? this.modules[t + r][e + n] = !0 : this.modules[t + r][e + n] = !1) }, getBestMaskPattern: function() { for (var t = 0, e = 0, r = 0; r < 8; r++) { this.makeImpl(!0, r); var n = d.getLostPoint(this); (0 == r || t > n) && (t = n, e = r) } return e }, createMovieClip: function(t, e, r) { var n = t.createEmptyMovieClip(e, r), i = 1; this.make(); for (var a = 0; a < this.moduleCount; a++) for (var o = a * i, h = 0; h < this.moduleCount; h++) { var s = h * i, l = this.modules[a][h]; l && (n.beginFill(0, 100), n.moveTo(s, o), n.lineTo(s + i, o), n.lineTo(s + i, o + i), n.lineTo(s, o + i), n.endFill()) } return n }, setupTimingPattern: function() { for (var t = 8; t < this.moduleCount - 8; t++) null == this.modules[t][6] && (this.modules[t][6] = t % 2 == 0); for (var e = 8; e < this.moduleCount - 8; 
     </script>
     <style>
         :root {
@@ -57,6 +57,14 @@
         .attribution a:hover { text-decoration: underline; }
         
         /* --- Content Preview Card --- */
+        .preview-label {
+            text-align: left;
+            color: var(--text-secondary);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
         .content-preview {
             margin-top: 1rem;
             text-align: left;
@@ -65,13 +73,17 @@
             margin-bottom: 0.75rem;
             word-wrap: break-word;
             line-height: 1.5;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
         .preview-link-card {
             border: 1px solid var(--border-color);
             border-radius: 0.5rem;
             padding: 0.75rem;
             background-color: #f9fafb;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .preview-link-card:hover {
+            background-color: #f1f5f9;
         }
         .preview-link-card a {
             text-decoration: none;
@@ -148,7 +160,8 @@
         #copy-generated-link-btn { padding: 0 1rem; background-color: #6b7280; color: white; border-radius: 4px; border: none; cursor: pointer; }
         #copy-generated-link-btn:hover { background-color: #4b5563; }
         #qrcode-output { margin-top: 1rem; text-align: center; display: none; }
-        #qrcode-container img { max-width: 150px; height: auto; margin: 0 auto; border: 4px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        #qrcode-container { display: inline-block; padding: 8px; background: white; border: 1px solid var(--border-color); border-radius: 4px; }
+        #qrcode-container canvas { display: block; }
         #qrcode-download { display: inline-block; margin-top: 0.75rem; color: var(--brand-blue); font-weight: 500; }
 
         /* Settings Panel */
@@ -175,6 +188,7 @@
         </div>
 
         <h3>You are sharing</h3>
+        <h4 class="preview-label">PREVIEW</h4>
         <div class="content-preview">
             <p class="preview-text" id="textContent"></p>
             <div class="preview-link-card">
@@ -270,6 +284,7 @@
                 lemmyInstance: 'lemmy.world'
             };
 
+            // This is the core logic that pulls from the browser's URL bar.
             const params = new URLSearchParams(window.location.search);
             const url = params.get('url') || defaults.url;
             const text = params.get('text') || defaults.text;
@@ -342,7 +357,6 @@
                 document.getElementById('urlHostname').textContent = 'Invalid URL';
             }
             
-
             // Initial call to set links
             updateShareLinks();
 
@@ -426,12 +440,23 @@
                 // Generate and display QR Code
                 qrcodeContainer.innerHTML = ''; // Clear previous QR
                 try {
-                    const qr = qrcode(4, 'L'); // type 4, error correction level L
-                    qr.addData(finalLink);
-                    qr.make();
-                    const qrImgTag = qr.createImgTag(5, 10); // (cellSize, margin)
-                    qrcodeContainer.appendChild(qrImgTag);
-                    qrcodeDownload.href = qrImgTag.src;
+                    const qr = new QRCode(qrcodeContainer, {
+                        text: finalLink,
+                        width: 150,
+                        height: 150,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.H
+                    });
+                    
+                    // Make it downloadable
+                    setTimeout(() => {
+                        const canvas = qrcodeContainer.querySelector('canvas');
+                        if (canvas) {
+                            qrcodeDownload.href = canvas.toDataURL("image/png");
+                        }
+                    }, 50); // Give canvas time to draw
+
                     qrcodeOutput.style.display = 'block';
                 } catch (e) {
                     console.error("QR Code generation failed:", e);
