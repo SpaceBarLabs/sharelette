@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharelette</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1.5rem;
+        }
+        h1 {
+            margin: 0 0 1rem;
+            font-size: 1.5rem;
+        }
+        .content {
+            margin-bottom: 2rem;
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 0.25rem;
+        }
+        .content p {
+            margin: 0;
+            word-wrap: break-word;
+        }
+        .share-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .share-btn:hover {
+            opacity: 0.9;
+        }
+        .facebook { background-color: #1877f2; }
+        .twitter { background-color: #1da1f2; }
+        .linkedin { background-color: #0a66c2; }
+        .email { background-color: #7d7d7d; }
+        .native-share, .copy {
+            background-color: #25d366;
+            width: 100%;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+       .copy {
+            background-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAsMi41QzIyLjUsMi41LDIuNSwyMi41LDIuNSw1MHMzMCw0Ny41LDQ3LjUsNDcuNXMyMC00Ny41LDQ3LjUtNDcuNVM3Ny41LDIuNSw1MCwyLjV6IE01MCw5Mi41QzI2LjIsOTIuNSw3LjUsNzMuOCw3LjUsNTBTMjYuMiw3LjUsNTAsNy41czQyLjUsMTguOCw0Mi41LDQyLjVTOzczLjgsOTIuNSw1MCw5Mi41eiBNNzIsMzVjLTEuMSwwLTIsMC45LTIsMnYyMGMwLDEuMSwwLjksMiwyLDJoNWMxLjEsMCwyLTAuOSwyLTJzLTAuOS0yLTItMkg3MnoiLz48cGF0aCBkPSJNMzUsNjdjMC00LjQtMy42LTgtOC04cy04LDMuNi04LDhjMCwxLjcsMC41LDMuMywxLjUsNC41bDExLDEzYzEuMiwxLjIsMi45LDEuOCw0LjUsMS44czMuMy0wLjYsNC41LTEuOGwxMS0xM0MzNC41LDcwLjMsMzUsNjguNywzNSw2N3oiLz48L3N2Zz4=" alt="Sharelette Logo" class="logo">
+        <h1>Share Content Easily</h1>
+        <div class="content">
+            <p id="textContent">Your content will appear here.</p>
+        </div>
+        <div class="share-buttons">
+            <a href="#" id="facebook-share" class="share-btn facebook" target="_blank">Facebook</a>
+            <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
+            <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank">LinkedIn</a>
+            <a href="#" id="email-share" class="share-btn email">Email</a>
+        </div>
+        <button id="native-share" class="share-btn native-share" style="display: none;">Share</button>
+        <button id="copy-btn" class="share-btn copy">Copy Link</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const url = params.get('url') || 'https://example.com';
+            const text = params.get('text') || 'Check out this awesome link!';
+
+            document.getElementById('textContent').textContent = text;
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+            document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
+            
+            const nativeShareBtn = document.getElementById('native-share');
+            if (navigator.share) {
+                nativeShareBtn.style.display = 'block';
+                nativeShareBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.share({
+                            title: text,
+                            text: text,
+                            url: url,
+                        });
+                    } catch (err) {
+                        console.error("Error using navigator.share:", err);
+                    }
+                });
+            }
+
+            const copyBtn = document.getElementById('copy-btn');
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(url).then(() => {
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy Link';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
