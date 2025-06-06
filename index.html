@@ -44,6 +44,7 @@
             display: block;
         }
         h1 { margin: 0; font-size: 2.5rem; font-weight: bold; }
+        h2 { font-size: 1.25rem; }
         h3, h4 {
             margin-bottom: 0.75rem;
             margin-top: 2rem;
@@ -157,6 +158,12 @@
         .copy { background-color: #ffc107; }
         
         .how-to-use { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); text-align: left; }
+        .how-to-use .promo-text {
+            font-style: italic;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
         .how-to-use h2 { margin-top: 0; margin-bottom: 1rem; font-size: 1.25rem; text-align: center; }
         .how-to-use p { margin-bottom: 1rem; line-height: 1.6; color: var(--code-text); }
         .code-block-container { position: relative; margin-bottom: 1.5rem; }
@@ -249,11 +256,11 @@
             <img src="sharelette.jpeg" alt="Sharelette Logo" class="logo">
             <h1>Sharelette</h1>
             <p class="attribution">
-                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
+                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener noreferrer">from CloudBreak</a>
             </p>
             <p class="coupon-code">
                 Use code <strong>SHARELETTE</strong> for $2 USD off any 
-                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_coupon" target="_blank" rel="noopener noreferrer">CloudBreak service</a>!
+                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_coupon&rby=sharelette" target="_blank" rel="noopener noreferrer">CloudBreak service</a>!
             </p>
         </div>
 
@@ -331,6 +338,7 @@
             <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
             
             <h4>Manage Settings File</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">This can be used to back up your settings or share them across different browsers and devices.</p>
             <div class="settings-io-buttons">
                 <button type="button" class="btn btn-secondary" id="export-settings-btn" style="width: 50%;">Export</button>
                 <button type="button" class="btn btn-secondary" id="import-settings-btn" style="width: 50%;">Import</button>
@@ -340,11 +348,12 @@
         </div>
 
         <div class="how-to-use">
+            <p class="promo-text">Are you a content promoter or creator? Make it effortless for your audience to share your content. With Sharelette, you can create a single, simple link that gives your users a full suite of sharing options, increasing your reach and engagement.</p>
             <h2>Use This Tool for Free</h2>
             <p>You don't need to download anything! Just create a link to our free, hosted service and add what you want to share.</p>
             <div class="code-block-container">
                 <button class="copy-code-btn" id="copy-html-btn">Copy</button>
-                <pre><code id="html-code-sample">&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"https://cloudbreak.app/sharelette/?url=https%3A%2F%2Fcloudbreak.app%3Futm_source%3Dsharelette%26utm_medium%3Dwebapp%26utm_campaign%3Dsharelette_tool&text=Check%20out%20CloudBreak!"</span>&gt;
+                <pre><code id="html-code-sample">&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"https://cloudbreak.app/sharelette/?url=https%3A%2F%2Fcloudbreak.app%3Futm_source%3Dsharelette%26utm_medium%3Dwebapp%26utm_campaign%3Dsharelette_tool%26rby%3Dsharelette&text=Check%20out%20CloudBreak!"</span>&gt;
   Share this on social media
 &lt;/<span class="code-tag">a</span>&gt;</code></pre>
             </div>
@@ -402,7 +411,7 @@
 
         // --- 1. SETTINGS & DEFAULTS ---
         const defaults = {
-            url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool',
+            url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette',
             text: 'Check out CloudBreak!',
             mastodonInstance: 'mastodon.social',
             lemmyInstance: 'lemmy.world',
@@ -586,7 +595,6 @@
             document.getElementById('generate-link-btn').click();
         });
 
-        // --- Event Listeners for Copy Buttons ---
         const copyBtn = document.getElementById('copy-btn');
         copyBtn.addEventListener('click', () => {
             const combinedText = `${text}\n${url}`;
@@ -613,7 +621,7 @@
             if (!button) return;
             const originalText = button.textContent;
             button.addEventListener('click', (e) => {
-                e.preventDefault(); // Prevent form submission if it's a button in a form
+                e.preventDefault();
                 copyTextToClipboard(getText()).then(() => {
                     button.textContent = feedback;
                     setTimeout(() => { button.textContent = originalText; }, 2000);
@@ -629,8 +637,15 @@
             const textToShare = document.getElementById('input-text').value;
             if (!urlToShare) { alert('Please enter a URL to share.'); return; }
             const finalLink = `${window.location.protocol}//${window.location.host}${window.location.pathname}?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(textToShare)}`;
+            
             document.getElementById('generated-link-output').value = finalLink;
             document.getElementById('output-area').style.display = 'block';
+
+            const codeSampleEl = document.getElementById('html-code-sample');
+            const escapedLink = finalLink.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            codeSampleEl.innerHTML = `&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"${escapedLink}"</span>&gt;
+  Share this on social media
+&lt;/<span class="code-tag">a</span>&gt;`;
         });
         
         document.getElementById('export-settings-btn').addEventListener('click', () => {
