@@ -24,9 +24,8 @@
             width: 90%;
         }
         .logo {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 1.5rem;
+            width: 250px;
+            height: 250px;
         }
         h1 {
             margin: 0 0 1rem;
@@ -68,6 +67,7 @@
         .twitter { background-color: #1da1f2; }
         .linkedin { background-color: #0a66c2; }
         .email { background-color: #7d7d7d; }
+        .sms { background-color: #4CAF50; }
         .native-share, .copy {
             background-color: #25d366;
             width: 100%;
@@ -81,8 +81,8 @@
 </head>
 <body>
     <div class="container">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAsMi41QzIyLjUsMi41LDIuNSwyMi41LDIuNSw1MHMzMCw0Ny41LDQ3LjUsNDcuNXMyMC00Ny41LDQ3LjUtNDcuNVM3Ny41LDIuNSw1MCwyLjV6IE01MCw5Mi41QzI2LjIsOTIuNSw3LjUsNzMuOCw3LjUsNTBTMjYuMiw3LjUsNTAsNy41czQyLjUsMTguOCw0Mi41LDQyLjVTOzczLjgsOTIuNSw1MCw5Mi41eiBNNzIsMzVjLTEuMSwwLTIsMC45LTIsMnYyMGMwLDEuMSwwLjksMiwyLDJoNWMxLjEsMCwyLTAuOSwyLTJzLTAuOS0yLTItMkg3MnoiLz48cGF0aCBkPSJNMzUsNjdjMC00LjQtMy42LTgtOC04cy04LDMuNi04LDhjMCwxLjcsMC41LDMuMywxLjUsNC41bDExLDEzYzEuMiwxLjIsMi45LDEuOCw0LjUsMS44czMuMy0wLjYsNC41LTEuOGwxMS0xM0MzNC41LDcwLjMsMzUsNjguNywzNSw2N3oiLz48L3N2Zz4=" alt="Sharelette Logo" class="logo">
-        <h1>Share Content Easily</h1>
+        <img src="sharelette.jpeg" alt="Sharelette Logo" class="logo">
+        <h1>Sharelette</h1>
         <div class="content">
             <p id="textContent">Your content will appear here.</p>
         </div>
@@ -91,6 +91,7 @@
             <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
             <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank">LinkedIn</a>
             <a href="#" id="email-share" class="share-btn email">Email</a>
+            <a href="#" id="sms-share" class="share-btn sms">SMS</a>
         </div>
         <button id="native-share" class="share-btn native-share" style="display: none;">Share</button>
         <button id="copy-btn" class="share-btn copy">Copy Link</button>
@@ -101,6 +102,7 @@
             const params = new URLSearchParams(window.location.search);
             const url = params.get('url') || 'https://example.com';
             const text = params.get('text') || 'Check out this awesome link!';
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
             document.getElementById('textContent').textContent = text;
             const encodedUrl = encodeURIComponent(url);
@@ -111,6 +113,15 @@
             document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
             
+            // Detect if the user is on iOS and format the SMS link accordingly
+            let smsLink;
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                smsLink = `sms:?&body=${encodedText}%20${encodedUrl}`;
+            } else {
+                smsLink = `sms:?body=${encodedText}%20${encodedUrl}`;
+            }
+            document.getElementById('sms-share').href = smsLink;
+
             const nativeShareBtn = document.getElementById('native-share');
             if (navigator.share) {
                 nativeShareBtn.style.display = 'block';
