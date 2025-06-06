@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sharelette</title>
-    <script type="text/javascript">
-        var QRCode; (function() { function r(t) { this.mode = n.MODE_8BIT_BYTE, this.data = t, this.parsedData = []; for (var e = 0, r = this.data.length; e < r; e++) { var i = [], a = this.data.charCodeAt(e); a > 65536 ? (i[0] = 240 | (1835008 & a) >>> 18, i[1] = 128 | (258048 & a) >>> 12, i[2] = 128 | (4032 & a) >>> 6, i[3] = 128 | 63 & a) : a > 2048 ? (i[0] = 224 | (61440 & a) >>> 12, i[1] = 128 | (4032 & a) >>> 6, i[2] = 128 | 63 & a) : a > 128 ? (i[0] = 192 | (1984 & a) >>> 6, i[1] = 128 | 63 & a) : i[0] = a, this.parsedData = this.parsedData.concat(i) } this.parsedData.length != this.data.length && (this.parsedData.unshift(191), this.parsedData.unshift(187), this.parsedData.unshift(239)) } function i(t, e) { this.typeNumber = t, this.errorCorrectLevel = e, this.modules = null, this.moduleCount = 0, this.dataCache = null, this.dataList = [] } function a(t) { var e = new i(t, o.L); return e.addData(t), e.make(), e } function o(t, e) { if (void 0 === t.length) throw new Error(t.length + "/" + e); var r = 0; while (r < t.length && 0 == t[r]) r++; this.num = new Array(t.length - r + e); for (var i = 0; i < t.length - r; i++) this.num[i] = t[i + r] } function h(t, e) { this.buffer = t, this.length = e } function s(t, e) { switch (e) { case n.MODE_NUMBER: return new u(t); case n.MODE_ALPHA_NUM: return new c(t); case n.MODE_8BIT_BYTE: return new r(t); case n.MODE_KANJI: return new f(t); default: throw new Error("mode:" + e) } } function l(t) { return t } function u(t) { this.mode = n.MODE_NUMBER, this.data = t } function c(t) { this.mode = n.MODE_ALPHA_NUM, this.data = t } function f(t) { this.mode = n.MODE_KANJI, this.data = t } r.prototype = { getLength: function() { return this.parsedData.length }, write: function(t) { for (var e = 0, r = this.parsedData.length; e < r; e++) t.put(this.parsedData[e], 8) } }, i.prototype = { addData: function(t, e) { e || (e = n.MODE_8BIT_BYTE); var r = s(t, e); this.dataList.push(r), this.dataCache = null }, isDark: function(t, e) { if (t < 0 || this.moduleCount <= t || e < 0 || this.moduleCount <= e) throw new Error(t + "," + e); return this.modules[t][e] }, getModuleCount: function() { return this.moduleCount }, make: function() { this.makeImpl(!1, this.getBestMaskPattern()) }, makeImpl: function(t, e) { this.moduleCount = 4 * this.typeNumber + 17, this.modules = new Array(this.moduleCount); for (var r = 0; r < this.moduleCount; r++) { this.modules[r] = new Array(this.moduleCount); for (var n = 0; n < this.moduleCount; n++) this.modules[r][n] = null } this.setupPositionProbePattern(0, 0), this.setupPositionProbePattern(this.moduleCount - 7, 0), this.setupPositionProbePattern(0, this.moduleCount - 7), this.setupPositionAdjustPattern(), this.setupTimingPattern(), this.setupTypeInfo(t, e), this.typeNumber >= 7 && this.setupTypeNumber(t), null == this.dataCache && (this.dataCache = i.createData(this.typeNumber, this.errorCorrectLevel, this.dataList)), this.mapData(this.dataCache, e) }, setupPositionProbePattern: function(t, e) { for (var r = -1; r <= 7; r++) if (!(t + r <= -1 || this.moduleCount <= t + r)) for (var n = -1; n <= 7; n++) e + n <= -1 || this.moduleCount <= e + n || (r >= 0 && r <= 6 && (0 == n || 6 == n) || n >= 0 && n <= 6 && (0 == r || 6 == r) || r >= 2 && r <= 4 && n >= 2 && n <= 4 ? this.modules[t + r][e + n] = !0 : this.modules[t + r][e + n] = !1) }, getBestMaskPattern: function() { for (var t = 0, e = 0, r = 0; r < 8; r++) { this.makeImpl(!0, r); var n = d.getLostPoint(this); (0 == r || t > n) && (t = n, e = r) } return e }, createMovieClip: function(t, e, r) { var n = t.createEmptyMovieClip(e, r), i = 1; this.make(); for (var a = 0; a < this.moduleCount; a++) for (var o = a * i, h = 0; h < this.moduleCount; h++) { var s = h * i, l = this.modules[a][h]; l && (n.beginFill(0, 100), n.moveTo(s, o), n.lineTo(s + i, o), n.lineTo(s + i, o + i), n.lineTo(s, o + i), n.endFill()) } return n }, setupTimingPattern: function() { for (var t = 8; t < this.moduleCount - 8; t++) null == this.modules[t][6] && (this.modules[t][6] = t % 2 == 0); for (var e = 8; e < this.moduleCount - 8; 
-    </script>
     <style>
         :root {
             --brand-blue: #007bff;
@@ -159,10 +156,6 @@
         #generated-link-output { flex-grow: 1; background-color: #fff; color: #555; }
         #copy-generated-link-btn { padding: 0 1rem; background-color: #6b7280; color: white; border-radius: 4px; border: none; cursor: pointer; }
         #copy-generated-link-btn:hover { background-color: #4b5563; }
-        #qrcode-output { margin-top: 1rem; text-align: center; display: none; }
-        #qrcode-container { display: inline-block; padding: 8px; background: white; border: 1px solid var(--border-color); border-radius: 4px; }
-        #qrcode-container canvas { display: block; }
-        #qrcode-download { display: inline-block; margin-top: 0.75rem; color: var(--brand-blue); font-weight: 500; }
 
         /* Settings Panel */
         .settings-panel { display: none; margin-top: 1.5rem; padding: 1.5rem; background-color: #f9fafb; border-radius: 4px; border: 1px solid var(--border-color); }
@@ -240,17 +233,13 @@
                         <label for="input-text">Text to share</label>
                         <input type="text" id="input-text" placeholder="Check out this awesome site!">
                     </div>
-                    <button type="button" class="btn btn-primary" id="generate-link-btn">Generate Link & QR Code</button>
+                    <button type="button" class="btn btn-primary" id="generate-link-btn">Generate Link</button>
                 </form>
                 <div id="output-area">
                      <label for="generated-link-output">Your Sharelette Link</label>
                     <div class="output-group">
                         <input type="text" id="generated-link-output" readonly>
                         <button id="copy-generated-link-btn">Copy</button>
-                    </div>
-                    <div id="qrcode-output">
-                        <div id="qrcode-container"></div>
-                        <a id="qrcode-download" download="sharelette-qr.png">Download QR Code</a>
                     </div>
                 </div>
             </div>
@@ -396,13 +385,12 @@
             };
             setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
             
+            // Get all elements for the generator
             const generateBtn = document.getElementById('generate-link-btn');
             const outputArea = document.getElementById('output-area');
             const outputInput = document.getElementById('generated-link-output');
-            const qrcodeOutput = document.getElementById('qrcode-output');
-            const qrcodeContainer = document.getElementById('qrcode-container');
-            const qrcodeDownload = document.getElementById('qrcode-download');
 
+            // Attach event listener to the "Generate" button
             generateBtn.addEventListener('click', () => {
                 const urlToShare = document.getElementById('input-url').value;
                 const textToShare = document.getElementById('input-text').value;
@@ -410,40 +398,18 @@
                     alert('Please enter a URL to share.');
                     return;
                 }
+
+                // Create the final Sharelette link
                 const encodedUrlParam = encodeURIComponent(urlToShare);
                 const encodedTextParam = encodeURIComponent(textToShare);
                 const baseAppUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
                 const finalLink = `${baseAppUrl}?url=${encodedUrlParam}&text=${encodedTextParam}`;
                 
+                // Show the output area and populate the link
                 outputInput.value = finalLink;
                 outputArea.style.display = 'block';
-
-                // Generate and display QR Code
-                qrcodeContainer.innerHTML = ''; // Clear previous QR
-                try {
-                    new QRCode(qrcodeContainer, {
-                        text: finalLink,
-                        width: 150,
-                        height: 150,
-                        colorDark : "#000000",
-                        colorLight : "#ffffff",
-                        correctLevel : QRCode.CorrectLevel.H
-                    });
-                    
-                    // Make it downloadable after a short delay for rendering
-                    setTimeout(() => {
-                        const canvas = qrcodeContainer.querySelector('canvas');
-                        if (canvas) {
-                            qrcodeDownload.href = canvas.toDataURL("image/png");
-                        }
-                    }, 100);
-
-                    qrcodeOutput.style.display = 'block';
-                } catch (e) {
-                    console.error("QR Code generation failed:", e);
-                    qrcodeOutput.style.display = 'none';
-                }
             });
+
             setupCopyButton('copy-generated-link-btn', () => outputInput.value, 'Copied!');
         });
     </script>
