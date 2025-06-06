@@ -257,9 +257,9 @@
 
             <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
             <div class="settings-panel" id="settings-panel">
-                 <h3>Personal Server Settings</h3>
-                 <p>Set your preferred servers for federated networks. These are saved in your browser.</p>
-                 <form id="settings-form">
+                <h3>Personal Server Settings</h3>
+                <p>Set your preferred servers for federated networks. These are saved in your browser.</p>
+                <form id="settings-form">
                     <div class="form-group">
                         <label for="mastodon-instance">Mastodon Server</label>
                         <input type="text" id="mastodon-instance" placeholder="mastodon.social">
@@ -269,14 +269,17 @@
                         <input type="text" id="lemmy-instance" placeholder="lemmy.world">
                     </div>
                     <button type="button" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
-                 </form>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- 1. INITIAL SETUP & DEFAULTS ---
+            // --- 1. CORE LOGIC: Get URL and Text from Query String ---
+            
+            // Set default values to be used if the query string is empty.
+            // This ensures the page always has valid content to display.
             const defaults = {
                 url: 'https://cloudbreak.app',
                 text: 'Check out CloudBreak!',
@@ -284,12 +287,17 @@
                 lemmyInstance: 'lemmy.world'
             };
 
-            // This is the core logic that pulls from the browser's URL bar.
+            // This is the key part that reads from the browser's address bar.
+            // It looks for "?url=..." and "?text=..." parameters.
             const params = new URLSearchParams(window.location.search);
+
+            // Get the 'url' from the query string. If it's not found, use the default.
             const url = params.get('url') || defaults.url;
-            const text = params.get('text') || defaults.text;
             
-            // --- 2. LOCAL STORAGE & SETTINGS ---
+            // Get the 'text' from the query string. If it's not found, use the default.
+            const text = params.get('text') || defaults.text;
+
+            // --- 2. LOCAL STORAGE & SETTINGS (Federated Networks) ---
             const settings = {
                 mastodonInstance: localStorage.getItem('mastodonInstance') || defaults.mastodonInstance,
                 lemmyInstance: localStorage.getItem('lemmyInstance') || defaults.lemmyInstance
@@ -323,7 +331,8 @@
                 settingsPanel.classList.remove('is-visible');
             });
 
-            // --- 3. RENDER PAGE CONTENT ---
+            // --- 3. RENDER PAGE CONTENT & UPDATE SHARE LINKS ---
+            // This function uses the `url` and `text` variables (from step 1) to build all the share links.
             const updateShareLinks = () => {
                 const encodedUrl = encodeURIComponent(url);
                 const encodedText = encodeURIComponent(text);
@@ -347,20 +356,27 @@
                 document.getElementById('sms-share').href = smsLink;
             };
 
-            // Populate the "what you're sharing" preview card
-            document.getElementById('textContent').textContent = text;
-            document.getElementById('urlContent').textContent = url;
-            document.getElementById('url-link').href = url;
-            try {
-                document.getElementById('urlHostname').textContent = new URL(url).hostname;
-            } catch (e) {
-                document.getElementById('urlHostname').textContent = 'Invalid URL';
-            }
+            // This function populates the "PREVIEW" card with the `url` and `text` from step 1.
+            const updatePreview = () => {
+                document.getElementById('textContent').textContent = text;
+                document.getElementById('urlContent').textContent = url;
+                document.getElementById('url-link').href = url;
+                try {
+                    // Prepend "https://" if missing for the URL constructor to work reliably.
+                    const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+                    document.getElementById('urlHostname').textContent = new URL(fullUrl).hostname;
+                } catch (e) {
+                    document.getElementById('urlHostname').textContent = 'Invalid URL';
+                    console.error("Could not parse URL:", url, e);
+                }
+            };
             
-            // Initial call to set links
+            // Initial calls to populate the page on load.
+            updatePreview();
             updateShareLinks();
 
             // --- 4. BUTTON EVENT LISTENERS ---
+            
             // Main "Copy Text & Link" button
             const copyBtn = document.getElementById('copy-btn');
             copyBtn.addEventListener('click', () => {
@@ -373,7 +389,7 @@
                 });
             });
 
-            // Discord Button
+            // Discord Button (copies to clipboard)
             const discordBtn = document.getElementById('discord-share');
             discordBtn.addEventListener('click', () => {
                 const combinedText = `${text}\n${url}`;
@@ -384,12 +400,13 @@
                 });
             });
 
-            // Native Share
+            // Native Share API
             if (navigator.share) {
                 const nativeShareBtn = document.getElementById('native-share');
                 nativeShareBtn.style.display = 'inline-flex';
                 nativeShareBtn.addEventListener('click', async () => {
                     try {
+                        // Use the url and text variables from the query string
                         await navigator.share({ title: text, text: text, url: url });
                     } catch (err) {
                         console.info("Navigator.share dialog info:", err);
@@ -397,10 +414,12 @@
                 });
             }
 
-            // --- 5. "HOW TO USE" SECTION LOGIC ---
+            // --- 5. "HOW TO USE" & LINK GENERATOR ---
+            
             // Generic Copy Function
             const setupCopyButton = (buttonId, getText, feedback) => {
                 const button = document.getElementById(buttonId);
+                if (!button) return;
                 const originalText = button.textContent;
                 button.addEventListener('click', () => {
                     navigator.clipboard.writeText(getText()).then(() => {
@@ -432,7 +451,10 @@
 
                 const encodedUrlParam = encodeURIComponent(urlToShare);
                 const encodedTextParam = encodeURIComponent(textToShare);
-                const finalLink = `https://cloudbreak.app/sharelette/?url=${encodedUrlParam}&text=${encodedTextParam}`;
+                
+                // Dynamically create the base URL from the current page's location.
+                const baseAppUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+                const finalLink = `${baseAppUrl}?url=${encodedUrlParam}&text=${encodedTextParam}`;
                 
                 outputInput.value = finalLink;
                 outputArea.style.display = 'block';
@@ -440,7 +462,7 @@
                 // Generate and display QR Code
                 qrcodeContainer.innerHTML = ''; // Clear previous QR
                 try {
-                    const qr = new QRCode(qrcodeContainer, {
+                    new QRCode(qrcodeContainer, {
                         text: finalLink,
                         width: 150,
                         height: 150,
@@ -455,7 +477,7 @@
                         if (canvas) {
                             qrcodeDownload.href = canvas.toDataURL("image/png");
                         }
-                    }, 50); // Give canvas time to draw
+                    }, 100); // Give canvas time to draw
 
                     qrcodeOutput.style.display = 'block';
                 } catch (e) {
