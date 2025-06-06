@@ -13,6 +13,7 @@
             --code-bg: #f3f4f6;
             --code-text: #333;
             --border-color: #e5e7eb;
+            --text-secondary: #6b7280;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -45,33 +46,58 @@
         }
         h1 { margin: 0; font-size: 2.5rem; font-weight: bold; }
         h3 {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             margin-top: 2rem;
             font-size: 1.1rem;
             font-weight: bold;
             color: #333;
         }
         .attribution { margin: 0.25rem 0 0 0; font-size: 0.9rem; }
-        .attribution a { color: #555; text-decoration: none; }
+        .attribution a { color: var(--text-secondary); text-decoration: none; }
         .attribution a:hover { text-decoration: underline; }
-        .content {
+        
+        /* --- Content Preview Card --- */
+        .content-preview {
             margin-top: 1rem;
-            background: #f9f9f9;
-            padding: 1rem;
-            border-radius: 0.25rem;
             text-align: left;
         }
-        .content p { margin: 0.5rem 0; word-wrap: break-word; line-height: 1.5; }
-        .content a { color: var(--brand-blue); }
-        .share-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
-        .share-btn {
+        .preview-text {
+            margin-bottom: 0.75rem;
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 1.1rem;
+        }
+        .preview-link-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+        }
+        .preview-link-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .preview-link-card .hostname {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .preview-link-card .url-text {
+            font-weight: bold;
+            color: var(--code-text);
+            word-break: break-all;
+        }
+
+        .action-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+        .action-item {
             display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
             padding: 0.6rem 1.2rem; border: none; border-radius: 0.25rem;
             font-size: 1rem; font-weight: 500; color: #fff;
             cursor: pointer; text-decoration: none; transition: opacity 0.3s;
         }
-        .share-btn:hover { opacity: 0.9; }
-        .share-btn svg { width: 1.25em; height: 1.25em; fill: currentColor; }
+        .action-item:hover { opacity: 0.9; }
+        .action-item svg { width: 1.25em; height: 1.25em; fill: currentColor; }
 
         /* Brand Colors */
         .facebook { background-color: #1877f2; }
@@ -122,8 +148,8 @@
         #copy-generated-link-btn { padding: 0 1rem; background-color: #6b7280; color: white; border-radius: 4px; border: none; cursor: pointer; }
         #copy-generated-link-btn:hover { background-color: #4b5563; }
         #qrcode-output { margin-top: 1rem; text-align: center; display: none; }
-        #qrcode-container img { max-width: 150px; height: auto; margin: 0 auto; }
-        #qrcode-download { display: inline-block; margin-top: 0.5rem; color: var(--brand-blue); }
+        #qrcode-container img { max-width: 150px; height: auto; margin: 0 auto; border: 4px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        #qrcode-download { display: inline-block; margin-top: 0.75rem; color: var(--brand-blue); font-weight: 500; }
 
         /* Settings Panel */
         .settings-panel { display: none; margin-top: 1.5rem; padding: 1.5rem; background-color: #f9fafb; border-radius: 4px; border: 1px solid var(--border-color); }
@@ -149,26 +175,31 @@
         </div>
 
         <h3>You are sharing</h3>
-        <div class="content">
-            <p><strong>Text:</strong> <span id="textContent"></span></p>
-            <p><strong>URL:</strong> <a href="#" id="urlContent" target="_blank" rel="noopener noreferrer"></a></p>
+        <div class="content-preview">
+            <p class="preview-text" id="textContent"></p>
+            <div class="preview-link-card">
+                <a href="#" id="url-link" target="_blank" rel="noopener noreferrer">
+                    <div class="hostname" id="urlHostname"></div>
+                    <div class="url-text" id="urlContent"></div>
+                </a>
+            </div>
         </div>
 
         <h3>Share on</h3>
-        <div class="share-buttons">
-            <a href="#" id="facebook-share" class="share-btn facebook" target="_blank">Facebook</a>
-            <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
-            <a href="#" id="bluesky-share" class="share-btn bluesky" target="_blank">Bluesky</a>
-            <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank">LinkedIn</a>
-            <a href="#" id="reddit-share" class="share-btn reddit" target="_blank">Reddit</a>
-            <a href="#" id="mastodon-share" class="share-btn mastodon" target="_blank">Mastodon</a>
-            <a href="#" id="lemmy-share" class="share-btn lemmy" target="_blank">Lemmy</a>
-            <button id="discord-share" class="share-btn discord">Discord</button>
-            <a href="#" id="email-share" class="share-btn email">Email</a>
-            <a href="#" id="sms-share" class="share-btn sms">SMS</a>
+        <div class="action-links">
+            <a href="#" id="facebook-share" class="action-item facebook" target="_blank">Facebook</a>
+            <a href="#" id="twitter-share" class="action-item twitter" target="_blank">Twitter</a>
+            <a href="#" id="bluesky-share" class="action-item bluesky" target="_blank">Bluesky</a>
+            <a href="#" id="linkedin-share" class="action-item linkedin" target="_blank">LinkedIn</a>
+            <a href="#" id="reddit-share" class="action-item reddit" target="_blank">Reddit</a>
+            <a href="#" id="mastodon-share" class="action-item mastodon" target="_blank">Mastodon</a>
+            <a href="#" id="lemmy-share" class="action-item lemmy" target="_blank">Lemmy</a>
+            <button id="discord-share" class="action-item discord">Discord</button>
+            <a href="#" id="email-share" class="action-item email">Email</a>
+            <a href="#" id="sms-share" class="action-item sms">SMS</a>
         </div>
-        <button id="native-share" class="share-btn native-share" style="display: none;">Share...</button>
-        <button id="copy-btn" class="share-btn copy">
+        <button id="native-share" class="action-item native-share" style="display: none;">Share...</button>
+        <button id="copy-btn" class="action-item copy">
             <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
             <span>Copy Text & Link</span>
         </button>
@@ -301,11 +332,16 @@
                 document.getElementById('sms-share').href = smsLink;
             };
 
-            // Populate the "what you're sharing" section
+            // Populate the "what you're sharing" preview card
             document.getElementById('textContent').textContent = text;
-            const urlContentAnchor = document.getElementById('urlContent');
-            urlContentAnchor.textContent = url;
-            urlContentAnchor.href = url;
+            document.getElementById('urlContent').textContent = url;
+            document.getElementById('url-link').href = url;
+            try {
+                document.getElementById('urlHostname').textContent = new URL(url).hostname;
+            } catch (e) {
+                document.getElementById('urlHostname').textContent = 'Invalid URL';
+            }
+            
 
             // Initial call to set links
             updateShareLinks();
@@ -390,11 +426,11 @@
                 // Generate and display QR Code
                 qrcodeContainer.innerHTML = ''; // Clear previous QR
                 try {
-                    const qr = qrcode(0, 'L');
+                    const qr = qrcode(4, 'L'); // type 4, error correction level L
                     qr.addData(finalLink);
                     qr.make();
-                    const qrImgTag = qr.createImgTag(4, 8); // (cellSize, margin)
-                    qrcodeContainer.innerHTML = qrImgTag;
+                    const qrImgTag = qr.createImgTag(5, 10); // (cellSize, margin)
+                    qrcodeContainer.appendChild(qrImgTag);
                     qrcodeDownload.href = qrImgTag.src;
                     qrcodeOutput.style.display = 'block';
                 } catch (e) {
