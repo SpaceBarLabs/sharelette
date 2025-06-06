@@ -65,12 +65,13 @@
         .attribution a:hover { text-decoration: underline; }
         
         .coupon-code {
+            position: relative;
             font-size: 0.9rem;
             color: var(--text-secondary);
             background-color: #f9fafb;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 0.6rem;
+            padding: 0.6rem 2rem 0.6rem 0.6rem;
             margin-top: 1rem;
             text-align: center;
             line-height: 1.5;
@@ -81,6 +82,22 @@
         }
         .coupon-code strong {
             color: var(--code-text);
+        }
+        .close-btn {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.5rem;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: bold;
+            line-height: 1;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+        }
+        .close-btn:hover {
+            color: #333;
         }
 
         .preview-card {
@@ -321,6 +338,7 @@
                 <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener">from CloudBreak</a>
             </p>
             <p class="coupon-code">
+                <button id="hide-coupon-btn" class="close-btn" aria-label="Hide coupon">&times;</button>
                 With Pocket shutting down, try our managed hosting for 
                 <a href="https://cloudbreak.app/wallabag?utm_source=sharelette&utm_medium=webapp&utm_campaign=wallabag_promo&rby=sharelette" target="_blank" rel="noopener">Wallabag, a read-it-later app</a>! 
                 Use code <strong>SHARELETTE</strong> for $2 USD off.
@@ -801,6 +819,29 @@
                 location.reload();
             }
         });
+
+        // --- Coupon Banner Logic ---
+        const couponBlock = document.querySelector('.coupon-code');
+        const hideCouponBtn = document.getElementById('hide-coupon-btn');
+        const couponHiddenKey = 'couponHiddenUntil';
+
+        // On page load, check if the coupon should be hidden
+        const hideUntil = localStorage.getItem(couponHiddenKey);
+        if (hideUntil && new Date().getTime() < parseInt(hideUntil, 10)) {
+            couponBlock.style.display = 'none';
+        } else if (hideUntil) {
+            // Clean up expired key
+            localStorage.removeItem(couponHiddenKey);
+        }
+        
+        // Add click listener to the hide button
+        hideCouponBtn.addEventListener('click', () => {
+            const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
+            const expirationTime = new Date().getTime() + twoWeeksInMs;
+            localStorage.setItem(couponHiddenKey, expirationTime.toString());
+            couponBlock.style.display = 'none';
+        });
+        // --- End Coupon Banner Logic ---
 
         // Initial Page Setup
         document.getElementById('mastodon-instance').value = settings.mastodonInstance;
