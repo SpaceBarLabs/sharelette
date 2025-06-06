@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sharelette</title>
     <style>
+        :root {
+            --brand-blue: #007bff;
+            --code-bg: #f3f4f6;
+            --code-text: #333;
+            --border-color: #e5e7eb;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
@@ -13,7 +19,7 @@
             min-height: 100vh;
             margin: 0;
             background-color: #f0f2f5;
-            padding: 2rem 1rem; /* Added more vertical padding */
+            padding: 2rem 1rem;
             box-sizing: border-box;
         }
         .container {
@@ -111,69 +117,130 @@
         .native-share { background-color: #25d366; }
         .copy { background-color: #ffc107; }
         
-        /* How-to-Use Section */
+        /* --- How-to-Use Section --- */
         .how-to-use {
-          margin-top: 2.5rem;
-          padding-top: 1.5rem;
-          border-top: 1px solid #e0e0e0;
-          text-align: left;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            text-align: left;
         }
         .how-to-use h2 {
-          margin-top: 0;
-          margin-bottom: 1rem;
-          font-size: 1.25rem;
-          text-align: center;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            text-align: center;
         }
         .how-to-use p {
-          margin-bottom: 1rem;
-          line-height: 1.6;
-          color: #333;
-        }
-        .how-to-use code {
-          background-color: #e8e8e8;
-          padding: 0.2em 0.4em;
-          border-radius: 4px;
-          font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-          font-size: 0.9em;
-          word-wrap: break-word;
-        }
-        .how-to-use ul {
-            list-style: none;
-            padding: 0;
             margin-bottom: 1rem;
+            line-height: 1.6;
+            color: var(--code-text);
         }
-        .how-to-use li {
-            margin-bottom: 0.5rem;
+        .code-block-container {
+            position: relative;
+            margin-bottom: 1.5rem;
         }
-        .how-to-use pre {
-            background-color: #e8e8e8;
+        .copy-code-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #d1d5db;
+            color: #1f2937;
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.6rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .copy-code-btn:hover {
+            background-color: #9ca3af;
+        }
+        pre {
+            background-color: var(--code-bg);
             padding: 1em;
             border-radius: 4px;
             white-space: pre-wrap;
             word-wrap: break-word;
+            color: var(--code-text);
         }
-        .how-to-use pre code {
-            background: none;
-            padding: 0;
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.9em;
         }
+        .code-tag { color: #9d174d; }
+        .code-attr { color: #92400e; }
+        .code-value { color: #1d4ed8; }
 
+        /* Link Generator Form */
+        .link-generator {
+            background-color: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--code-text);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .generate-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--brand-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .generate-btn:hover {
+            opacity: 0.9;
+        }
+        #output-area {
+            margin-top: 1.5rem;
+            display: none; /* Hidden by default */
+        }
+        .output-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        #generated-link-output {
+            flex-grow: 1;
+            background-color: #fff;
+            color: #555;
+        }
+        #copy-generated-link-btn {
+            padding: 0 1rem;
+            background-color: #6b7280;
+            color: white;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+        #copy-generated-link-btn:hover {
+            background-color: #4b5563;
+        }
 
         /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 600px) {
             body {
-                align-items: flex-start; /* Aligns container to the top */
-                padding-top: 1rem;
+                align-items: flex-start;
+                padding: 1rem;
             }
-            .container {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-            .logo {
-                width: 60px;
-                height: 60px;
-            }
+            .container { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .logo { width: 60px; height: 60px; }
         }
     </style>
 </head>
@@ -208,16 +275,37 @@
 
         <div class="how-to-use">
             <h2>Use This Tool for Free</h2>
-            <p>Sharelette is a free sharing gateway. You can use it on your own website by creating a link to this page with the content you want to share as URL parameters.</p>
-            <ul>
-                <li><code>url</code>: The full link you want users to share.</li>
-                <li><code>text</code>: The description that will appear in the share message.</li>
-            </ul>
-            <p>For example, to create a "Share" link on your site, you would format your HTML like this:</p>
-            <pre><code>&lt;a href="https://your-website.com/sharelette.html?url=https%3A%2F%2Fcloudbreak.app&text=Check%20out%20this%20cool%20app!"&gt;
+            <p>You don't need to download anything! Just create a link to our free, hosted service and add what you want to share.</p>
+            
+            <p>Here’s the HTML to add a "Share" link on your site. Just change the URL and text to your own.</p>
+            <div class="code-block-container">
+                <button class="copy-code-btn" id="copy-html-btn" data-feedback-text="Copied HTML!">Copy</button>
+                <pre><code id="html-code-sample">&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"https://cloudbreak.app/sharelette/?url=https%3A%2F%2Fcloudbreak.app&text=Check%20out%20CloudBreak!"</span>&gt;
   Share this on social media
-&lt;/a&gt;</code></pre>
-            <p>Just replace <code>your-website.com/sharelette.html</code> with the URL where you host this file.</p>
+&lt;/<span class="code-tag">a</span>&gt;</code></pre>
+            </div>
+
+            <h3>Generate Your Own Link</h3>
+            <div class="link-generator">
+                <form id="link-generator-form">
+                    <div class="form-group">
+                        <label for="input-url">URL to share</label>
+                        <input type="text" id="input-url" placeholder="https://your-website.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-text">Text to share</label>
+                        <input type="text" id="input-text" placeholder="Check out this awesome site!">
+                    </div>
+                    <button type="button" class="generate-btn" id="generate-link-btn">Generate Link</button>
+                </form>
+                <div id="output-area">
+                     <label for="generated-link-output">Your Sharelette Link</label>
+                    <div class="output-group">
+                        <input type="text" id="generated-link-output" readonly>
+                        <button id="copy-generated-link-btn" data-feedback-text="Copied Link!">Copy</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -249,27 +337,51 @@
             }
             document.getElementById('sms-share').href = smsLink;
 
-            // --- Event Listeners for Buttons ---
-            const discordBtn = document.getElementById('discord-share');
-            const copyBtn = document.getElementById('copy-btn');
-            const combinedText = `${text}\n${url}`;
+            // --- Generic Copy Function ---
+            const setupCopyButton = (buttonId, targetElement, isInput = false, feedbackText = 'Copied!') => {
+                const button = document.getElementById(buttonId);
+                if (!button) return;
+                const originalText = button.textContent;
+                button.addEventListener('click', () => {
+                    const textToCopy = isInput ? targetElement.value : targetElement.innerText;
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        button.textContent = feedbackText;
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                        alert('Failed to copy text.');
+                    });
+                });
+            };
 
-            const copyToClipboard = (textToCopy, buttonElement, originalText) => {
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    // Check if button has a span for text, otherwise set textContent directly
-                    const textHolder = buttonElement.querySelector('span') || buttonElement;
+            // Main "Copy Text & Link" button
+            const copyBtn = document.getElementById('copy-btn');
+            copyBtn.addEventListener('click', () => {
+                const combinedText = `${text}\n${url}`;
+                const textHolder = copyBtn.querySelector('span');
+                const originalText = textHolder.textContent;
+                navigator.clipboard.writeText(combinedText).then(() => {
                     textHolder.textContent = 'Copied!';
                     setTimeout(() => {
                         textHolder.textContent = originalText;
                     }, 2000);
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                    alert('Failed to copy text.');
                 });
-            };
-            
-            discordBtn.addEventListener('click', () => copyToClipboard(combinedText, discordBtn, 'Discord'));
-            copyBtn.addEventListener('click', () => copyToClipboard(combinedText, copyBtn, 'Copy Text & Link'));
+            });
+
+            // Discord Button
+            const discordBtn = document.getElementById('discord-share');
+            discordBtn.addEventListener('click', () => {
+                const combinedText = `${text}\n${url}`;
+                const originalText = discordBtn.textContent;
+                navigator.clipboard.writeText(combinedText).then(() => {
+                    discordBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        discordBtn.textContent = originalText;
+                    }, 2000);
+                });
+            });
 
             // Native Share
             const nativeShareBtn = document.getElementById('native-share');
@@ -283,6 +395,35 @@
                     }
                 });
             }
+
+            // --- "How to Use" Section Logic ---
+            // Copy HTML Sample Button
+            setupCopyButton('copy-html-btn', document.getElementById('html-code-sample'), false, 'Copied!');
+
+            // Link Generator Form
+            const generateBtn = document.getElementById('generate-link-btn');
+            const outputArea = document.getElementById('output-area');
+            const outputInput = document.getElementById('generated-link-output');
+
+            generateBtn.addEventListener('click', () => {
+                const urlToShare = document.getElementById('input-url').value;
+                const textToShare = document.getElementById('input-text').value;
+
+                if (!urlToShare) {
+                    alert('Please enter a URL to share.');
+                    return;
+                }
+
+                const encodedUrlParam = encodeURIComponent(urlToShare);
+                const encodedTextParam = encodeURIComponent(textToShare);
+                const finalLink = `https://cloudbreak.app/sharelette/?url=${encodedUrlParam}&text=${encodedTextParam}`;
+                
+                outputInput.value = finalLink;
+                outputArea.style.display = 'block';
+            });
+
+            // Copy Generated Link Button
+            setupCopyButton('copy-generated-link-btn', outputInput, true, 'Copied!');
         });
     </script>
 </body>
