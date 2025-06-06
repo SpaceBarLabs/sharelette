@@ -23,13 +23,21 @@
             max-width: 500px;
             width: 90%;
         }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
         .logo {
-            width: 250px;
-            height: 250px;
+            width: 80px;
+            height: 80px;
         }
         h1 {
-            margin: 0 0 1rem;
-            font-size: 1.5rem;
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
         }
         .content {
             margin-bottom: 2rem;
@@ -81,8 +89,10 @@
 </head>
 <body>
     <div class="container">
-        <img src="sharelette.jpeg" alt="Sharelette Logo" class="logo">
-        <h1>Sharelette</h1>
+        <div class="header">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAsMi41QzIyLjUsMi41LDIuNSwyMi41LDIuNSw1MHMzMCw0Ny41LDQ3LjUsNDcuNXMyMC00Ny41LDQ3LjUtNDcuNVM3Ny41LDIuNSw1MCwyLjV6IE01MCw5Mi41QzI2LjIsOTIuNSw3LjUsNzMuOCw3LjUsNTBTMjYuMiw3LjUsNTAsNy41czQyLjUsMTguOCw0Mi41LDQyLjVTOzczLjgsOTIuNSw1MCw5Mi41eiIvPjxwYXRoIGQ9Ik0zMi41LDY3LjVjMC00LjQsMy42LTgsOC04czgsMy42LDgsOC41YzAsMS43LTAuNSwzLjMtMS41LDQuNWwtMTEsMTNjLTEuMiwxLjItMi45LDEuOC00LjUsMS44cy0zLjMtMC42LTQuNS0xLjhsLTExLTEzQzMyLDcwLjgsMzIuNSw2OS4yLDMyLjUsNjcuNXoiLz48L3N2Zz4=" alt="Sharelette Logo" class="logo">
+            <h1>Sharelette</h1>
+        </div>
         <div class="content">
             <p id="textContent">Your content will appear here.</p>
         </div>
@@ -112,8 +122,7 @@
             document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
             document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
-            
-            // Detect if the user is on iOS and format the SMS link accordingly
+
             let smsLink;
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                 smsLink = `sms:?&body=${encodedText}%20${encodedUrl}`;
