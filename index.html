@@ -63,10 +63,26 @@
             background: #f9f9f9;
             padding: 1rem;
             border-radius: 0.25rem;
+            text-align: left;
+        }
+        .content h4 {
+            margin: 0 0 1rem 0;
+            color: #333;
+            font-weight: bold;
         }
         .content p {
-            margin: 0;
+            margin: 0.5rem 0;
             word-wrap: break-word;
+            line-height: 1.5;
+        }
+        .content a {
+            color: var(--brand-blue);
+        }
+        .share-on-label {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
         }
         .share-buttons {
             display: flex;
@@ -100,7 +116,7 @@
 
         /* Brand Colors */
         .facebook { background-color: #1877f2; }
-        .twitter { background-color: #000000; }
+        .twitter { background-color: #1DA1F2; } /* Changed to light blue */
         .linkedin { background-color: #0a66c2; }
         .reddit { background-color: #FF4500; }
         .mastodon { background-color: #6364FF; }
@@ -254,8 +270,13 @@
             </p>
         </div>
         <div class="content">
-            <p id="textContent">Your content will appear here.</p>
+            <h4>This is what you're sharing</h4>
+            <p><strong>Text:</strong> <span id="textContent"></span></p>
+            <p><strong>URL:</strong> <a href="#" id="urlContent" target="_blank" rel="noopener noreferrer"></a></p>
         </div>
+
+        <h3 class="share-on-label">Share on</h3>
+
         <div class="share-buttons">
             <a href="#" id="facebook-share" class="share-btn facebook" target="_blank">Facebook</a>
             <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
@@ -316,7 +337,13 @@
             const text = params.get('text') || 'Check out CloudBreak!';
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-            document.getElementById('textContent').textContent = text;
+            // Populate the "what you're sharing" section
+            const textContentSpan = document.getElementById('textContent');
+            const urlContentAnchor = document.getElementById('urlContent');
+            textContentSpan.textContent = text;
+            urlContentAnchor.textContent = url;
+            urlContentAnchor.href = url;
+
             const encodedUrl = encodeURIComponent(url);
             const encodedText = encodeURIComponent(text);
 
@@ -338,14 +365,14 @@
             document.getElementById('sms-share').href = smsLink;
 
             // --- Generic Copy Function ---
-            const setupCopyButton = (buttonId, targetElement, isInput = false, feedbackText = 'Copied!') => {
+            const setupCopyButton = (buttonId, targetElement, isInput = false) => {
                 const button = document.getElementById(buttonId);
                 if (!button) return;
                 const originalText = button.textContent;
                 button.addEventListener('click', () => {
                     const textToCopy = isInput ? targetElement.value : targetElement.innerText;
                     navigator.clipboard.writeText(textToCopy).then(() => {
-                        button.textContent = feedbackText;
+                        button.textContent = 'Copied!';
                         setTimeout(() => {
                             button.textContent = originalText;
                         }, 2000);
@@ -397,10 +424,8 @@
             }
 
             // --- "How to Use" Section Logic ---
-            // Copy HTML Sample Button
-            setupCopyButton('copy-html-btn', document.getElementById('html-code-sample'), false, 'Copied!');
+            setupCopyButton('copy-html-btn', document.getElementById('html-code-sample'), false);
 
-            // Link Generator Form
             const generateBtn = document.getElementById('generate-link-btn');
             const outputArea = document.getElementById('output-area');
             const outputInput = document.getElementById('generated-link-output');
@@ -408,22 +433,18 @@
             generateBtn.addEventListener('click', () => {
                 const urlToShare = document.getElementById('input-url').value;
                 const textToShare = document.getElementById('input-text').value;
-
                 if (!urlToShare) {
                     alert('Please enter a URL to share.');
                     return;
                 }
-
                 const encodedUrlParam = encodeURIComponent(urlToShare);
                 const encodedTextParam = encodeURIComponent(textToShare);
                 const finalLink = `https://cloudbreak.app/sharelette/?url=${encodedUrlParam}&text=${encodedTextParam}`;
-                
                 outputInput.value = finalLink;
                 outputArea.style.display = 'block';
             });
 
-            // Copy Generated Link Button
-            setupCopyButton('copy-generated-link-btn', outputInput, true, 'Copied!');
+            setupCopyButton('copy-generated-link-btn', outputInput, true);
         });
     </script>
 </body>
