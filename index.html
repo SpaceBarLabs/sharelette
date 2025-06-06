@@ -207,6 +207,11 @@
         #generated-link-output { flex-grow: 1; background-color: #fff; color: #555; }
         #copy-generated-link-btn { padding: 0 1rem; background-color: #6b7280; color: white; border-radius: 4px; border: none; cursor: pointer; }
         #copy-generated-link-btn:hover { background-color: #4b5563; }
+        
+        #qrcode-output { margin-top: 1rem; text-align: center; display: none; }
+        #qrcode-container { display: inline-block; padding: 8px; background: white; border: 1px solid var(--border-color); border-radius: 4px; }
+        #qrcode-container canvas { display: block; }
+        #qrcode-download { display: block; margin-top: 0.75rem; color: var(--brand-blue); font-weight: 500; }
 
         .settings-panel { 
             display: none; 
@@ -268,14 +273,7 @@
         .footer a {
             color: var(--text-secondary);
         }
-        #footer-qrcode {
-            margin-top: 1.5rem;
-            display: inline-block;
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
-        }
-        
+
         @media (max-width: 600px) {
             body { align-items: flex-start; padding: 1rem; }
             .container { padding: 1.5rem; }
@@ -398,7 +396,7 @@
                         <label for="input-text">Text to share</label>
                         <input type="text" id="input-text" placeholder="Check out this awesome site!">
                     </div>
-                    <button type="submit" class="btn btn-primary" id="generate-link-btn">Generate Link</button>
+                    <button type="submit" class="btn btn-primary" id="generate-link-btn">Generate Link & QR Code</button>
                 </form>
                 <div id="output-area">
                      <label for="generated-link-output">Your Sharelette Link</label>
@@ -411,6 +409,11 @@
                         <button class="copy-code-btn" id="copy-html-btn">Copy</button>
                         <pre><code id="html-code-sample"></code></pre>
                     </div>
+                    <div id="qrcode-output">
+                        <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">QR Code</label>
+                        <div id="qrcode-container"></div>
+                        <a id="qrcode-download" download="sharelette-qr.png">Download QR Code</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -421,7 +424,6 @@
         <a href="https://spacebarlabs.com/"><img src="/SBL_Logo.svg" alt="Space Bar Labs Logo"></a><br>
         <span>&copy; space bar labs 2025</span><br>
         <span><a href="https://spacebarlabs.com/privacy-policy/">Privacy Policy</a> | <a href="https://spacebarlabs.com/terms-of-service/">Terms of Service</a></span>
-        <div id="footer-qrcode"></div>
       </div>
     </footer>
 
@@ -676,6 +678,24 @@
   Share this on social media
 &lt;/<span class="code-tag">a</span>&gt;`;
             document.getElementById('code-preview-wrapper').style.display = 'block';
+            
+            const qrcodeOutput = document.getElementById('qrcode-output');
+            const qrcodeContainer = document.getElementById('qrcode-container');
+            const qrcodeDownload = document.getElementById('qrcode-download');
+            qrcodeContainer.innerHTML = '';
+            qrcodeOutput.style.display = 'none';
+            try {
+                new QRCode(qrcodeContainer, { text: finalLink, width: 128, height: 128, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+                setTimeout(() => {
+                    const canvas = qrcodeContainer.querySelector('canvas');
+                    if (canvas) {
+                        qrcodeDownload.href = canvas.toDataURL("image/png");
+                        qrcodeOutput.style.display = 'block';
+                    }
+                }, 100);
+            } catch (e) {
+                console.error("QR Code generation failed:", e);
+            }
         });
         
         document.getElementById('export-settings-btn').addEventListener('click', () => {
@@ -725,23 +745,12 @@
             }
         });
 
-        // Initial Page Setup
         document.getElementById('mastodon-instance').value = settings.mastodonInstance;
         document.getElementById('lemmy-instance').value = settings.lemmyInstance;
         updatePreview();
         renderShareVisibilityCheckboxes();
         renderCustomShareList();
         renderCustomShareButtons();
-        
-        // Generate static footer QR code
-        new QRCode(document.getElementById("footer-qrcode"), {
-            text: "https://sharelette.cloudbreak.app",
-            width: 100,
-            height: 100,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
     });
     </script>
 </body>
