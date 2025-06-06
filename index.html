@@ -71,11 +71,20 @@
         .share-btn:hover {
             opacity: 0.9;
         }
+        /* Standard Share Buttons */
         .facebook { background-color: #1877f2; }
         .twitter { background-color: #1da1f2; }
         .linkedin { background-color: #0a66c2; }
         .email { background-color: #7d7d7d; }
         .sms { background-color: #4CAF50; }
+
+        /* New Share Buttons */
+        .reddit { background-color: #FF4500; }
+        .lemmy { background-color: #00C161; }
+        .mastodon { background-color: #6364FF; }
+        .discord { background-color: #5865F2; }
+
+        /* Action Buttons */
         .native-share, .copy {
             background-color: #25d366;
             width: 100%;
@@ -90,7 +99,16 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAsMi41QzIyLjUsMi41LDIuNSwyMi41LDIuNSw1MHMzMCw0Ny41LDQ3LjUsNDcuNXMyMC00Ny41LDQ3LjUtNDcuNVM3Ny41LDIuNSw1MCwyLjV6IE01MCw5Mi41QzI2LjIsOTIuNSw3LjUsNzMuOCw3LjUsNTBTMjYuMiw3LjUsNTAsNy41czQyLjUsMTguOCw0Mi41LDQyLjVTOzczLjgsOTIuNSw1MCw5Mi41eiIvPjxwYXRoIGQ9Ik0zMi41LDY3LjVjMC00LjQsMy42LTgsOC04czgsMy42LDgsOC41YzAsMS43LTAuNSwzLjMtMS41LDQuNWwtMTEsMTNjLTEuMiwxLjItMi45LDEuOC00LjUsMS44cy0zLjMtMC42LTQuNS0xLjhsLTExLTEzQzMyLDcwLjgsMzIuNSw2OS4yLDMyLjUsNjcuNXoiLz48L3N2Zz4=" alt="Sharelette Logo" class="logo">
+            <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <style>
+                  .woman { fill: #4A4A4A; }
+                  .speech-bubble { fill: #F2F2F2; stroke: #4A4A4A; stroke-width: 2; }
+                </style>
+                <circle class="woman" cx="50" cy="30" r="10"/>
+                <path class="woman" d="M35,45 C35,55 65,55 65,45 Q65,40 50,40 Q35,40 35,45 Z"/>
+                <path class="woman" d="M50,50 L50,80 L60,80 L60,60 L40,60 L40,80 L50,80"/>
+                <path class="speech-bubble" d="M60,10 C40,10 20,25 20,40 C20,55 35,55 50,55 L50,65 L60,55 C75,55 90,45 90,30 C90,15 75,10 60,10 Z"/>
+            </svg>
             <h1>Sharelette</h1>
         </div>
         <div class="content">
@@ -100,8 +118,12 @@
             <a href="#" id="facebook-share" class="share-btn facebook" target="_blank">Facebook</a>
             <a href="#" id="twitter-share" class="share-btn twitter" target="_blank">Twitter</a>
             <a href="#" id="linkedin-share" class="share-btn linkedin" target="_blank">LinkedIn</a>
+            <a href="#" id="reddit-share" class="share-btn reddit" target="_blank">Reddit</a>
             <a href="#" id="email-share" class="share-btn email">Email</a>
             <a href="#" id="sms-share" class="share-btn sms">SMS</a>
+            <button id="mastodon-share" class="share-btn mastodon">Mastodon</button>
+            <button id="lemmy-share" class="share-btn lemmy">Lemmy</button>
+            <button id="discord-share" class="share-btn discord">Discord</button>
         </div>
         <button id="native-share" class="share-btn native-share" style="display: none;">Share</button>
         <button id="copy-btn" class="share-btn copy">Copy Link</button>
@@ -118,11 +140,13 @@
             const encodedUrl = encodeURIComponent(url);
             const encodedText = encodeURIComponent(text);
 
+            // Standard Shares
             document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
             document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
             document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
             document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
-
+            document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
+            
             let smsLink;
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                 smsLink = `sms:?&body=${encodedText}%20${encodedUrl}`;
@@ -131,16 +155,44 @@
             }
             document.getElementById('sms-share').href = smsLink;
 
+            // Federated & Prompt-based Shares
+            document.getElementById('mastodon-share').addEventListener('click', () => {
+                const instance = prompt("Enter your Mastodon instance (e.g., mastodon.social)");
+                if (instance) {
+                    const shareUrl = `https://${instance}/share?text=${encodedText}%20${encodedUrl}`;
+                    window.open(shareUrl, '_blank');
+                }
+            });
+
+            document.getElementById('lemmy-share').addEventListener('click', () => {
+                const instance = prompt("Enter your Lemmy instance (e.g., lemmy.world)");
+                if (instance) {
+                    const shareUrl = `https://${instance}/create_post?title=${encodedText}&url=${encodedUrl}`;
+                    window.open(shareUrl, '_blank');
+                }
+            });
+
+            // Clipboard-based Shares
+            const discordBtn = document.getElementById('discord-share');
+            discordBtn.addEventListener('click', () => {
+                const discordText = `${text}\n${url}`;
+                navigator.clipboard.writeText(discordText).then(() => {
+                    discordBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        discordBtn.textContent = 'Discord';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy for Discord: ', err);
+                });
+            });
+
+            // Native & Copy Fallback
             const nativeShareBtn = document.getElementById('native-share');
             if (navigator.share) {
                 nativeShareBtn.style.display = 'block';
                 nativeShareBtn.addEventListener('click', async () => {
                     try {
-                        await navigator.share({
-                            title: text,
-                            text: text,
-                            url: url,
-                        });
+                        await navigator.share({ title: text, text: text, url: url });
                     } catch (err) {
                         console.error("Error using navigator.share:", err);
                     }
@@ -151,9 +203,7 @@
             copyBtn.addEventListener('click', () => {
                 navigator.clipboard.writeText(url).then(() => {
                     copyBtn.textContent = 'Copied!';
-                    setTimeout(() => {
-                        copyBtn.textContent = 'Copy Link';
-                    }, 2000);
+                    setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 2000);
                 }).catch(err => {
                     console.error('Failed to copy: ', err);
                 });
