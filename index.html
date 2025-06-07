@@ -209,12 +209,12 @@
             font-weight: 500;
         }
         
-        /* New class for the Sync promo callout */
         .sync-promo-callout {
+            position: relative; /* Added for close button */
             background-color: #f0f9ff;
             border: 1px solid #bae6fd;
             border-radius: 6px;
-            padding: 0.75rem;
+            padding: 0.75rem 2.5rem 0.75rem 0.75rem; /* Adjusted padding for close button */
             margin: 0.5rem 0 1rem 0;
             font-size: 0.9rem;
             text-align: center;
@@ -429,8 +429,9 @@
         </button>
         
         <h3>Quick Share</h3>
-        <div class="sync-promo-callout">
-            Want to sync your settings & contacts across devices? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync!</a>
+        <div class="sync-promo-callout" id="sync-promo-main">
+            <button id="hide-sync-promo-btn" class="close-btn" aria-label="Hide sync promo">&times;</button>
+            Want to sync your settings & contacts across devices? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync for just $4/year!</a>
         </div>
         <div class="action-links" id="quick-share-links">
         </div>
@@ -538,7 +539,7 @@
             <h4>Manage Settings File</h4>
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">This can be used to back up your settings or share them across different browsers and devices.</p>
             <div class="sync-promo-callout">
-                Tired of importing/exporting? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync</a> for automatic backups & cross-device syncing.
+                Tired of importing/exporting? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync for just $4/year</a> for automatic backups & cross-device syncing.
             </div>
             <div class="settings-io-buttons">
                 <button type="button" class="btn btn-secondary" id="export-settings-btn" style="width: 50%;">Export</button>
@@ -735,10 +736,9 @@
         const url = finalUrl;
         const text = finalText;
 
-        // --- Native Share Button Logic ---
         const nativeShareBtn = document.getElementById('native-share');
         if (navigator.share) {
-            nativeShareBtn.style.display = 'inline-flex'; // Make the button visible
+            nativeShareBtn.style.display = 'inline-flex';
             nativeShareBtn.addEventListener('click', async () => {
                 try {
                     await navigator.share({
@@ -1123,6 +1123,7 @@ Share this on social media
                 });
                 localStorage.removeItem('pocketWarningHidden');
                 localStorage.removeItem('couponHiddenUntil');
+                localStorage.removeItem('syncPromoHiddenUntil'); // Also reset the new promo
                 alert('All settings have been reset. The page will now reload.');
                 location.reload();
             }
@@ -1132,10 +1133,10 @@ Share this on social media
         const couponBlock = document.querySelector('.coupon-code');
         const hideCouponBtn = document.getElementById('hide-coupon-btn');
         const couponHiddenKey = 'couponHiddenUntil';
-        const hideUntil = localStorage.getItem(couponHiddenKey);
-        if (hideUntil && new Date().getTime() < parseInt(hideUntil, 10)) {
+        const hideUntilCoupon = localStorage.getItem(couponHiddenKey);
+        if (hideUntilCoupon && new Date().getTime() < parseInt(hideUntilCoupon, 10)) {
             couponBlock.style.display = 'none';
-        } else if (hideUntil) {
+        } else if (hideUntilCoupon) {
             localStorage.removeItem(couponHiddenKey);
         }
         hideCouponBtn.addEventListener('click', () => {
@@ -1156,6 +1157,25 @@ Share this on social media
             pocketWarningBlock.style.display = 'none';
             localStorage.setItem(pocketWarningHiddenKey, 'true');
         });
+
+        // --- Sync Promo Close Logic ---
+        const syncPromoBlock = document.getElementById('sync-promo-main');
+        const hideSyncPromoBtn = document.getElementById('hide-sync-promo-btn');
+        const syncPromoHiddenKey = 'syncPromoHiddenUntil';
+        if (syncPromoBlock && hideSyncPromoBtn) {
+            const hideUntilSync = localStorage.getItem(syncPromoHiddenKey);
+            if (hideUntilSync && new Date().getTime() < parseInt(hideUntilSync, 10)) {
+                syncPromoBlock.style.display = 'none';
+            } else if (hideUntilSync) {
+                localStorage.removeItem(syncPromoHiddenKey);
+            }
+            hideSyncPromoBtn.addEventListener('click', () => {
+                const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
+                const expirationTime = new Date().getTime() + twoWeeksInMs;
+                localStorage.setItem(syncPromoHiddenKey, expirationTime.toString());
+                syncPromoBlock.style.display = 'none';
+            });
+        }
 
         // --- Initial Page Setup ---
         document.getElementById('mastodon-instance').value = settings.mastodonInstance;
