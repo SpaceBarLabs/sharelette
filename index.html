@@ -209,6 +209,26 @@
             font-weight: 500;
         }
         
+        /* New class for the Sync promo callout */
+        .sync-promo-callout {
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin: 0.5rem 0 1rem 0;
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .sync-promo-callout a {
+            color: #0369a1;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .sync-promo-callout a:hover {
+            text-decoration: underline;
+        }
+
         .quick-share-explainer {
             font-size: 0.9rem;
             color: var(--text-secondary);
@@ -409,8 +429,11 @@
         </button>
         
         <h3>Quick Share</h3>
+        <div class="sync-promo-callout">
+            Want to sync your settings & contacts across devices? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync!</a>
+        </div>
         <div class="action-links" id="quick-share-links">
-            </div>
+        </div>
 
         <h3>Save for Later</h3>
         <div class="action-links">
@@ -514,6 +537,9 @@
             
             <h4>Manage Settings File</h4>
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">This can be used to back up your settings or share them across different browsers and devices.</p>
+            <div class="sync-promo-callout">
+                Tired of importing/exporting? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync</a> for automatic backups & cross-device syncing.
+            </div>
             <div class="settings-io-buttons">
                 <button type="button" class="btn btn-secondary" id="export-settings-btn" style="width: 50%;">Export</button>
                 <button type="button" class="btn btn-secondary" id="import-settings-btn" style="width: 50%;">Import</button>
@@ -569,489 +595,110 @@
       </div>
     </footer>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // --- PWA Install Prompt Logic ---
-    let deferredPrompt;
-    const installContainer = document.getElementById('install-container');
-    const installButton = document.getElementById('install-pwa-btn');
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- PWA Install Prompt Logic ---
+        let deferredPrompt;
+        const installContainer = document.getElementById('install-container');
+        const installButton = document.getElementById('install-pwa-btn');
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        if (installContainer) {
-            installContainer.style.display = 'block';
-        }
-    });
-
-    if (installButton) {
-        installButton.addEventListener('click', async () => {
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
             if (installContainer) {
-                installContainer.style.display = 'none';
-            }
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response to the install prompt: ${outcome}`);
-                deferredPrompt = null;
+                installContainer.style.display = 'block';
             }
         });
-    }
 
-    // --- PWA Service Worker Registration ---
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').then(registration => {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            }).catch(err => {
-                console.log('ServiceWorker registration failed: ', err);
-            });
-        });
-    }
-    
-    // --- The rest of the page logic ---
-    function copyTextToClipboard(text) {
-        return new Promise((resolve, reject) => {
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text).then(resolve).catch(reject);
-            } else {
-                try {
-                    const textArea = document.createElement("textarea");
-                    textArea.value = text;
-                    textArea.style.position = 'fixed';
-                    textArea.style.top = '-9999px';
-                    textArea.style.left = '-9999px';
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    const successful = document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    if (successful) resolve();
-                    else reject(new Error('Copy command failed.'));
-                } catch (err) {
-                    reject(err);
+        if (installButton) {
+            installButton.addEventListener('click', async () => {
+                if (installContainer) {
+                    installContainer.style.display = 'none';
                 }
-            }
-        });
-    }
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    deferredPrompt = null;
+                }
+            });
+        }
 
-    function formatPhoneNumberE164(phone) {
-        let digits = phone.replace(/\D/g, '');
-        if (digits.length === 11 && digits.startsWith('1')) {
+        // --- PWA Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+        
+        // --- The rest of the page logic ---
+        function copyTextToClipboard(text) {
+            return new Promise((resolve, reject) => {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(resolve).catch(reject);
+                } else {
+                    try {
+                        const textArea = document.createElement("textarea");
+                        textArea.value = text;
+                        textArea.style.position = 'fixed';
+                        textArea.style.top = '-9999px';
+                        textArea.style.left = '-9999px';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        const successful = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        if (successful) resolve();
+                        else reject(new Error('Copy command failed.'));
+                    } catch (err) {
+                        reject(err);
+                    }
+                }
+            });
+        }
+
+        function formatPhoneNumberE164(phone) {
+            let digits = phone.replace(/\D/g, '');
+            if (digits.length === 11 && digits.startsWith('1')) {
+                return `+${digits}`;
+            }
+            if (digits.length === 10) {
+                return `+1${digits}`;
+            }
             return `+${digits}`;
         }
-        if (digits.length === 10) {
-            return `+1${digits}`;
-        }
-        return `+${digits}`;
-    }
 
-    const defaults = {
-        url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette',
-        text: 'Check out CloudBreak!',
-        mastodonInstance: 'mastodon.social',
-        lemmyInstance: 'lemmy.world',
-        wallabagInstance: 'wallabag.cloudbreak.app',
-        visibleShareButtons: [
-            'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
-            'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
-            'email-share', 'sms-share', 'pocket-save', 'instapaper-save', 'wallabag-save',
-            'raindrop-save', 'feedbin-save'
-        ],
-        customShareButtons: [],
-        quickShareContacts: []
-    };
+        const defaults = {
+            url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette',
+            text: 'Check out CloudBreak!',
+            mastodonInstance: 'mastodon.social',
+            lemmyInstance: 'lemmy.world',
+            wallabagInstance: 'wallabag.cloudbreak.app',
+            visibleShareButtons: [
+                'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
+                'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
+                'email-share', 'sms-share', 'pocket-save', 'instapaper-save', 'wallabag-save',
+                'raindrop-save', 'feedbin-save'
+            ],
+            customShareButtons: [],
+            quickShareContacts: []
+        };
 
-    const getSetting = (key) => {
-        const saved = localStorage.getItem(key);
-        if (saved === null) return defaults[key];
-        try { return JSON.parse(saved); } catch (e) { return saved; }
-    };
+        const getSetting = (key) => {
+            const saved = localStorage.getItem(key);
+            if (saved === null) return defaults[key];
+            try { return JSON.parse(saved); } catch (e) { return saved; }
+        };
 
-    const setSetting = (key, value) => {
-        localStorage.setItem(key, JSON.stringify(value));
-    };
+        const setSetting = (key, value) => {
+            localStorage.setItem(key, JSON.stringify(value));
+        };
 
-    let settings = {
-        mastodonInstance: getSetting('mastodonInstance'),
-        lemmyInstance: getSetting('lemmyInstance'),
-        wallabagInstance: getSetting('wallabagInstance'),
-        visibleShareButtons: getSetting('visibleShareButtons'),
-        customShareButtons: getSetting('customShareButtons'),
-        quickShareContacts: getSetting('quickShareContacts')
-    };
-    
-    const params = new URLSearchParams(window.location.search);
-    const sharedUrlParam = params.get('url');
-    const sharedTitleParam = params.get('title');
-    const sharedTextParam = params.get('text');
-
-    let finalUrl = defaults.url;
-    let finalText = defaults.text;
-
-    const isUrl = (str) => {
-        if (!str) return false;
-        return str.startsWith('http://') || str.startsWith('https://');
-    };
-
-    if (isUrl(sharedUrlParam)) {
-        finalUrl = sharedUrlParam;
-    } else if (isUrl(sharedTextParam)) {
-        finalUrl = sharedTextParam;
-    }
-
-    if (sharedTitleParam) {
-        finalText = sharedTitleParam;
-    } else if (sharedTextParam && finalUrl !== sharedTextParam) {
-        finalText = sharedTextParam;
-    }
-
-    const url = finalUrl;
-    const text = finalText;
-
-    // --- [FIX START] Native Share Button Logic ---
-    const nativeShareBtn = document.getElementById('native-share');
-    if (navigator.share) {
-        nativeShareBtn.style.display = 'inline-flex'; // Make the button visible
-        nativeShareBtn.addEventListener('click', async () => {
-            try {
-                await navigator.share({
-                    title: text,
-                    text: text,
-                    url: url,
-                });
-                console.log("Content shared successfully!");
-            } catch (error) {
-                // This error typically means the user canceled the share action.
-                // It's safe to ignore in most cases.
-                console.log("Error sharing:", error);
-            }
-        });
-    }
-    // --- [FIX END] Native Share Button Logic ---
-
-    const allShareButtons = Array.from(document.querySelectorAll('.action-links > .action-item'));
-    const shareVisibilityGroup = document.getElementById('share-visibility-group');
-
-    const renderShareVisibilityCheckboxes = () => {
-        shareVisibilityGroup.innerHTML = '';
-        allShareButtons.forEach(btn => {
-            if (!btn.id) return;
-            const label = document.createElement('label');
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.className = 'share-toggle';
-            checkbox.value = btn.id;
-            checkbox.checked = settings.visibleShareButtons.includes(btn.id);
-            label.appendChild(checkbox);
-            label.append(` ${btn.textContent}`);
-            shareVisibilityGroup.appendChild(label);
-        });
-    };
-
-    const applyShareVisibility = () => {
-        allShareButtons.forEach(btn => {
-            if (btn.id) {
-                btn.style.display = settings.visibleShareButtons.includes(btn.id) ? 'inline-flex' : 'none';
-            }
-        });
-    };
-
-    const renderCustomShareButtons = () => {
-        document.querySelectorAll('.custom-share-btn').forEach(btn => btn.remove());
-        const actionLinksContainer = document.querySelector('h3:nth-of-type(2) + .action-links');
-        settings.customShareButtons.forEach((customBtn, index) => {
-            const btn = document.createElement('a');
-            btn.className = 'action-item custom-share-btn';
-            btn.textContent = customBtn.name;
-            btn.target = '_blank';
-            btn.dataset.index = index;
-            actionLinksContainer.appendChild(btn);
-        });
-        updateShareLinks(); 
-    };
-
-    const renderQuickShareButtons = () => {
-        const quickShareContainer = document.getElementById('quick-share-links');
-        quickShareContainer.innerHTML = '';
-
-        if (settings.quickShareContacts.length === 0) {
-            quickShareContainer.innerHTML = `<p class="quick-share-explainer">No contacts yet. Add people in "Personal Settings" to get started.</p>`;
-            return;
-        }
-
-        settings.quickShareContacts.forEach((person, index) => {
-            const btn = document.createElement('a');
-            btn.className = `action-item ${person.type}`;
-            const typeLabel = person.type === 'sms' ? 'SMS' : 'Email';
-            btn.textContent = `${person.name} (${typeLabel})`;
-            btn.dataset.index = index;
-            quickShareContainer.appendChild(btn);
-        });
-        updateQuickShareLinks(); 
-    };
-    
-    const updateQuickShareLinks = () => {
-        const encodedUrl = encodeURIComponent(url);
-        const encodedText = encodeURIComponent(text);
-        const quickShareContainer = document.getElementById('quick-share-links');
-        
-        settings.quickShareContacts.forEach((person, index) => {
-            const btn = quickShareContainer.querySelector(`a[data-index="${index}"]`);
-            if (btn) {
-                if (person.type === 'email') {
-                    btn.href = `mailto:${person.contact}?subject=${encodedText}&body=${text}%20${url}`;
-                } else if (person.type === 'sms') {
-                    btn.href = `sms:${person.contact}?body=${encodedText}%20${encodedUrl}`;
-                }
-            }
-        });
-    };
-
-    const updateShareLinks = () => {
-        const encodedUrl = encodeURIComponent(url);
-        const encodedText = encodeURIComponent(text);
-        document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-        document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
-        document.getElementById('bluesky-share').href = `https://bsky.app/intent/compose?text=${encodedText} ${encodedUrl}`;
-        document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
-        document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
-        document.getElementById('mastodon-share').href = `https://${settings.mastodonInstance}/share?text=${encodedText}%20${encodedUrl}`;
-        document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
-        document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
-        document.getElementById('sms-share').href = `sms:?body=${encodedText}%20${encodedUrl}`;
-        document.getElementById('pocket-save').href = `https://getpocket.com/save?url=${encodedUrl}&title=${encodedText}`;
-        document.getElementById('instapaper-save').href = `https://www.instapaper.com/hello2?url=${encodedUrl}&title=${encodedText}`;
-        document.getElementById('wallabag-save').href = `https://${settings.wallabagInstance}/bookmarklet?url=${encodedUrl}`;
-        document.getElementById('raindrop-save').href = `https://app.raindrop.io/add?link=${encodedUrl}&title=${encodedText}`;
-        document.getElementById('feedbin-save').href = `https://feedbin.com/pages/new?url=${encodedUrl}`;
-        document.querySelectorAll('.custom-share-btn').forEach(btn => {
-            const index = parseInt(btn.dataset.index, 10);
-            const customBtnData = settings.customShareButtons[index];
-            if (customBtnData) {
-                btn.href = customBtnData.url.replace(/%URL%/g, encodedUrl).replace(/%TEXT%/g, encodedText);
-            }
-        });
-        updateQuickShareLinks();
-        applyShareVisibility();
-    };
-
-    const updatePreview = () => {
-        document.getElementById('textContent').textContent = text;
-        document.getElementById('urlContent').textContent = url;
-        document.getElementById('url-link').href = url;
-        try {
-            const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
-            document.getElementById('urlHostname').textContent = new URL(fullUrl).hostname;
-        } catch (e) {
-            document.getElementById('urlHostname').textContent = 'Invalid URL';
-        }
-    };
-
-    const updateBookmarklet = () => {
-        const bookmarkletLink = document.getElementById('sharelette-bookmarklet');
-        if (bookmarkletLink) {
-            const appUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-            const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)`;
-            bookmarkletLink.href = script;
-        }
-    };
-
-    const settingsToggleBtn = document.getElementById('settings-toggle-btn');
-    const settingsPanel = document.getElementById('settings-panel');
-    settingsToggleBtn.addEventListener('click', () => {
-        settingsPanel.classList.toggle('is-visible');
-    });
-    
-    document.getElementById('settings-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const mastodonInput = document.getElementById('mastodon-instance');
-        const lemmyInput = document.getElementById('lemmy-instance');
-        const wallabagInput = document.getElementById('wallabag-instance');
-
-        settings.mastodonInstance = mastodonInput.value.trim() || defaults.mastodonInstance;
-        settings.lemmyInstance = lemmyInput.value.trim() || defaults.lemmyInstance;
-        settings.wallabagInstance = wallabagInput.value.trim() || defaults.wallabagInstance;
-
-        localStorage.setItem('mastodonInstance', settings.mastodonInstance);
-        localStorage.setItem('lemmyInstance', settings.lemmyInstance);
-        localStorage.setItem('wallabagInstance', settings.wallabagInstance);
-
-        const visibleButtons = Array.from(document.querySelectorAll('.share-toggle:checked')).map(cb => cb.value);
-        settings.visibleShareButtons = visibleButtons;
-        setSetting('visibleShareButtons', settings.visibleShareButtons);
-
-        alert('Settings saved!');
-        updateShareLinks();
-        settingsPanel.classList.remove('is-visible');
-    });
-    
-    const customShareList = document.getElementById('custom-share-list');
-    const renderCustomShareList = () => {
-        customShareList.innerHTML = '';
-        settings.customShareButtons.forEach((btn, index) => {
-            const item = document.createElement('div');
-            item.className = 'custom-share-item';
-            item.innerHTML = `<span><strong>${btn.name}:</strong> ${btn.url}</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
-            customShareList.appendChild(item);
-        });
-    };
-
-    customShareList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-custom-btn')) {
-            const index = parseInt(e.target.dataset.index, 10);
-            settings.customShareButtons.splice(index, 1);
-            setSetting('customShareButtons', settings.customShareButtons);
-            renderCustomShareList();
-            renderCustomShareButtons();
-        }
-    });
-
-    document.getElementById('custom-share-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const nameInput = document.getElementById('custom-name');
-        const urlInput = document.getElementById('custom-url');
-        const name = nameInput.value.trim();
-        const url = urlInput.value.trim();
-        if (name && url && (url.includes('%URL%') || url.includes('%TEXT%'))) {
-            settings.customShareButtons.push({ name, url });
-            setSetting('customShareButtons', settings.customShareButtons);
-            renderCustomShareList();
-            renderCustomShareButtons();
-            nameInput.value = '';
-            urlInput.value = '';
-        } else {
-            alert('Please provide a name and a URL template containing %URL% or %TEXT%.');
-        }
-    });
-
-    const quickShareList = document.getElementById('quick-share-list');
-    const renderQuickShareList = () => {
-        quickShareList.innerHTML = '';
-        settings.quickShareContacts.forEach((person, index) => {
-            const item = document.createElement('div');
-            item.className = 'custom-share-item';
-            item.innerHTML = `<span><strong>${person.name}:</strong> ${person.contact} (${person.type})</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
-            quickShareList.appendChild(item);
-        });
-    };
-
-    quickShareList.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove-custom-btn')) {
-            const index = parseInt(e.target.dataset.index, 10);
-            settings.quickShareContacts.splice(index, 1);
-            setSetting('quickShareContacts', settings.quickShareContacts);
-            renderQuickShareList();
-            renderQuickShareButtons();
-        }
-    });
-
-    document.getElementById('quick-share-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const nameInput = document.getElementById('quick-share-name');
-        const contactInput = document.getElementById('quick-share-contact');
-        const typeInput = document.getElementById('quick-share-type');
-        
-        const name = nameInput.value.trim();
-        let contact = contactInput.value.trim();
-        const type = typeInput.value;
-
-        if (name && contact) {
-            if (type === 'sms') {
-                contact = formatPhoneNumberE164(contact);
-            }
-            settings.quickShareContacts.push({ name, contact, type });
-            setSetting('quickShareContacts', settings.quickShareContacts);
-            renderQuickShareList();
-            renderQuickShareButtons();
-            nameInput.value = '';
-            contactInput.value = '';
-            typeInput.value = 'email';
-        } else {
-            alert('Please provide a name and contact information.');
-        }
-    });
-
-    document.getElementById('link-generator-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        document.getElementById('generate-link-btn').click();
-    });
-
-    const copyBtn = document.getElementById('copy-btn');
-    copyBtn.addEventListener('click', () => {
-        const combinedText = `${text}\n${url}`;
-        const textHolder = copyBtn.querySelector('span');
-        const originalText = textHolder.textContent;
-        copyTextToClipboard(combinedText).then(() => {
-            textHolder.textContent = 'Copied!';
-            setTimeout(() => { textHolder.textContent = originalText; }, 2000);
-        }).catch(err => console.error('Failed to copy: ', err));
-    });
-
-    const discordBtn = document.getElementById('discord-share');
-    discordBtn.addEventListener('click', () => {
-        const combinedText = `${text}\n${url}`;
-        const originalText = discordBtn.textContent;
-        copyTextToClipboard(combinedText).then(() => {
-            discordBtn.textContent = 'Copied!';
-            setTimeout(() => { discordBtn.textContent = originalText; }, 2000);
-        }).catch(err => console.error('Failed to copy for Discord: ', err));
-    });
-    
-    const setupCopyButton = (buttonId, getText, feedback) => {
-        const button = document.getElementById(buttonId);
-        if (!button) return;
-        const originalText = button.textContent;
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            copyTextToClipboard(getText()).then(() => {
-                button.textContent = feedback;
-                setTimeout(() => { button.textContent = originalText; }, 2000);
-            }).catch(err => console.error(`Failed to copy for button #${buttonId}: `, err));
-        });
-    };
-    setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
-    setupCopyButton('copy-generated-link-btn', () => document.getElementById('generated-link-output').value, 'Copied!');
-    
-    const generateBtn = document.getElementById('generate-link-btn');
-    generateBtn.addEventListener('click', () => {
-        const urlToShare = document.getElementById('input-url').value;
-        const textToShare = document.getElementById('input-text').value;
-        if (!urlToShare) { alert('Please enter a URL to share.'); return; }
-        const finalLink = `${window.location.protocol}//${window.location.host}${window.location.pathname}?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(textToShare)}`;
-        
-        document.getElementById('generated-link-output').value = finalLink;
-        document.getElementById('output-area').style.display = 'block';
-
-        const codeSampleEl = document.getElementById('html-code-sample');
-        const escapedLink = finalLink.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        codeSampleEl.innerHTML = `&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"${escapedLink}"</span>&gt;
-Share this on social media
-&lt;/<span class="code-tag">a</span>&gt;`;
-        document.getElementById('code-preview-wrapper').style.display = 'block';
-
-        const qrcodeOutput = document.getElementById('qrcode-output');
-        const qrcodeContainer = document.getElementById('qrcode-container');
-        const qrcodeDownload = document.getElementById('qrcode-download');
-        qrcodeContainer.innerHTML = '';
-        qrcodeOutput.style.display = 'none';
-        try {
-            new QRCode(qrcodeContainer, { text: finalLink, width: 128, height: 128, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
-            setTimeout(() => {
-                const canvas = qrcodeContainer.querySelector('canvas');
-                if (canvas) {
-                    qrcodeDownload.href = canvas.toDataURL("image/png");
-                    qrcodeOutput.style.display = 'block';
-                }
-            }, 100);
-        } catch (e) {
-            console.error("QR Code generation failed:", e);
-        }
-
-    });
-    
-    document.getElementById('export-settings-btn').addEventListener('click', () => {
-        const settingsToExport = {
+        let settings = {
             mastodonInstance: getSetting('mastodonInstance'),
             lemmyInstance: getSetting('lemmyInstance'),
             wallabagInstance: getSetting('wallabagInstance'),
@@ -1059,93 +706,468 @@ Share this on social media
             customShareButtons: getSetting('customShareButtons'),
             quickShareContacts: getSetting('quickShareContacts')
         };
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settingsToExport, null, 2));
-        const downloadAnchorNode = document.createElement('a');
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "sharelette-settings.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-    });
-    
-    const importFileInput = document.getElementById('import-file-input');
-    document.getElementById('import-settings-btn').addEventListener('click', () => importFileInput.click());
-    importFileInput.addEventListener('change', (event) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const importedSettings = JSON.parse(e.target.result);
-                const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
-                if (!requiredKeys.every(key => key in importedSettings)) throw new Error("File is missing required settings keys.");
-                requiredKeys.forEach(key => {
-                    if(importedSettings[key] !== null && importedSettings[key] !== undefined) {
-                        setSetting(key, importedSettings[key]);
-                    }
-                });
-                alert('Settings imported successfully! The page will now reload.');
-                location.reload();
-            } catch (err) {
-                alert(`Failed to import settings: ${err.message}`);
-            }
+        
+        const params = new URLSearchParams(window.location.search);
+        const sharedUrlParam = params.get('url');
+        const sharedTitleParam = params.get('title');
+        const sharedTextParam = params.get('text');
+
+        let finalUrl = defaults.url;
+        let finalText = defaults.text;
+
+        const isUrl = (str) => {
+            if (!str) return false;
+            return str.startsWith('http://') || str.startsWith('https://');
         };
-        reader.readAsText(event.target.files[0]);
-    });
-    
-    document.getElementById('reset-settings-btn').addEventListener('click', () => {
-        if (confirm('Are you sure you want to reset all settings? This action cannot be undone.')) {
-            Object.keys(defaults).forEach(key => {
-                if (key !== 'url' && key !== 'text') {
-                    localStorage.removeItem(key);
+
+        if (isUrl(sharedUrlParam)) {
+            finalUrl = sharedUrlParam;
+        } else if (isUrl(sharedTextParam)) {
+            finalUrl = sharedTextParam;
+        }
+
+        if (sharedTitleParam) {
+            finalText = sharedTitleParam;
+        } else if (sharedTextParam && finalUrl !== sharedTextParam) {
+            finalText = sharedTextParam;
+        }
+
+        const url = finalUrl;
+        const text = finalText;
+
+        // --- Native Share Button Logic ---
+        const nativeShareBtn = document.getElementById('native-share');
+        if (navigator.share) {
+            nativeShareBtn.style.display = 'inline-flex'; // Make the button visible
+            nativeShareBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.share({
+                        title: text,
+                        text: text,
+                        url: url,
+                    });
+                    console.log("Content shared successfully!");
+                } catch (error) {
+                    console.log("Error sharing:", error);
                 }
             });
-            localStorage.removeItem('pocketWarningHidden');
-            localStorage.removeItem('couponHiddenUntil');
-            alert('All settings have been reset. The page will now reload.');
-            location.reload();
         }
-    });
 
-    // --- Coupon Banner Logic ---
-    const couponBlock = document.querySelector('.coupon-code');
-    const hideCouponBtn = document.getElementById('hide-coupon-btn');
-    const couponHiddenKey = 'couponHiddenUntil';
-    const hideUntil = localStorage.getItem(couponHiddenKey);
-    if (hideUntil && new Date().getTime() < parseInt(hideUntil, 10)) {
-        couponBlock.style.display = 'none';
-    } else if (hideUntil) {
-        localStorage.removeItem(couponHiddenKey);
-    }
-    hideCouponBtn.addEventListener('click', () => {
-        const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
-        const expirationTime = new Date().getTime() + twoWeeksInMs;
-        localStorage.setItem(couponHiddenKey, expirationTime.toString());
-        couponBlock.style.display = 'none';
-    });
+        const allShareButtons = Array.from(document.querySelectorAll('.action-links > .action-item'));
+        const shareVisibilityGroup = document.getElementById('share-visibility-group');
 
-    // --- Pocket Warning Close Logic ---
-    const pocketWarningBlock = document.querySelector('.callout-warning');
-    const hidePocketWarningBtn = document.getElementById('hide-pocket-warning-btn');
-    const pocketWarningHiddenKey = 'pocketWarningHidden';
-    if (localStorage.getItem(pocketWarningHiddenKey)) {
-        pocketWarningBlock.style.display = 'none';
-    }
-    hidePocketWarningBtn.addEventListener('click', () => {
-        pocketWarningBlock.style.display = 'none';
-        localStorage.setItem(pocketWarningHiddenKey, 'true');
-    });
+        const renderShareVisibilityCheckboxes = () => {
+            shareVisibilityGroup.innerHTML = '';
+            allShareButtons.forEach(btn => {
+                if (!btn.id) return;
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'share-toggle';
+                checkbox.value = btn.id;
+                checkbox.checked = settings.visibleShareButtons.includes(btn.id);
+                label.appendChild(checkbox);
+                label.append(` ${btn.textContent}`);
+                shareVisibilityGroup.appendChild(label);
+            });
+        };
 
-    // --- Initial Page Setup ---
-    document.getElementById('mastodon-instance').value = settings.mastodonInstance;
-    document.getElementById('lemmy-instance').value = settings.lemmyInstance;
-    document.getElementById('wallabag-instance').value = settings.wallabagInstance;
-    updatePreview();
-    renderShareVisibilityCheckboxes();
-    renderCustomShareList();
-    renderCustomShareButtons();
-    renderQuickShareList();
-    renderQuickShareButtons();
-    updateBookmarklet();
-});
-</script>
+        const applyShareVisibility = () => {
+            allShareButtons.forEach(btn => {
+                if (btn.id) {
+                    btn.style.display = settings.visibleShareButtons.includes(btn.id) ? 'inline-flex' : 'none';
+                }
+            });
+        };
+
+        const renderCustomShareButtons = () => {
+            document.querySelectorAll('.custom-share-btn').forEach(btn => btn.remove());
+            const actionLinksContainer = document.querySelector('h3:nth-of-type(2) + .action-links');
+            settings.customShareButtons.forEach((customBtn, index) => {
+                const btn = document.createElement('a');
+                btn.className = 'action-item custom-share-btn';
+                btn.textContent = customBtn.name;
+                btn.target = '_blank';
+                btn.dataset.index = index;
+                actionLinksContainer.appendChild(btn);
+            });
+            updateShareLinks(); 
+        };
+
+        const renderQuickShareButtons = () => {
+            const quickShareContainer = document.getElementById('quick-share-links');
+            quickShareContainer.innerHTML = '';
+
+            if (settings.quickShareContacts.length === 0) {
+                quickShareContainer.innerHTML += `<p class="quick-share-explainer">No contacts yet. Add people in "Personal Settings" to get started.</p>`;
+                return;
+            }
+
+            settings.quickShareContacts.forEach((person, index) => {
+                const btn = document.createElement('a');
+                btn.className = `action-item ${person.type}`;
+                const typeLabel = person.type === 'sms' ? 'SMS' : 'Email';
+                btn.textContent = `${person.name} (${typeLabel})`;
+                btn.dataset.index = index;
+                quickShareContainer.appendChild(btn);
+            });
+            updateQuickShareLinks(); 
+        };
+        
+        const updateQuickShareLinks = () => {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+            const quickShareContainer = document.getElementById('quick-share-links');
+            
+            settings.quickShareContacts.forEach((person, index) => {
+                const btn = quickShareContainer.querySelector(`a[data-index="${index}"]`);
+                if (btn) {
+                    if (person.type === 'email') {
+                        btn.href = `mailto:${person.contact}?subject=${encodedText}&body=${text}%20${url}`;
+                    } else if (person.type === 'sms') {
+                        btn.href = `sms:${person.contact}?body=${encodedText}%20${encodedUrl}`;
+                    }
+                }
+            });
+        };
+
+        const updateShareLinks = () => {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+            document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
+            document.getElementById('bluesky-share').href = `https://bsky.app/intent/compose?text=${encodedText} ${encodedUrl}`;
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('mastodon-share').href = `https://${settings.mastodonInstance}/share?text=${encodedText}%20${encodedUrl}`;
+            document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
+            document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
+            document.getElementById('sms-share').href = `sms:?body=${encodedText}%20${encodedUrl}`;
+            document.getElementById('pocket-save').href = `https://getpocket.com/save?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('instapaper-save').href = `https://www.instapaper.com/hello2?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('wallabag-save').href = `https://${settings.wallabagInstance}/bookmarklet?url=${encodedUrl}`;
+            document.getElementById('raindrop-save').href = `https://app.raindrop.io/add?link=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('feedbin-save').href = `https://feedbin.com/pages/new?url=${encodedUrl}`;
+            document.querySelectorAll('.custom-share-btn').forEach(btn => {
+                const index = parseInt(btn.dataset.index, 10);
+                const customBtnData = settings.customShareButtons[index];
+                if (customBtnData) {
+                    btn.href = customBtnData.url.replace(/%URL%/g, encodedUrl).replace(/%TEXT%/g, encodedText);
+                }
+            });
+            updateQuickShareLinks();
+            applyShareVisibility();
+        };
+
+        const updatePreview = () => {
+            document.getElementById('textContent').textContent = text;
+            document.getElementById('urlContent').textContent = url;
+            document.getElementById('url-link').href = url;
+            try {
+                const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+                document.getElementById('urlHostname').textContent = new URL(fullUrl).hostname;
+            } catch (e) {
+                document.getElementById('urlHostname').textContent = 'Invalid URL';
+            }
+        };
+
+        const updateBookmarklet = () => {
+            const bookmarkletLink = document.getElementById('sharelette-bookmarklet');
+            if (bookmarkletLink) {
+                const appUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+                const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)`;
+                bookmarkletLink.href = script;
+            }
+        };
+
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        settingsToggleBtn.addEventListener('click', () => {
+            settingsPanel.classList.toggle('is-visible');
+        });
+        
+        document.getElementById('settings-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const mastodonInput = document.getElementById('mastodon-instance');
+            const lemmyInput = document.getElementById('lemmy-instance');
+            const wallabagInput = document.getElementById('wallabag-instance');
+
+            settings.mastodonInstance = mastodonInput.value.trim() || defaults.mastodonInstance;
+            settings.lemmyInstance = lemmyInput.value.trim() || defaults.lemmyInstance;
+            settings.wallabagInstance = wallabagInput.value.trim() || defaults.wallabagInstance;
+
+            localStorage.setItem('mastodonInstance', settings.mastodonInstance);
+            localStorage.setItem('lemmyInstance', settings.lemmyInstance);
+            localStorage.setItem('wallabagInstance', settings.wallabagInstance);
+
+            const visibleButtons = Array.from(document.querySelectorAll('.share-toggle:checked')).map(cb => cb.value);
+            settings.visibleShareButtons = visibleButtons;
+            setSetting('visibleShareButtons', settings.visibleShareButtons);
+
+            alert('Settings saved!');
+            updateShareLinks();
+            settingsPanel.classList.remove('is-visible');
+        });
+        
+        const customShareList = document.getElementById('custom-share-list');
+        const renderCustomShareList = () => {
+            customShareList.innerHTML = '';
+            settings.customShareButtons.forEach((btn, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-share-item';
+                item.innerHTML = `<span><strong>${btn.name}:</strong> ${btn.url}</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
+                customShareList.appendChild(item);
+            });
+        };
+
+        customShareList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-custom-btn')) {
+                const index = parseInt(e.target.dataset.index, 10);
+                settings.customShareButtons.splice(index, 1);
+                setSetting('customShareButtons', settings.customShareButtons);
+                renderCustomShareList();
+                renderCustomShareButtons();
+            }
+        });
+
+        document.getElementById('custom-share-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('custom-name');
+            const urlInput = document.getElementById('custom-url');
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+            if (name && url && (url.includes('%URL%') || url.includes('%TEXT%'))) {
+                settings.customShareButtons.push({ name, url });
+                setSetting('customShareButtons', settings.customShareButtons);
+                renderCustomShareList();
+                renderCustomShareButtons();
+                nameInput.value = '';
+                urlInput.value = '';
+            } else {
+                alert('Please provide a name and a URL template containing %URL% or %TEXT%.');
+            }
+        });
+
+        const quickShareList = document.getElementById('quick-share-list');
+        const renderQuickShareList = () => {
+            quickShareList.innerHTML = '';
+            settings.quickShareContacts.forEach((person, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-share-item';
+                item.innerHTML = `<span><strong>${person.name}:</strong> ${person.contact} (${person.type})</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
+                quickShareList.appendChild(item);
+            });
+        };
+
+        quickShareList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-custom-btn')) {
+                const index = parseInt(e.target.dataset.index, 10);
+                settings.quickShareContacts.splice(index, 1);
+                setSetting('quickShareContacts', settings.quickShareContacts);
+                renderQuickShareList();
+                renderQuickShareButtons();
+            }
+        });
+
+        document.getElementById('quick-share-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('quick-share-name');
+            const contactInput = document.getElementById('quick-share-contact');
+            const typeInput = document.getElementById('quick-share-type');
+            
+            const name = nameInput.value.trim();
+            let contact = contactInput.value.trim();
+            const type = typeInput.value;
+
+            if (name && contact) {
+                if (type === 'sms') {
+                    contact = formatPhoneNumberE164(contact);
+                }
+                settings.quickShareContacts.push({ name, contact, type });
+                setSetting('quickShareContacts', settings.quickShareContacts);
+                renderQuickShareList();
+                renderQuickShareButtons();
+                nameInput.value = '';
+                contactInput.value = '';
+                typeInput.value = 'email';
+            } else {
+                alert('Please provide a name and contact information.');
+            }
+        });
+
+        document.getElementById('link-generator-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('generate-link-btn').click();
+        });
+
+        const copyBtn = document.getElementById('copy-btn');
+        copyBtn.addEventListener('click', () => {
+            const combinedText = `${text}\n${url}`;
+            const textHolder = copyBtn.querySelector('span');
+            const originalText = textHolder.textContent;
+            copyTextToClipboard(combinedText).then(() => {
+                textHolder.textContent = 'Copied!';
+                setTimeout(() => { textHolder.textContent = originalText; }, 2000);
+            }).catch(err => console.error('Failed to copy: ', err));
+        });
+
+        const discordBtn = document.getElementById('discord-share');
+        discordBtn.addEventListener('click', () => {
+            const combinedText = `${text}\n${url}`;
+            const originalText = discordBtn.textContent;
+            copyTextToClipboard(combinedText).then(() => {
+                discordBtn.textContent = 'Copied!';
+                setTimeout(() => { discordBtn.textContent = originalText; }, 2000);
+            }).catch(err => console.error('Failed to copy for Discord: ', err));
+        });
+        
+        const setupCopyButton = (buttonId, getText, feedback) => {
+            const button = document.getElementById(buttonId);
+            if (!button) return;
+            const originalText = button.textContent;
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                copyTextToClipboard(getText()).then(() => {
+                    button.textContent = feedback;
+                    setTimeout(() => { button.textContent = originalText; }, 2000);
+                }).catch(err => console.error(`Failed to copy for button #${buttonId}: `, err));
+            });
+        };
+        setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
+        setupCopyButton('copy-generated-link-btn', () => document.getElementById('generated-link-output').value, 'Copied!');
+        
+        const generateBtn = document.getElementById('generate-link-btn');
+        generateBtn.addEventListener('click', () => {
+            const urlToShare = document.getElementById('input-url').value;
+            const textToShare = document.getElementById('input-text').value;
+            if (!urlToShare) { alert('Please enter a URL to share.'); return; }
+            const finalLink = `${window.location.protocol}//${window.location.host}${window.location.pathname}?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(textToShare)}`;
+            
+            document.getElementById('generated-link-output').value = finalLink;
+            document.getElementById('output-area').style.display = 'block';
+
+            const codeSampleEl = document.getElementById('html-code-sample');
+            const escapedLink = finalLink.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            codeSampleEl.innerHTML = `&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"${escapedLink}"</span>&gt;
+Share this on social media
+&lt;/<span class="code-tag">a</span>&gt;`;
+            document.getElementById('code-preview-wrapper').style.display = 'block';
+
+            const qrcodeOutput = document.getElementById('qrcode-output');
+            const qrcodeContainer = document.getElementById('qrcode-container');
+            const qrcodeDownload = document.getElementById('qrcode-download');
+            qrcodeContainer.innerHTML = '';
+            qrcodeOutput.style.display = 'none';
+            try {
+                new QRCode(qrcodeContainer, { text: finalLink, width: 128, height: 128, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+                setTimeout(() => {
+                    const canvas = qrcodeContainer.querySelector('canvas');
+                    if (canvas) {
+                        qrcodeDownload.href = canvas.toDataURL("image/png");
+                        qrcodeOutput.style.display = 'block';
+                    }
+                }, 100);
+            } catch (e) {
+                console.error("QR Code generation failed:", e);
+            }
+
+        });
+        
+        document.getElementById('export-settings-btn').addEventListener('click', () => {
+            const settingsToExport = {
+                mastodonInstance: getSetting('mastodonInstance'),
+                lemmyInstance: getSetting('lemmyInstance'),
+                wallabagInstance: getSetting('wallabagInstance'),
+                visibleShareButtons: getSetting('visibleShareButtons'),
+                customShareButtons: getSetting('customShareButtons'),
+                quickShareContacts: getSetting('quickShareContacts')
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settingsToExport, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "sharelette-settings.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
+        
+        const importFileInput = document.getElementById('import-file-input');
+        document.getElementById('import-settings-btn').addEventListener('click', () => importFileInput.click());
+        importFileInput.addEventListener('change', (event) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedSettings = JSON.parse(e.target.result);
+                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
+                    if (!requiredKeys.every(key => key in importedSettings)) throw new Error("File is missing required settings keys.");
+                    requiredKeys.forEach(key => {
+                        if(importedSettings[key] !== null && importedSettings[key] !== undefined) {
+                            setSetting(key, importedSettings[key]);
+                        }
+                    });
+                    alert('Settings imported successfully! The page will now reload.');
+                    location.reload();
+                } catch (err) {
+                    alert(`Failed to import settings: ${err.message}`);
+                }
+            };
+            reader.readAsText(event.target.files[0]);
+        });
+        
+        document.getElementById('reset-settings-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all settings? This action cannot be undone.')) {
+                Object.keys(defaults).forEach(key => {
+                    if (key !== 'url' && key !== 'text') {
+                        localStorage.removeItem(key);
+                    }
+                });
+                localStorage.removeItem('pocketWarningHidden');
+                localStorage.removeItem('couponHiddenUntil');
+                alert('All settings have been reset. The page will now reload.');
+                location.reload();
+            }
+        });
+
+        // --- Coupon Banner Logic ---
+        const couponBlock = document.querySelector('.coupon-code');
+        const hideCouponBtn = document.getElementById('hide-coupon-btn');
+        const couponHiddenKey = 'couponHiddenUntil';
+        const hideUntil = localStorage.getItem(couponHiddenKey);
+        if (hideUntil && new Date().getTime() < parseInt(hideUntil, 10)) {
+            couponBlock.style.display = 'none';
+        } else if (hideUntil) {
+            localStorage.removeItem(couponHiddenKey);
+        }
+        hideCouponBtn.addEventListener('click', () => {
+            const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
+            const expirationTime = new Date().getTime() + twoWeeksInMs;
+            localStorage.setItem(couponHiddenKey, expirationTime.toString());
+            couponBlock.style.display = 'none';
+        });
+
+        // --- Pocket Warning Close Logic ---
+        const pocketWarningBlock = document.querySelector('.callout-warning');
+        const hidePocketWarningBtn = document.getElementById('hide-pocket-warning-btn');
+        const pocketWarningHiddenKey = 'pocketWarningHidden';
+        if (localStorage.getItem(pocketWarningHiddenKey)) {
+            pocketWarningBlock.style.display = 'none';
+        }
+        hidePocketWarningBtn.addEventListener('click', () => {
+            pocketWarningBlock.style.display = 'none';
+            localStorage.setItem(pocketWarningHiddenKey, 'true');
+        });
+
+        // --- Initial Page Setup ---
+        document.getElementById('mastodon-instance').value = settings.mastodonInstance;
+        document.getElementById('lemmy-instance').value = settings.lemmyInstance;
+        document.getElementById('wallabag-instance').value = settings.wallabagInstance;
+        updatePreview();
+        renderShareVisibilityCheckboxes();
+        renderCustomShareList();
+        renderCustomShareButtons();
+        renderQuickShareButtons();
+        updateBookmarklet();
+    });
+    </script>
 </body>
 </html>
