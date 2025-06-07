@@ -475,7 +475,7 @@
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">
                 To share the page you're currently on, drag this link to your browser's bookmarks bar.
             </p>
-            <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move;">Drag to Bookmarks</a>
+            <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move; color: white">Drag to Bookmarks</a>
             
             <div id="install-container" style="display: none; text-align: center; margin-top: 1.5rem;">
                 <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
@@ -690,7 +690,6 @@
         
         const params = new URLSearchParams(window.location.search);
         
-        // ** THIS IS THE UPDATED LOGIC TO GET THE TITLE **
         const url = params.get('url') || defaults.url;
         const sharedTitle = params.get('title');
         const sharedText = params.get('text');
@@ -818,7 +817,6 @@
             const bookmarkletLink = document.getElementById('sharelette-bookmarklet');
             if (bookmarkletLink) {
                 const appUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-                // This script navigates the current tab to the Sharelette page
                 const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)'`;
                 bookmarkletLink.href = script;
             }
