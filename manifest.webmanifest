@@ -4,7 +4,7 @@
   "description": "A simple, powerful tool to share links across various social media and save-for-later services.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f0f2f5",
+  "background_color": "#ffffff",
   "theme_color": "#007bff",
   "icons": [
     {
@@ -22,6 +22,7 @@
     "action": "/",
     "method": "GET",
     "params": {
+      "title": "title",
       "text": "text",
       "url": "url"
     }
