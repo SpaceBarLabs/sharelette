@@ -462,6 +462,11 @@
         <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
         <div class="settings-panel" id="settings-panel">
             <form id="settings-form">
+                <h4>Visible Share Buttons</h4>
+                <div class="form-group">
+                    <div id="share-visibility-group" class="checkbox-group"></div>
+                </div>
+                
                 <h4>Personal Server Settings</h4>
                 <div class="form-group">
                     <label for="mastodon-instance">Mastodon Server</label>
@@ -474,11 +479,6 @@
                 <div class="form-group">
                     <label for="wallabag-instance">Wallabag Server</label>
                     <input type="text" id="wallabag-instance" placeholder="wallabag.cloudbreak.app">
-                </div>
-
-                <h4>Visible Share Buttons</h4>
-                <div class="form-group">
-                    <div id="share-visibility-group" class="checkbox-group"></div>
                 </div>
 
                 <button type="submit" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
@@ -889,7 +889,12 @@
         const settingsToggleBtn = document.getElementById('settings-toggle-btn');
         const settingsPanel = document.getElementById('settings-panel');
         settingsToggleBtn.addEventListener('click', () => {
-            settingsPanel.classList.toggle('is-visible');
+            const isVisible = settingsPanel.classList.toggle('is-visible');
+            if (isVisible) {
+                setTimeout(() => {
+                    settingsPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 0);
+            }
         });
         
         document.getElementById('settings-form').addEventListener('submit', (e) => {
