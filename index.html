@@ -817,7 +817,7 @@
             const bookmarkletLink = document.getElementById('sharelette-bookmarklet');
             if (bookmarkletLink) {
                 const appUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-                const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)'`;
+                const script = `javascript:document.location='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)`;
                 bookmarkletLink.href = script;
             }
         };
