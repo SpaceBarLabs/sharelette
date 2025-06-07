@@ -429,7 +429,7 @@
         </button>
         
         <h3>Quick Share</h3>
-        <div class="sync-promo-callout" id="sync-promo-main">
+        <div class="sync-promo-callout" id="sync-promo-main" style="display: none;">
             <button id="hide-sync-promo-btn" class="close-btn" aria-label="Hide sync promo">&times;</button>
             Want to sync your settings & contacts across devices? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync for just $4/year!</a>
         </div>
@@ -449,6 +449,11 @@
             <button id="hide-pocket-warning-btn" class="close-btn" aria-label="Hide Pocket warning">&times;</button>
             <strong>Pocket is shutting down on July 8th, 2025.</strong>
             You can export your data and find alternatives at <a href="https://getoffpocket.com?utm_source=sharelette&utm_medium=webapp&utm_campaign=pocket_shutdown_info" target="_blank" rel="noopener">getoffpocket.com</a>.
+        </div>
+
+        <h3>Customization</h3>
+        <div id="install-container" style="display: none; width: 100%; margin-bottom: 1rem;">
+            <button class="btn btn-primary" id="install-pwa-btn" style="width: 100%;">Install App</button>
         </div>
 
         <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
@@ -495,18 +500,11 @@
             
             <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
             
-            <h4>Bookmarklet & App Install</h4>
+            <h4>Bookmarklet</h4>
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">
                 To share the page you're currently on, drag this link to your browser's bookmarks bar.
             </p>
             <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move; color: white">Drag to Bookmarks</a>
-            
-            <div id="install-container" style="display: none; text-align: center; margin-top: 1.5rem;">
-                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                    For quick, app-like access, install Sharelette to your home screen.
-                </p>
-                <button class="btn btn-primary" id="install-pwa-btn" style="width: auto; padding: 0.6rem 1.2rem;">Install App</button>
-            </div>
             
             <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
             
@@ -538,7 +536,7 @@
             
             <h4>Manage Settings File</h4>
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">This can be used to back up your settings or share them across different browsers and devices.</p>
-            <div class="sync-promo-callout">
+            <div class="sync-promo-callout" style="padding: 0.75rem;">
                 Tired of importing/exporting? <a href="https://buy.stripe.com/cNi5kD1lLcbU0RtgIE0Ba0b" target="_blank" rel="noopener">Pre-order Sharelette Sync for just $4/year</a> for automatic backups & cross-device syncing.
             </div>
             <div class="settings-io-buttons">
@@ -1123,7 +1121,7 @@ Share this on social media
                 });
                 localStorage.removeItem('pocketWarningHidden');
                 localStorage.removeItem('couponHiddenUntil');
-                localStorage.removeItem('syncPromoHiddenUntil'); // Also reset the new promo
+                localStorage.removeItem('syncPromoHiddenUntil');
                 alert('All settings have been reset. The page will now reload.');
                 location.reload();
             }
@@ -1163,12 +1161,18 @@ Share this on social media
         const hideSyncPromoBtn = document.getElementById('hide-sync-promo-btn');
         const syncPromoHiddenKey = 'syncPromoHiddenUntil';
         if (syncPromoBlock && hideSyncPromoBtn) {
+            const hasSavedSettings = settings.quickShareContacts.length > 0 || settings.customShareButtons.length > 0;
             const hideUntilSync = localStorage.getItem(syncPromoHiddenKey);
-            if (hideUntilSync && new Date().getTime() < parseInt(hideUntilSync, 10)) {
-                syncPromoBlock.style.display = 'none';
-            } else if (hideUntilSync) {
+            const isDismissed = hideUntilSync && new Date().getTime() < parseInt(hideUntilSync, 10);
+
+            if (hasSavedSettings && !isDismissed) {
+                syncPromoBlock.style.display = 'block';
+            }
+
+            if (hideUntilSync && !isDismissed) {
                 localStorage.removeItem(syncPromoHiddenKey);
             }
+            
             hideSyncPromoBtn.addEventListener('click', () => {
                 const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
                 const expirationTime = new Date().getTime() + twoWeeksInMs;
