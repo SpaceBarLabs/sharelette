@@ -1,30 +1,1118 @@
-{
-  "name": "Sharelette",
-  "short_name": "Sharelette",
-  "description": "A simple, powerful tool to share links across various social media and save-for-later services.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007bff",
-  "icons": [
-    {
-      "src": "sharelette.jpeg",
-      "sizes": "192x192",
-      "type": "image/jpeg"
-    },
-    {
-      "src": "sharelette.jpeg",
-      "sizes": "512x512",
-      "type": "image/jpeg"
-    }
-  ],
-  "share_target": {
-    "action": "/",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharelette</title>
+    <script type="text/javascript" src="/qrcode.min.js"></script>
+    
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#007bff">
+    <link rel="apple-touch-icon" href="sharelette.jpeg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Sharelette">
+
+    <style>
+        :root {
+            --brand-blue: #007bff;
+            --code-bg: #f3f4f6;
+            --code-text: #333;
+            --border-color: #e5e7eb;
+            --text-secondary: #6b7280;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+            padding: 2rem 1rem;
+        }
+        .container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .header { margin-bottom: 0.5rem; }
+        .logo {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem auto;
+            display: block;
+        }
+        h1 { margin: 0; font-size: 2.5rem; font-weight: bold; }
+        h2 { font-size: 1.25rem; }
+        h3, h4 {
+            margin-bottom: 0.75rem;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+        h4 {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+             margin-top: 1.5rem;
+        }
+        .attribution { margin: 0.25rem 0 0 0; font-size: 0.9rem; }
+        .attribution a { color: var(--text-secondary); text-decoration: none; }
+        .attribution a:hover { text-decoration: underline; }
+        
+        .coupon-code {
+            position: relative;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.6rem 2.5rem 0.6rem 0.6rem;
+            margin-top: 1rem;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .coupon-code a {
+            color: var(--brand-blue);
+            font-weight: 500;
+        }
+        .coupon-code strong {
+            color: var(--code-text);
+        }
+        .close-btn {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.5rem;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            font-weight: bold;
+            line-height: 1;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+        }
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .preview-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            margin-top: 0;
+            text-align: left;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .preview-label {
+            color: var(--text-secondary);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        .content-preview {
+            margin-top: 1rem;
+        }
+        .preview-text {
+            margin-bottom: 0.75rem;
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+        .preview-link-card {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .preview-link-card:hover {
+            background-color: #f1f5f9;
+        }
+        .preview-link-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .preview-link-card .hostname {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .preview-link-card .url-text {
+            font-weight: bold;
+            color: var(--code-text);
+            word-break: break-all;
+        }
+
+        .action-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+        .action-item {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+            padding: 0.6rem 1.2rem; border: none; border-radius: 0.25rem;
+            font-size: 1rem; font-weight: 500; color: #fff;
+            cursor: pointer; text-decoration: none; transition: opacity 0.3s;
+        }
+        .action-item:hover { opacity: 0.9; }
+        .action-item svg { width: 1.25em; height: 1.25em; fill: currentColor; }
+
+        .facebook { background-color: #1877f2; }
+        .twitter { background-color: #1DA1F2; }
+        .bluesky { background-color: #0078FF; }
+        .linkedin { background-color: #0a66c2; }
+        .reddit { background-color: #FF4500; }
+        .mastodon { background-color: #6364FF; }
+        .lemmy { background-color: #00C161; }
+        .discord { background-color: #5865F2; }
+        .email { background-color: #7d7d7d; }
+        .sms { background-color: #4CAF50; }
+        .pocket { background-color: #EF3F56; }
+        .instapaper { background-color: #1f1f1f; }
+        .wallabag { background-color: #333; }
+        .raindrop { background-color: #3B4E70; }
+        .feedbin { background-color: #000000; }
+        .custom-share-btn { background-color: #57534e; }
+
+        .native-share, .copy { width: 100%; margin-top: 1rem; }
+        .native-share { background-color: #25d366; }
+        .copy { background-color: #ffc107; }
+
+        .callout-warning {
+            position: relative;
+            background-color: #fffbe6;
+            border: 1px solid #fde68a;
+            border-radius: 6px;
+            padding: 1rem 2.5rem 1rem 1rem;
+            margin-top: 1.5rem;
+            text-align: left;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+        .callout-warning strong {
+            color: #ca8a04;
+        }
+        .callout-warning a {
+            color: #b45309;
+            font-weight: 500;
+        }
+        
+        .quick-share-explainer {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+            padding: 0.6rem 0;
+        }
+
+        .how-to-use { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); text-align: left; }
+        .how-to-use .promo-text {
+            font-style: italic;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .how-to-use h2 { margin-top: 0; margin-bottom: 1rem; font-size: 1.25rem; text-align: center; }
+        .how-to-use p { margin-bottom: 1rem; line-height: 1.6; color: var(--code-text); }
+        .code-block-container { position: relative; margin-bottom: 1.5rem; }
+        .copy-code-btn {
+            position: absolute; top: 0.5rem; right: 0.5rem;
+            background-color: #d1d5db; color: #1f2937; border: none;
+            border-radius: 4px; padding: 0.25rem 0.6rem; font-size: 0.8rem; cursor: pointer;
+        }
+        .copy-code-btn:hover { background-color: #9ca3af; }
+        pre { 
+            background-color: var(--code-bg); 
+            padding: 1em; 
+            border-radius: 4px; 
+            white-space: pre-wrap; 
+            word-wrap: break-word; 
+            word-break: break-all;
+            color: var(--code-text); 
+        }
+        code { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace; font-size: 0.9em; }
+        .code-tag { color: #9d174d; } .code-attr { color: #92400e; } .code-value { color: #1d4ed8; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--code-text); }
+        .form-group input[type="text"], .form-group select { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; }
+        .btn {
+            width: 100%; padding: 0.75rem; color: white; border: none;
+            border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-primary { background-color: var(--brand-blue); }
+        .btn-secondary { background-color: #6b7280; margin-top: 1rem; }
+        .btn-danger { background-color: #dc2626; margin-top: 0.5rem; }
+        .btn-danger:hover { background-color: #b91c1c; }
+        
+        #output-area { margin-top: 1.5rem; display: none; text-align: left; }
+        #output-area > label { font-weight: 500; margin-bottom: 0.5rem; display: block;}
+        .output-group { display: flex; gap: 0.5rem; }
+        #generated-link-output { flex-grow: 1; background-color: #fff; color: #555; }
+        #copy-generated-link-btn { padding: 0 1rem; background-color: #6b7280; color: white; border-radius: 4px; border: none; cursor: pointer; }
+        #copy-generated-link-btn:hover { background-color: #4b5563; }
+        
+        #qrcode-output { margin-top: 1rem; text-align: center; display: none; }
+        #qrcode-container { display: inline-block; padding: 8px; background: white; border: 1px solid var(--border-color); border-radius: 4px; }
+        #qrcode-container canvas { display: block; }
+        #qrcode-download { display: block; margin-top: 0.75rem; color: var(--brand-blue); font-weight: 500; }
+
+        .settings-panel { 
+            display: none; 
+            margin-top: 1.5rem; 
+            padding: 1.5rem; 
+            background-color: #f9fafb; 
+            border-radius: 4px; 
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        .settings-panel a {
+            color: var(--brand-blue);
+        }
+        .settings-panel.is-visible { display: block; }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+        .checkbox-group label { font-weight: normal; }
+        .custom-share-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+        }
+        .custom-share-item span { flex-grow: 1; word-break: break-all; }
+        .remove-custom-btn, .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        .remove-custom-btn { background-color: #dc2626; }
+        .btn-sm { background-color: var(--brand-blue); }
+        .settings-io-buttons { margin-top: 1.5rem; display: flex; gap: 0.5rem; }
+        
+        .footer {
+            padding: 2rem 1.5rem;
+            background-color: transparent;
+            width: 100%;
+            margin-top: 2rem;
+        }
+        .footer .content {
+            line-height: 1.5;
+        }
+        .has-text-centered {
+            text-align: center;
+        }
+        .is-size-7 {
+            font-size: 0.8rem;
+        }
+        .footer img {
+            height: 40px;
+            margin-bottom: 0.5rem;
+        }
+        .footer a {
+            color: var(--text-secondary);
+        }
+        #footer-qrcode {
+            margin-top: 1.5rem;
+            display: inline-block;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        
+        @media (max-width: 600px) {
+            body { 
+                align-items: flex-start; 
+                padding: 1rem; 
+                background-color: #fff;
+            }
+            .container {
+                padding: 0;
+                box-shadow: none;
+                background-color: transparent;
+            }
+            h1 { font-size: 2rem; }
+            .logo {
+                width: 180px;
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="sharelette.jpeg" alt="Sharelette Logo" class="logo">
+            <h1>Sharelette</h1>
+            <p class="attribution">
+                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener">from CloudBreak</a>
+            </p>
+            <p class="coupon-code">
+                <button id="hide-coupon-btn" class="close-btn" aria-label="Hide coupon">&times;</button>
+                With Pocket shutting down, try our managed hosting for 
+                <a href="https://cloudbreak.app/wallabag?utm_source=sharelette&utm_medium=webapp&utm_campaign=wallabag_promo&rby=sharelette" target="_blank" rel="noopener">Wallabag, a read-it-later app</a>! 
+                Use code <strong>SHARELETTE</strong> for $2 USD off.
+            </p>
+        </div>
+
+        <h3>You are sharing</h3>
+        <div class="preview-card">
+            <h4 class="preview-label">PREVIEW</h4>
+            <div class="content-preview">
+                <p class="preview-text" id="textContent"></p>
+                <div class="preview-link-card">
+                    <a href="#" id="url-link" target="_blank" rel="noopener">
+                        <div class="hostname" id="urlHostname"></div>
+                        <div class="url-text" id="urlContent"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <h3>Share on</h3>
+        <div class="action-links">
+            <a href="#" id="facebook-share" class="action-item facebook" target="_blank">Facebook</a>
+            <a href="#" id="twitter-share" class="action-item twitter" target="_blank">Twitter</a>
+            <a href="#" id="bluesky-share" class="action-item bluesky" target="_blank">Bluesky</a>
+            <a href="#" id="linkedin-share" class="action-item linkedin" target="_blank">LinkedIn</a>
+            <a href="#" id="reddit-share" class="action-item reddit" target="_blank">Reddit</a>
+            <a href="#" id="mastodon-share" class="action-item mastodon" target="_blank">Mastodon</a>
+            <a href="#" id="lemmy-share" class="action-item lemmy" target="_blank">Lemmy</a>
+            <button id="discord-share" class="action-item discord">Discord</button>
+            <a href="#" id="email-share" class="action-item email">Email</a>
+            <a href="#" id="sms-share" class="action-item sms">SMS</a>
+        </div>
+        <button id="native-share" class="action-item native-share" style="display: none;">Share...</button>
+        <button id="copy-btn" class="action-item copy">
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            <span>Copy Text & Link</span>
+        </button>
+        
+        <h3>Quick Share</h3>
+        <div class="action-links" id="quick-share-links">
+            </div>
+
+        <h3>Save for Later</h3>
+        <div class="action-links">
+            <a href="#" id="pocket-save" class="action-item pocket" target="_blank">Pocket</a>
+            <a href="#" id="instapaper-save" class="action-item instapaper" target="_blank">Instapaper</a>
+            <a href="#" id="wallabag-save" class="action-item wallabag" target="_blank">Wallabag</a>
+            <a href="#" id="raindrop-save" class="action-item raindrop" target="_blank">Raindrop.io</a>
+            <a href="#" id="feedbin-save" class="action-item feedbin" target="_blank">Feedbin</a>
+        </div>
+
+        <div class="callout-warning">
+            <button id="hide-pocket-warning-btn" class="close-btn" aria-label="Hide Pocket warning">&times;</button>
+            <strong>Pocket is shutting down on July 8th, 2025.</strong>
+            You can export your data and find alternatives at <a href="https://getoffpocket.com?utm_source=sharelette&utm_medium=webapp&utm_campaign=pocket_shutdown_info" target="_blank" rel="noopener">getoffpocket.com</a>.
+        </div>
+
+        <button class="btn btn-secondary" id="settings-toggle-btn">Personal Settings</button>
+        <div class="settings-panel" id="settings-panel">
+            <form id="settings-form">
+                <h4>Personal Server Settings</h4>
+                <div class="form-group">
+                    <label for="mastodon-instance">Mastodon Server</label>
+                    <input type="text" id="mastodon-instance" placeholder="mastodon.social">
+                </div>
+                <div class="form-group">
+                    <label for="lemmy-instance">Lemmy Server</label>
+                    <input type="text" id="lemmy-instance" placeholder="lemmy.world">
+                </div>
+                <div class="form-group">
+                    <label for="wallabag-instance">Wallabag Server</label>
+                    <input type="text" id="wallabag-instance" placeholder="wallabag.cloudbreak.app">
+                </div>
+
+                <h4>Visible Share Buttons</h4>
+                <div class="form-group">
+                    <div id="share-visibility-group" class="checkbox-group"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+            </form>
+            
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+
+            <h4>Custom Share Buttons</h4>
+            <div id="custom-share-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"></div>
+            <form id="custom-share-form">
+                <div class="form-group">
+                    <label for="custom-name">Button Name</label>
+                    <input type="text" id="custom-name" placeholder="My Forum" required>
+                </div>
+                <div class="form-group">
+                    <label for="custom-url">Share URL Template</label>
+                    <input type="text" id="custom-url" placeholder="https://myforum.com/submit?url=%URL%&title=%TEXT%" required>
+                    <small>Use <code>%URL%</code> for the link and <code>%TEXT%</code> for the text.</small>
+                </div>
+                <button type="submit" class="btn btn-sm" id="add-custom-btn">Add Custom Button</button>
+            </form>
+            
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+            
+            <h4>Bookmarklet & App Install</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">
+                To share the page you're currently on, drag this link to your browser's bookmarks bar.
+            </p>
+            <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move;">Drag to Bookmarks</a>
+            
+            <div id="install-container" style="display: none; text-align: center; margin-top: 1.5rem;">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    For quick, app-like access, install Sharelette to your home screen.
+                </p>
+                <button class="btn btn-primary" id="install-pwa-btn" style="width: auto; padding: 0.6rem 1.2rem;">Install App</button>
+            </div>
+            
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+            
+            <h4>Quick Share Contacts</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem; line-height: 1.5;">
+                Contact information is saved only on your device. It is only used to generate email and SMS sharing buttons for your convenience. Please see our <a href="https://spacebarlabs.com/privacy-policy/">Privacy Policy</a> for more information.
+            </p>
+            <div id="quick-share-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"></div>
+            <form id="quick-share-form">
+                <div class="form-group">
+                    <label for="quick-share-name">Name</label>
+                    <input type="text" id="quick-share-name" placeholder="Friend" required>
+                </div>
+                <div class="form-group">
+                    <label for="quick-share-contact">Email or Phone Number</label>
+                    <input type="text" id="quick-share-contact" placeholder="friend@example.com or 555-123-4567" required>
+                </div>
+                <div class="form-group">
+                    <label for="quick-share-type">Contact Type</label>
+                    <select id="quick-share-type" class="form-control">
+                        <option value="email">Email</option>
+                        <option value="sms">Phone (SMS)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm" id="add-quick-share-btn">Add Person</button>
+            </form>
+
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+            
+            <h4>Manage Settings File</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">This can be used to back up your settings or share them across different browsers and devices.</p>
+            <div class="settings-io-buttons">
+                <button type="button" class="btn btn-secondary" id="export-settings-btn" style="width: 50%;">Export</button>
+                <button type="button" class="btn btn-secondary" id="import-settings-btn" style="width: 50%;">Import</button>
+                <input type="file" id="import-file-input" accept=".json" style="display: none;">
+            </div>
+            <button type="button" class="btn btn-danger" id="reset-settings-btn">Reset All Settings</button>
+        </div>
+
+        <div class="how-to-use">
+            <p class="promo-text">Are you a content promoter or creator? Make it effortless for your audience to share your content. With Sharelette, you can create a single, simple link that gives your users a full, personalized suite of sharing options, increasing your reach and engagement.</p>
+            <h2>Use This Tool for Free</h2>
+            <p>You don't need to download anything! Just create a link to our free, hosted service and add what you want to share.</p>
+            
+            <h3>Generate Your Own Link</h3>
+            <div class="link-generator">
+                <form id="link-generator-form">
+                    <div class="form-group">
+                        <label for="input-url">URL to share</label>
+                        <input type="text" id="input-url" placeholder="https://your-website.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-text">Text to share</label>
+                        <input type="text" id="input-text" placeholder="Check out this awesome site!">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="generate-link-btn">Generate Link & QR Code</button>
+                </form>
+                <div id="output-area">
+                     <label for="generated-link-output">Your Sharelette Link</label>
+                    <div class="output-group">
+                        <input type="text" id="generated-link-output" readonly>
+                        <button id="copy-generated-link-btn">Copy</button>
+                    </div>
+                    <div class="code-block-container" id="code-preview-wrapper" style="margin-top: 1rem; display: none;">
+                         <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">HTML Preview</label>
+                        <button class="copy-code-btn" id="copy-html-btn">Copy</button>
+                        <pre><code id="html-code-sample"></code></pre>
+                    </div>
+                    <div id="qrcode-output">
+                         <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">QR Code</label>
+                        <div id="qrcode-container"></div>
+                        <a id="qrcode-download" download="sharelette-qr.png">Download QR Code</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+      <div class="content has-text-centered is-size-7">
+        <a href="https://spacebarlabs.com/"><img src="/SBL_Logo.svg" alt="Space Bar Labs Logo"></a><br>
+        <span>&copy; space bar labs 2025</span><br>
+        <span><a href="https://spacebarlabs.com/privacy-policy/">Privacy Policy</a> | <a href="https://spacebarlabs.com/terms-of-service/">Terms of Service</a></span>
+      </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- PWA Install Prompt Logic ---
+        let deferredPrompt;
+        const installContainer = document.getElementById('install-container');
+        const installButton = document.getElementById('install-pwa-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome from showing the prompt automatically.
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI to notify the user they can install the PWA
+            if (installContainer) {
+                installContainer.style.display = 'block';
+            }
+        });
+
+        if (installButton) {
+            installButton.addEventListener('click', async () => {
+                // Hide the app install button
+                if (installContainer) {
+                    installContainer.style.display = 'none';
+                }
+                // Show the install prompt.
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    // Wait for the user to respond to the prompt.
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    // We've used the prompt, and can't use it again, so clear it.
+                    deferredPrompt = null;
+                }
+            });
+        }
+
+        // --- PWA Service Worker Registration ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+        
+        // --- The rest of the page logic ---
+        function copyTextToClipboard(text) {
+            return new Promise((resolve, reject) => {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(resolve).catch(reject);
+                } else {
+                    try {
+                        const textArea = document.createElement("textarea");
+                        textArea.value = text;
+                        textArea.style.position = 'fixed';
+                        textArea.style.top = '-9999px';
+                        textArea.style.left = '-9999px';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        const successful = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        if (successful) resolve();
+                        else reject(new Error('Copy command failed.'));
+                    } catch (err) {
+                        reject(err);
+                    }
+                }
+            });
+        }
+
+        function formatPhoneNumberE164(phone) {
+            let digits = phone.replace(/\D/g, '');
+            if (digits.length === 11 && digits.startsWith('1')) {
+                return `+${digits}`;
+            }
+            if (digits.length === 10) {
+                return `+1${digits}`;
+            }
+            return `+${digits}`;
+        }
+
+        const defaults = {
+            url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette',
+            text: 'Check out CloudBreak!',
+            mastodonInstance: 'mastodon.social',
+            lemmyInstance: 'lemmy.world',
+            wallabagInstance: 'wallabag.cloudbreak.app',
+            visibleShareButtons: [
+                'facebook-share', 'twitter-share', 'bluesky-share', 'linkedin-share', 
+                'reddit-share', 'mastodon-share', 'lemmy-share', 'discord-share', 
+                'email-share', 'sms-share', 'pocket-save', 'instapaper-save', 'wallabag-save',
+                'raindrop-save', 'feedbin-save'
+            ],
+            customShareButtons: [],
+            quickShareContacts: []
+        };
+
+        const getSetting = (key) => {
+            const saved = localStorage.getItem(key);
+            if (saved === null) return defaults[key];
+            try { return JSON.parse(saved); } catch (e) { return saved; }
+        };
+
+        const setSetting = (key, value) => {
+            localStorage.setItem(key, JSON.stringify(value));
+        };
+
+        let settings = {
+            mastodonInstance: getSetting('mastodonInstance'),
+            lemmyInstance: getSetting('lemmyInstance'),
+            wallabagInstance: getSetting('wallabagInstance'),
+            visibleShareButtons: getSetting('visibleShareButtons'),
+            customShareButtons: getSetting('customShareButtons'),
+            quickShareContacts: getSetting('quickShareContacts')
+        };
+        
+        const params = new URLSearchParams(window.location.search);
+        
+        // ** THIS IS THE UPDATED LOGIC TO GET THE TITLE **
+        const url = params.get('url') || defaults.url;
+        const sharedTitle = params.get('title');
+        const sharedText = params.get('text');
+        const text = sharedTitle || sharedText || defaults.text;
+
+        const allShareButtons = Array.from(document.querySelectorAll('.action-links > .action-item'));
+        const shareVisibilityGroup = document.getElementById('share-visibility-group');
+
+        const renderShareVisibilityCheckboxes = () => {
+            shareVisibilityGroup.innerHTML = '';
+            allShareButtons.forEach(btn => {
+                if (!btn.id) return;
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'share-toggle';
+                checkbox.value = btn.id;
+                checkbox.checked = settings.visibleShareButtons.includes(btn.id);
+                label.appendChild(checkbox);
+                label.append(` ${btn.textContent}`);
+                shareVisibilityGroup.appendChild(label);
+            });
+        };
+
+        const applyShareVisibility = () => {
+            allShareButtons.forEach(btn => {
+                if (btn.id) {
+                    btn.style.display = settings.visibleShareButtons.includes(btn.id) ? 'inline-flex' : 'none';
+                }
+            });
+        };
+
+        const renderCustomShareButtons = () => {
+            document.querySelectorAll('.custom-share-btn').forEach(btn => btn.remove());
+            const actionLinksContainer = document.querySelector('h3:nth-of-type(2) + .action-links');
+            settings.customShareButtons.forEach((customBtn, index) => {
+                const btn = document.createElement('a');
+                btn.className = 'action-item custom-share-btn';
+                btn.textContent = customBtn.name;
+                btn.target = '_blank';
+                btn.dataset.index = index;
+                actionLinksContainer.appendChild(btn);
+            });
+            updateShareLinks(); 
+        };
+
+        const renderQuickShareButtons = () => {
+            const quickShareContainer = document.getElementById('quick-share-links');
+            quickShareContainer.innerHTML = '';
+
+            if (settings.quickShareContacts.length === 0) {
+                quickShareContainer.innerHTML = `<p class="quick-share-explainer">No contacts yet. Add people in "Personal Settings" to get started.</p>`;
+                return;
+            }
+
+            settings.quickShareContacts.forEach((person, index) => {
+                const btn = document.createElement('a');
+                btn.className = `action-item ${person.type}`;
+                const typeLabel = person.type === 'sms' ? 'SMS' : 'Email';
+                btn.textContent = `${person.name} (${typeLabel})`;
+                btn.dataset.index = index;
+                quickShareContainer.appendChild(btn);
+            });
+            updateQuickShareLinks(); 
+        };
+        
+        const updateQuickShareLinks = () => {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+            const quickShareContainer = document.getElementById('quick-share-links');
+            
+            settings.quickShareContacts.forEach((person, index) => {
+                const btn = quickShareContainer.querySelector(`a[data-index="${index}"]`);
+                if (btn) {
+                    if (person.type === 'email') {
+                        btn.href = `mailto:${person.contact}?subject=${encodedText}&body=${text}%20${url}`;
+                    } else if (person.type === 'sms') {
+                        btn.href = `sms:${person.contact}?body=${encodedText}%20${encodedUrl}`;
+                    }
+                }
+            });
+        };
+
+        const updateShareLinks = () => {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+            document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+            document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
+            document.getElementById('bluesky-share').href = `https://bsky.app/intent/compose?text=${encodedText} ${encodedUrl}`;
+            document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('reddit-share').href = `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('mastodon-share').href = `https://${settings.mastodonInstance}/share?text=${encodedText}%20${encodedUrl}`;
+            document.getElementById('lemmy-share').href = `https://${settings.lemmyInstance}/create_post?title=${encodedText}&url=${encodedUrl}`;
+            document.getElementById('email-share').href = `mailto:?subject=${encodedText}&body=${text}%20${url}`;
+            document.getElementById('sms-share').href = `sms:?body=${encodedText}%20${encodedUrl}`;
+            document.getElementById('pocket-save').href = `https://getpocket.com/save?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('instapaper-save').href = `https://www.instapaper.com/hello2?url=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('wallabag-save').href = `https://${settings.wallabagInstance}/bookmarklet?url=${encodedUrl}`;
+            document.getElementById('raindrop-save').href = `https://app.raindrop.io/add?link=${encodedUrl}&title=${encodedText}`;
+            document.getElementById('feedbin-save').href = `https://feedbin.com/pages/new?url=${encodedUrl}`;
+            document.querySelectorAll('.custom-share-btn').forEach(btn => {
+                const index = parseInt(btn.dataset.index, 10);
+                const customBtnData = settings.customShareButtons[index];
+                if (customBtnData) {
+                    btn.href = customBtnData.url.replace(/%URL%/g, encodedUrl).replace(/%TEXT%/g, encodedText);
+                }
+            });
+            updateQuickShareLinks();
+            applyShareVisibility();
+        };
+
+        const updatePreview = () => {
+            document.getElementById('textContent').textContent = text;
+            document.getElementById('urlContent').textContent = url;
+            document.getElementById('url-link').href = url;
+            try {
+                const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : `https://${url}`;
+                document.getElementById('urlHostname').textContent = new URL(fullUrl).hostname;
+            } catch (e) {
+                document.getElementById('urlHostname').textContent = 'Invalid URL';
+            }
+        };
+
+        const updateBookmarklet = () => {
+            const bookmarkletLink = document.getElementById('sharelette-bookmarklet');
+            if (bookmarkletLink) {
+                const appUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+                // This script navigates the current tab to the Sharelette page
+                const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)'`;
+                bookmarkletLink.href = script;
+            }
+        };
+
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        settingsToggleBtn.addEventListener('click', () => {
+            settingsPanel.classList.toggle('is-visible');
+        });
+        
+        document.getElementById('settings-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const mastodonInput = document.getElementById('mastodon-instance');
+            const lemmyInput = document.getElementById('lemmy-instance');
+            const wallabagInput = document.getElementById('wallabag-instance');
+
+            settings.mastodonInstance = mastodonInput.value.trim() || defaults.mastodonInstance;
+            settings.lemmyInstance = lemmyInput.value.trim() || defaults.lemmyInstance;
+            settings.wallabagInstance = wallabagInput.value.trim() || defaults.wallabagInstance;
+
+            localStorage.setItem('mastodonInstance', settings.mastodonInstance);
+            localStorage.setItem('lemmyInstance', settings.lemmyInstance);
+            localStorage.setItem('wallabagInstance', settings.wallabagInstance);
+
+            const visibleButtons = Array.from(document.querySelectorAll('.share-toggle:checked')).map(cb => cb.value);
+            settings.visibleShareButtons = visibleButtons;
+            setSetting('visibleShareButtons', settings.visibleShareButtons);
+
+            alert('Settings saved!');
+            updateShareLinks();
+            settingsPanel.classList.remove('is-visible');
+        });
+        
+        const customShareList = document.getElementById('custom-share-list');
+        const renderCustomShareList = () => {
+            customShareList.innerHTML = '';
+            settings.customShareButtons.forEach((btn, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-share-item';
+                item.innerHTML = `<span><strong>${btn.name}:</strong> ${btn.url}</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
+                customShareList.appendChild(item);
+            });
+        };
+
+        customShareList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-custom-btn')) {
+                const index = parseInt(e.target.dataset.index, 10);
+                settings.customShareButtons.splice(index, 1);
+                setSetting('customShareButtons', settings.customShareButtons);
+                renderCustomShareList();
+                renderCustomShareButtons();
+            }
+        });
+
+        document.getElementById('custom-share-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('custom-name');
+            const urlInput = document.getElementById('custom-url');
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+            if (name && url && (url.includes('%URL%') || url.includes('%TEXT%'))) {
+                settings.customShareButtons.push({ name, url });
+                setSetting('customShareButtons', settings.customShareButtons);
+                renderCustomShareList();
+                renderCustomShareButtons();
+                nameInput.value = '';
+                urlInput.value = '';
+            } else {
+                alert('Please provide a name and a URL template containing %URL% or %TEXT%.');
+            }
+        });
+
+        const quickShareList = document.getElementById('quick-share-list');
+        const renderQuickShareList = () => {
+            quickShareList.innerHTML = '';
+            settings.quickShareContacts.forEach((person, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-share-item';
+                item.innerHTML = `<span><strong>${person.name}:</strong> ${person.contact} (${person.type})</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
+                quickShareList.appendChild(item);
+            });
+        };
+
+        quickShareList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-custom-btn')) {
+                const index = parseInt(e.target.dataset.index, 10);
+                settings.quickShareContacts.splice(index, 1);
+                setSetting('quickShareContacts', settings.quickShareContacts);
+                renderQuickShareList();
+                renderQuickShareButtons();
+            }
+        });
+
+        document.getElementById('quick-share-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('quick-share-name');
+            const contactInput = document.getElementById('quick-share-contact');
+            const typeInput = document.getElementById('quick-share-type');
+            
+            const name = nameInput.value.trim();
+            let contact = contactInput.value.trim();
+            const type = typeInput.value;
+
+            if (name && contact) {
+                if (type === 'sms') {
+                    contact = formatPhoneNumberE164(contact);
+                }
+                settings.quickShareContacts.push({ name, contact, type });
+                setSetting('quickShareContacts', settings.quickShareContacts);
+                renderQuickShareList();
+                renderQuickShareButtons();
+                nameInput.value = '';
+                contactInput.value = '';
+                typeInput.value = 'email';
+            } else {
+                alert('Please provide a name and contact information.');
+            }
+        });
+
+        document.getElementById('link-generator-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('generate-link-btn').click();
+        });
+
+        const copyBtn = document.getElementById('copy-btn');
+        copyBtn.addEventListener('click', () => {
+            const combinedText = `${text}\n${url}`;
+            const textHolder = copyBtn.querySelector('span');
+            const originalText = textHolder.textContent;
+            copyTextToClipboard(combinedText).then(() => {
+                textHolder.textContent = 'Copied!';
+                setTimeout(() => { textHolder.textContent = originalText; }, 2000);
+            }).catch(err => console.error('Failed to copy: ', err));
+        });
+
+        const discordBtn = document.getElementById('discord-share');
+        discordBtn.addEventListener('click', () => {
+            const combinedText = `${text}\n${url}`;
+            const originalText = discordBtn.textContent;
+            copyTextToClipboard(combinedText).then(() => {
+                discordBtn.textContent = 'Copied!';
+                setTimeout(() => { discordBtn.textContent = originalText; }, 2000);
+            }).catch(err => console.error('Failed to copy for Discord: ', err));
+        });
+        
+        const setupCopyButton = (buttonId, getText, feedback) => {
+            const button = document.getElementById(buttonId);
+            if (!button) return;
+            const originalText = button.textContent;
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                copyTextToClipboard(getText()).then(() => {
+                    button.textContent = feedback;
+                    setTimeout(() => { button.textContent = originalText; }, 2000);
+                }).catch(err => console.error(`Failed to copy for button #${buttonId}: `, err));
+            });
+        };
+        setupCopyButton('copy-html-btn', () => document.getElementById('html-code-sample').innerText, 'Copied!');
+        setupCopyButton('copy-generated-link-btn', () => document.getElementById('generated-link-output').value, 'Copied!');
+        
+        const generateBtn = document.getElementById('generate-link-btn');
+        generateBtn.addEventListener('click', () => {
+            const urlToShare = document.getElementById('input-url').value;
+            const textToShare = document.getElementById('input-text').value;
+            if (!urlToShare) { alert('Please enter a URL to share.'); return; }
+            const finalLink = `${window.location.protocol}//${window.location.host}${window.location.pathname}?url=${encodeURIComponent(urlToShare)}&text=${encodeURIComponent(textToShare)}`;
+            
+            document.getElementById('generated-link-output').value = finalLink;
+            document.getElementById('output-area').style.display = 'block';
+
+            const codeSampleEl = document.getElementById('html-code-sample');
+            const escapedLink = finalLink.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            codeSampleEl.innerHTML = `&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"${escapedLink}"</span>&gt;
+  Share this on social media
+&lt;/<span class="code-tag">a</span>&gt;`;
+            document.getElementById('code-preview-wrapper').style.display = 'block';
+
+            const qrcodeOutput = document.getElementById('qrcode-output');
+            const qrcodeContainer = document.getElementById('qrcode-container');
+            const qrcodeDownload = document.getElementById('qrcode-download');
+            qrcodeContainer.innerHTML = '';
+            qrcodeOutput.style.display = 'none';
+            try {
+                new QRCode(qrcodeContainer, { text: finalLink, width: 128, height: 128, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+                setTimeout(() => {
+                    const canvas = qrcodeContainer.querySelector('canvas');
+                    if (canvas) {
+                        qrcodeDownload.href = canvas.toDataURL("image/png");
+                        qrcodeOutput.style.display = 'block';
+                    }
+                }, 100);
+            } catch (e) {
+                console.error("QR Code generation failed:", e);
+            }
+
+        });
+        
+        document.getElementById('export-settings-btn').addEventListener('click', () => {
+            const settingsToExport = {
+                mastodonInstance: getSetting('mastodonInstance'),
+                lemmyInstance: getSetting('lemmyInstance'),
+                wallabagInstance: getSetting('wallabagInstance'),
+                visibleShareButtons: getSetting('visibleShareButtons'),
+                customShareButtons: getSetting('customShareButtons'),
+                quickShareContacts: getSetting('quickShareContacts')
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settingsToExport, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "sharelette-settings.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
+        
+        const importFileInput = document.getElementById('import-file-input');
+        document.getElementById('import-settings-btn').addEventListener('click', () => importFileInput.click());
+        importFileInput.addEventListener('change', (event) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedSettings = JSON.parse(e.target.result);
+                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
+                    if (!requiredKeys.every(key => key in importedSettings)) throw new Error("File is missing required settings keys.");
+                    requiredKeys.forEach(key => {
+                        if(importedSettings[key] !== null && importedSettings[key] !== undefined) {
+                            setSetting(key, importedSettings[key]);
+                        }
+                    });
+                    alert('Settings imported successfully! The page will now reload.');
+                    location.reload();
+                } catch (err) {
+                    alert(`Failed to import settings: ${err.message}`);
+                }
+            };
+            reader.readAsText(event.target.files[0]);
+        });
+        
+        document.getElementById('reset-settings-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all settings? This action cannot be undone.')) {
+                Object.keys(defaults).forEach(key => {
+                    if (key !== 'url' && key !== 'text') {
+                        localStorage.removeItem(key);
+                    }
+                });
+                localStorage.removeItem('pocketWarningHidden');
+                localStorage.removeItem('couponHiddenUntil');
+                alert('All settings have been reset. The page will now reload.');
+                location.reload();
+            }
+        });
+
+        // --- Coupon Banner Logic ---
+        const couponBlock = document.querySelector('.coupon-code');
+        const hideCouponBtn = document.getElementById('hide-coupon-btn');
+        const couponHiddenKey = 'couponHiddenUntil';
+        const hideUntil = localStorage.getItem(couponHiddenKey);
+        if (hideUntil && new Date().getTime() < parseInt(hideUntil, 10)) {
+            couponBlock.style.display = 'none';
+        } else if (hideUntil) {
+            localStorage.removeItem(couponHiddenKey);
+        }
+        hideCouponBtn.addEventListener('click', () => {
+            const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
+            const expirationTime = new Date().getTime() + twoWeeksInMs;
+            localStorage.setItem(couponHiddenKey, expirationTime.toString());
+            couponBlock.style.display = 'none';
+        });
+
+        // --- Pocket Warning Close Logic ---
+        const pocketWarningBlock = document.querySelector('.callout-warning');
+        const hidePocketWarningBtn = document.getElementById('hide-pocket-warning-btn');
+        const pocketWarningHiddenKey = 'pocketWarningHidden';
+        if (localStorage.getItem(pocketWarningHiddenKey)) {
+            pocketWarningBlock.style.display = 'none';
+        }
+        hidePocketWarningBtn.addEventListener('click', () => {
+            pocketWarningBlock.style.display = 'none';
+            localStorage.setItem(pocketWarningHiddenKey, 'true');
+        });
+
+        // --- Initial Page Setup ---
+        document.getElementById('mastodon-instance').value = settings.mastodonInstance;
+        document.getElementById('lemmy-instance').value = settings.lemmyInstance;
+        document.getElementById('wallabag-instance').value = settings.wallabagInstance;
+        updatePreview();
+        renderShareVisibilityCheckboxes();
+        renderCustomShareList();
+        renderCustomShareButtons();
+        renderQuickShareList();
+        renderQuickShareButtons();
+        updateBookmarklet();
+    });
+    </script>
+</body>
+</html>
