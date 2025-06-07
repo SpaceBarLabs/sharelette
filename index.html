@@ -457,11 +457,11 @@
             <form id="quick-share-form">
                 <div class="form-group">
                     <label for="quick-share-name">Name</label>
-                    <input type="text" id="quick-share-name" placeholder="Mom" required>
+                    <input type="text" id="quick-share-name" placeholder="Friend" required>
                 </div>
                 <div class="form-group">
                     <label for="quick-share-contact">Email or Phone Number</label>
-                    <input type="text" id="quick-share-contact" placeholder="mom@example.com or 555-123-4567" required>
+                    <input type="text" id="quick-share-contact" placeholder="friend@example.com or 555-123-4567" required>
                 </div>
                 <div class="form-group">
                     <label for="quick-share-type">Contact Type</label>
@@ -662,7 +662,8 @@
             settings.quickShareContacts.forEach((person, index) => {
                 const btn = document.createElement('a');
                 btn.className = `action-item ${person.type}`;
-                btn.textContent = `${person.name} (${person.type.toUpperCase()})`;
+                const typeLabel = person.type === 'sms' ? 'SMS' : 'Email';
+                btn.textContent = `${person.name} (${typeLabel})`;
                 btn.dataset.index = index;
                 quickShareContainer.appendChild(btn);
             });
@@ -967,8 +968,8 @@
                         localStorage.removeItem(key);
                     }
                 });
-                // Also clear the pocket warning setting
                 localStorage.removeItem('pocketWarningHidden');
+                localStorage.removeItem('couponHiddenUntil');
                 alert('All settings have been reset. The page will now reload.');
                 location.reload();
             }
