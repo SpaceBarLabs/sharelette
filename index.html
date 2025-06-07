@@ -177,6 +177,8 @@
         .raindrop { background-color: #3B4E70; }
         .feedbin { background-color: #000000; }
         .custom-share-btn { background-color: #57534e; }
+        .btn-quick-share { background-color: #4ade80; color: #1f2937; }
+        .btn-quick-share:hover { background-color: #36d36e; opacity: 1; }
 
         .native-share, .copy { width: 100%; margin-top: 1rem; }
         .native-share { background-color: #25d366; }
@@ -230,7 +232,7 @@
 
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--code-text); }
-        .form-group input[type="text"] { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; }
+        .form-group input[type="text"], .form-group select { width: 100%; padding: 0.6rem; border: 1px solid #ccc; border-radius: 4px; }
         .btn {
             width: 100%; padding: 0.75rem; color: white; border: none;
             border-radius: 4px; font-size: 1rem; font-weight: bold; cursor: pointer;
@@ -380,7 +382,11 @@
             <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
             <span>Copy Text & Link</span>
         </button>
-        
+       
+        <h3>Quick Share</h3>
+        <div class="action-links" id="quick-share-links">
+            </div>
+
         <h3>Save for Later</h3>
         <div class="action-links">
             <a href="#" id="pocket-save" class="action-item pocket" target="_blank">Pocket</a>
@@ -436,7 +442,30 @@
                 </div>
                 <button type="submit" class="btn btn-sm" id="add-custom-btn">Add Custom Button</button>
             </form>
+           
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
             
+            <h4>Quick Share Contacts</h4>
+            <div id="quick-share-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"></div>
+            <form id="quick-share-form">
+                <div class="form-group">
+                    <label for="quick-share-name">Name</label>
+                    <input type="text" id="quick-share-name" placeholder="Mom" required>
+                </div>
+                <div class="form-group">
+                    <label for="quick-share-contact">Email or Phone Number</label>
+                    <input type="text" id="quick-share-contact" placeholder="mom@example.com or 1234567890" required>
+                </div>
+                <div class="form-group">
+                    <label for="quick-share-type">Contact Type</label>
+                    <select id="quick-share-type" class="form-control">
+                        <option value="email">Email</option>
+                        <option value="sms">Phone (SMS)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm" id="add-quick-share-btn">Add Person</button>
+            </form>
+
             <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
             
             <h4>Manage Settings File</h4>
@@ -474,7 +503,7 @@
                         <button id="copy-generated-link-btn">Copy</button>
                     </div>
                     <div class="code-block-container" id="code-preview-wrapper" style="margin-top: 1rem; display: none;">
-                        <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">HTML Preview</label>
+                         <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">HTML Preview</label>
                         <button class="copy-code-btn" id="copy-html-btn">Copy</button>
                         <pre><code id="html-code-sample"></code></pre>
                     </div>
@@ -535,7 +564,8 @@
                 'email-share', 'sms-share', 'pocket-save', 'instapaper-save', 'wallabag-save',
                 'raindrop-save', 'feedbin-save'
             ],
-            customShareButtons: []
+            customShareButtons: [],
+            quickShareContacts: []
         };
 
         const getSetting = (key) => {
@@ -553,7 +583,8 @@
             lemmyInstance: getSetting('lemmyInstance'),
             wallabagInstance: getSetting('wallabagInstance'),
             visibleShareButtons: getSetting('visibleShareButtons'),
-            customShareButtons: getSetting('customShareButtons')
+            customShareButtons: getSetting('customShareButtons'),
+            quickShareContacts: getSetting('quickShareContacts')
         };
         
         const params = new URLSearchParams(window.location.search);
@@ -589,7 +620,7 @@
 
         const renderCustomShareButtons = () => {
             document.querySelectorAll('.custom-share-btn').forEach(btn => btn.remove());
-            const actionLinksContainer = document.querySelector('.action-links');
+            const actionLinksContainer = document.querySelector('h3:nth-of-type(2) + .action-links');
             settings.customShareButtons.forEach((customBtn, index) => {
                 const btn = document.createElement('a');
                 btn.className = 'action-item custom-share-btn';
@@ -599,6 +630,36 @@
                 actionLinksContainer.appendChild(btn);
             });
             updateShareLinks(); 
+        };
+
+        const renderQuickShareButtons = () => {
+            const quickShareContainer = document.getElementById('quick-share-links');
+            quickShareContainer.innerHTML = '';
+            settings.quickShareContacts.forEach((person, index) => {
+                const btn = document.createElement('a');
+                btn.className = 'action-item btn-quick-share';
+                btn.textContent = person.name;
+                btn.dataset.index = index;
+                quickShareContainer.appendChild(btn);
+            });
+            updateQuickShareLinks(); 
+        };
+        
+        const updateQuickShareLinks = () => {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+            const quickShareContainer = document.getElementById('quick-share-links');
+            
+            settings.quickShareContacts.forEach((person, index) => {
+                const btn = quickShareContainer.querySelector(`a[data-index="${index}"]`);
+                if (btn) {
+                    if (person.type === 'email') {
+                        btn.href = `mailto:${person.contact}?subject=${encodedText}&body=${text}%20${url}`;
+                    } else if (person.type === 'sms') {
+                        btn.href = `sms:${person.contact}?body=${encodedText}%20${encodedUrl}`;
+                    }
+                }
+            });
         };
 
         const updateShareLinks = () => {
@@ -625,6 +686,7 @@
                     btn.href = customBtnData.url.replace(/%URL%/g, encodedUrl).replace(/%TEXT%/g, encodedText);
                 }
             });
+            updateQuickShareLinks();
             applyShareVisibility();
         };
 
@@ -705,6 +767,50 @@
                 urlInput.value = '';
             } else {
                 alert('Please provide a name and a URL template containing %URL% or %TEXT%.');
+            }
+        });
+
+        const quickShareList = document.getElementById('quick-share-list');
+        const renderQuickShareList = () => {
+            quickShareList.innerHTML = '';
+            settings.quickShareContacts.forEach((person, index) => {
+                const item = document.createElement('div');
+                item.className = 'custom-share-item';
+                item.innerHTML = `<span><strong>${person.name}:</strong> ${person.contact} (${person.type})</span><button type="button" class="remove-custom-btn" data-index="${index}">X</button>`;
+                quickShareList.appendChild(item);
+            });
+        };
+
+        quickShareList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-custom-btn')) {
+                const index = parseInt(e.target.dataset.index, 10);
+                settings.quickShareContacts.splice(index, 1);
+                setSetting('quickShareContacts', settings.quickShareContacts);
+                renderQuickShareList();
+                renderQuickShareButtons();
+            }
+        });
+
+        document.getElementById('quick-share-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('quick-share-name');
+            const contactInput = document.getElementById('quick-share-contact');
+            const typeInput = document.getElementById('quick-share-type');
+            
+            const name = nameInput.value.trim();
+            const contact = contactInput.value.trim();
+            const type = typeInput.value;
+
+            if (name && contact) {
+                settings.quickShareContacts.push({ name, contact, type });
+                setSetting('quickShareContacts', settings.quickShareContacts);
+                renderQuickShareList();
+                renderQuickShareButtons();
+                nameInput.value = '';
+                contactInput.value = '';
+                typeInput.value = 'email';
+            } else {
+                alert('Please provide a name and contact information.');
             }
         });
 
@@ -792,7 +898,8 @@
                 lemmyInstance: getSetting('lemmyInstance'),
                 wallabagInstance: getSetting('wallabagInstance'),
                 visibleShareButtons: getSetting('visibleShareButtons'),
-                customShareButtons: getSetting('customShareButtons')
+                customShareButtons: getSetting('customShareButtons'),
+                quickShareContacts: getSetting('quickShareContacts')
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settingsToExport, null, 2));
             const downloadAnchorNode = document.createElement('a');
@@ -810,11 +917,11 @@
             reader.onload = (e) => {
                 try {
                     const importedSettings = JSON.parse(e.target.result);
-                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'visibleShareButtons', 'customShareButtons'];
+                    const requiredKeys = ['mastodonInstance', 'lemmyInstance', 'wallabagInstance', 'visibleShareButtons', 'customShareButtons', 'quickShareContacts'];
                     if (!requiredKeys.every(key => key in importedSettings)) throw new Error("File is missing required settings keys.");
                     requiredKeys.forEach(key => {
                         if(importedSettings[key] !== null && importedSettings[key] !== undefined) {
-                            localStorage.setItem(key, JSON.stringify(importedSettings[key]))
+                            setSetting(key, importedSettings[key]);
                         }
                     });
                     alert('Settings imported successfully! The page will now reload.');
@@ -869,6 +976,8 @@
         renderShareVisibilityCheckboxes();
         renderCustomShareList();
         renderCustomShareButtons();
+        renderQuickShareList();
+        renderQuickShareButtons();
     });
     </script>
 </body>
