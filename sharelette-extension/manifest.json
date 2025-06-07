@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Sharelette",
+  "version": "1.0",
+  "description": "Share the current page using Sharelette and replaces the native share dialog.",
+  "icons": {
+    "16": "https://placehold.co/16x16/25D366/FFFFFF?text=S",
+    "48": "https://placehold.co/48x48/25D366/FFFFFF?text=S",
+    "128": "https://placehold.co/128x128/25D366/FFFFFF?text=S"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+        "16": "https://placehold.co/16x16/25D366/FFFFFF?text=S",
+        "48": "https://placehold.co/48x48/25D366/FFFFFF?text=S"
+    }
+  },
+  "background": {
+    "service_worker": "scripts.js"
+  }
+}
+
