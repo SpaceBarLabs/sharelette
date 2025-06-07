@@ -338,8 +338,15 @@
         }
         
         @media (max-width: 600px) {
-            body { align-items: flex-start; padding: 1rem; }
-            .container { padding: 1.5rem; }
+            body { 
+                align-items: flex-start; 
+                padding: 1rem; 
+            }
+            .container {
+                padding: 0;
+                box-shadow: none;
+                background-color: transparent;
+            }
             h1 { font-size: 2rem; }
             .logo {
                 width: 180px;
@@ -804,7 +811,7 @@
             if (bookmarkletLink) {
                 const appUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
                 // This script navigates the current tab to the Sharelette page
-                const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)`;
+                const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)'`;
                 bookmarkletLink.href = script;
             }
         };
