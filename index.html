@@ -475,7 +475,7 @@
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">
                 To share the page you're currently on, drag this link to your browser's bookmarks bar.
             </p>
-            <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move; color: white">Drag to Bookmarks</a>
+            <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move;">Drag to Bookmarks</a>
             
             <div id="install-container" style="display: none; text-align: center; margin-top: 1.5rem;">
                 <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
@@ -688,12 +688,38 @@
             quickShareContacts: getSetting('quickShareContacts')
         };
         
+        // *** THIS IS THE ROBUST LOGIC FOR PARSING SHARED DATA ***
         const params = new URLSearchParams(window.location.search);
-        
-        const url = params.get('url') || defaults.url;
-        const sharedTitle = params.get('title');
-        const sharedText = params.get('text');
-        const text = sharedTitle || sharedText || defaults.text;
+
+        const sharedUrlParam = params.get('url');
+        const sharedTitleParam = params.get('title');
+        const sharedTextParam = params.get('text');
+
+        let finalUrl = defaults.url;
+        let finalText = defaults.text;
+
+        const isUrl = (str) => {
+            if (!str) return false;
+            return str.startsWith('http://') || str.startsWith('https://');
+        };
+
+        // Determine the final URL, checking text param as a fallback
+        if (isUrl(sharedUrlParam)) {
+            finalUrl = sharedUrlParam;
+        } else if (isUrl(sharedTextParam)) {
+            finalUrl = sharedTextParam;
+        }
+
+        // Determine the final Text, prioritizing title
+        if (sharedTitleParam) {
+            finalText = sharedTitleParam;
+        } else if (sharedTextParam && finalUrl !== sharedTextParam) {
+            // Use text param for description only if it wasn't already used for the URL
+            finalText = sharedTextParam;
+        }
+
+        const url = finalUrl;
+        const text = finalText;
 
         const allShareButtons = Array.from(document.querySelectorAll('.action-links > .action-item'));
         const shareVisibilityGroup = document.getElementById('share-visibility-group');
@@ -817,7 +843,7 @@
             const bookmarkletLink = document.getElementById('sharelette-bookmarklet');
             if (bookmarkletLink) {
                 const appUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
-                const script = `javascript:document.location='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)`;
+                const script = `javascript:window.location.href='${appUrl}?url='+encodeURIComponent(location.href)+'&text='+encodeURIComponent(document.title)'`;
                 bookmarkletLink.href = script;
             }
         };
