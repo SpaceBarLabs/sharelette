@@ -71,7 +71,7 @@
             background-color: #f9fafb;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 0.6rem 2rem 0.6rem 0.6rem;
+            padding: 0.6rem 2.5rem 0.6rem 0.6rem;
             margin-top: 1rem;
             text-align: center;
             line-height: 1.5;
@@ -177,18 +177,17 @@
         .raindrop { background-color: #3B4E70; }
         .feedbin { background-color: #000000; }
         .custom-share-btn { background-color: #57534e; }
-        .btn-quick-share { background-color: #4ade80; color: #1f2937; }
-        .btn-quick-share:hover { background-color: #36d36e; opacity: 1; }
 
         .native-share, .copy { width: 100%; margin-top: 1rem; }
         .native-share { background-color: #25d366; }
         .copy { background-color: #ffc107; }
 
         .callout-warning {
+            position: relative;
             background-color: #fffbe6;
             border: 1px solid #fde68a;
             border-radius: 6px;
-            padding: 1rem;
+            padding: 1rem 2.5rem 1rem 1rem;
             margin-top: 1.5rem;
             text-align: left;
             line-height: 1.5;
@@ -202,6 +201,13 @@
             font-weight: 500;
         }
         
+        .quick-share-explainer {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+            padding: 0.6rem 0;
+        }
+
         .how-to-use { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); text-align: left; }
         .how-to-use .promo-text {
             font-style: italic;
@@ -397,6 +403,7 @@
         </div>
 
         <div class="callout-warning">
+            <button id="hide-pocket-warning-btn" class="close-btn" aria-label="Hide Pocket warning">&times;</button>
             <strong>Pocket is shutting down on July 8th, 2025.</strong>
             You can export your data and find alternatives at <a href="https://getoffpocket.com?utm_source=sharelette&utm_medium=webapp&utm_campaign=pocket_shutdown_info" target="_blank" rel="noopener">getoffpocket.com</a>.
         </div>
@@ -454,7 +461,7 @@
                 </div>
                 <div class="form-group">
                     <label for="quick-share-contact">Email or Phone Number</label>
-                    <input type="text" id="quick-share-contact" placeholder="mom@example.com or 1234567890" required>
+                    <input type="text" id="quick-share-contact" placeholder="mom@example.com or 555-123-4567" required>
                 </div>
                 <div class="form-group">
                     <label for="quick-share-type">Contact Type</label>
@@ -552,6 +559,17 @@
             });
         }
 
+        function formatPhoneNumberE164(phone) {
+            let digits = phone.replace(/\D/g, '');
+            if (digits.length === 11 && digits.startsWith('1')) {
+                return `+${digits}`;
+            }
+            if (digits.length === 10) {
+                return `+1${digits}`;
+            }
+            return `+${digits}`;
+        }
+
         const defaults = {
             url: 'https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette',
             text: 'Check out CloudBreak!',
@@ -597,7 +615,7 @@
         const renderShareVisibilityCheckboxes = () => {
             shareVisibilityGroup.innerHTML = '';
             allShareButtons.forEach(btn => {
-                if (!btn.id) return; // Skip buttons without an ID
+                if (!btn.id) return;
                 const label = document.createElement('label');
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
@@ -635,10 +653,16 @@
         const renderQuickShareButtons = () => {
             const quickShareContainer = document.getElementById('quick-share-links');
             quickShareContainer.innerHTML = '';
+
+            if (settings.quickShareContacts.length === 0) {
+                quickShareContainer.innerHTML = `<p class="quick-share-explainer">No contacts yet. Add people in "Personal Settings" to get started.</p>`;
+                return;
+            }
+
             settings.quickShareContacts.forEach((person, index) => {
                 const btn = document.createElement('a');
-                btn.className = 'action-item btn-quick-share';
-                btn.textContent = person.name;
+                btn.className = `action-item ${person.type}`;
+                btn.textContent = `${person.name} (${person.type.toUpperCase()})`;
                 btn.dataset.index = index;
                 quickShareContainer.appendChild(btn);
             });
@@ -798,10 +822,13 @@
             const typeInput = document.getElementById('quick-share-type');
             
             const name = nameInput.value.trim();
-            const contact = contactInput.value.trim();
+            let contact = contactInput.value.trim();
             const type = typeInput.value;
 
             if (name && contact) {
+                if (type === 'sms') {
+                    contact = formatPhoneNumberE164(contact);
+                }
                 settings.quickShareContacts.push({ name, contact, type });
                 setSetting('quickShareContacts', settings.quickShareContacts);
                 renderQuickShareList();
@@ -940,6 +967,8 @@
                         localStorage.removeItem(key);
                     }
                 });
+                // Also clear the pocket warning setting
+                localStorage.removeItem('pocketWarningHidden');
                 alert('All settings have been reset. The page will now reload.');
                 location.reload();
             }
@@ -949,24 +978,30 @@
         const couponBlock = document.querySelector('.coupon-code');
         const hideCouponBtn = document.getElementById('hide-coupon-btn');
         const couponHiddenKey = 'couponHiddenUntil';
-
-        // On page load, check if the coupon should be hidden
         const hideUntil = localStorage.getItem(couponHiddenKey);
         if (hideUntil && new Date().getTime() < parseInt(hideUntil, 10)) {
             couponBlock.style.display = 'none';
         } else if (hideUntil) {
-            // Clean up expired key
             localStorage.removeItem(couponHiddenKey);
         }
-        
-        // Add click listener to the hide button
         hideCouponBtn.addEventListener('click', () => {
             const twoWeeksInMs = 14 * 24 * 60 * 60 * 1000;
             const expirationTime = new Date().getTime() + twoWeeksInMs;
             localStorage.setItem(couponHiddenKey, expirationTime.toString());
             couponBlock.style.display = 'none';
         });
-        // --- End Coupon Banner Logic ---
+
+        // --- Pocket Warning Close Logic ---
+        const pocketWarningBlock = document.querySelector('.callout-warning');
+        const hidePocketWarningBtn = document.getElementById('hide-pocket-warning-btn');
+        const pocketWarningHiddenKey = 'pocketWarningHidden';
+        if (localStorage.getItem(pocketWarningHiddenKey)) {
+            pocketWarningBlock.style.display = 'none';
+        }
+        hidePocketWarningBtn.addEventListener('click', () => {
+            pocketWarningBlock.style.display = 'none';
+            localStorage.setItem(pocketWarningHiddenKey, 'true');
+        });
 
         // Initial Page Setup
         document.getElementById('mastodon-instance').value = settings.mastodonInstance;
