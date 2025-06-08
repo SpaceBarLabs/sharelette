@@ -551,38 +551,46 @@
         </div>
 
         <div class="how-to-use">
-            <p class="promo-text">Are you a content promoter or creator? Make it effortless for your audience to share your content. With Sharelette, you can create a single, simple link that gives your users a full, personalized suite of sharing options, increasing your reach and engagement.</p>
-            <h2>Use This Tool for Free</h2>
-            <p>You don't need to download anything! Just create a link to our free, hosted service and add what you want to share.</p>
+            <h2>For Your Website, App, or Event</h2>
+            <p class="promo-text" style="text-align: left; font-style: normal; margin-bottom: 1.5rem;">
+                Do you have a website, app, or event you want people to share? Sharelette makes it easy.
+                When your users click a Sharelette link, they get a simple, powerful page to share your content on social media, email, and more.
+                It's perfect for adding 'Share' buttons to your site or for printing QR codes on flyers and posters for real-world engagement.
+            </p>
+
+            <button type="button" class="btn btn-primary" id="show-generator-btn" style="width: 100%;">Create Your Share Link & QR Code</button>
             
-            <h3>Generate Your Own Link</h3>
-            <div class="link-generator">
-                <form id="link-generator-form">
-                    <div class="form-group">
-                        <label for="input-url">URL to share</label>
-                        <input type="text" id="input-url" placeholder="https://your-website.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="input-text">Text to share</label>
-                        <input type="text" id="input-text" placeholder="Check out this awesome site!">
-                    </div>
-                    <button type="submit" class="btn btn-primary" id="generate-link-btn">Generate Link & QR Code</button>
-                </form>
-                <div id="output-area">
-                     <label for="generated-link-output">Your Sharelette Link</label>
-                    <div class="output-group">
-                        <input type="text" id="generated-link-output" readonly>
-                        <button id="copy-generated-link-btn">Copy</button>
-                    </div>
-                    <div class="code-block-container" id="code-preview-wrapper" style="margin-top: 1rem; display: none;">
-                         <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">HTML Preview</label>
-                        <button class="copy-code-btn" id="copy-html-btn">Copy</button>
-                        <pre><code id="html-code-sample"></code></pre>
-                    </div>
-                    <div id="qrcode-output">
-                         <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">QR Code</label>
-                        <div id="qrcode-container"></div>
-                        <a id="qrcode-download" download="sharelette-qr.png">Download QR Code</a>
+            <div id="generator-container" style="display: none; margin-top: 2rem;">
+                <h3>Create Your Link</h3>
+                <p>You don't need to download anything! Just fill out the form below to create a link or QR code to our free, hosted service.</p>
+                <div class="link-generator">
+                    <form id="link-generator-form">
+                        <div class="form-group">
+                            <label for="input-url">URL to share</label>
+                            <input type="text" id="input-url" placeholder="https://your-website.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-text">Text to share</label>
+                            <input type="text" id="input-text" placeholder="Check out this awesome site!">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="generate-link-btn">Generate Link & QR Code</button>
+                    </form>
+                    <div id="output-area">
+                         <label for="generated-link-output">Your Sharelette Link</label>
+                        <div class="output-group">
+                            <input type="text" id="generated-link-output" readonly>
+                            <button id="copy-generated-link-btn">Copy</button>
+                        </div>
+                        <div class="code-block-container" id="code-preview-wrapper" style="margin-top: 1rem; display: none;">
+                             <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">HTML Preview</label>
+                            <button class="copy-code-btn" id="copy-html-btn">Copy</button>
+                            <pre><code id="html-code-sample"></code></pre>
+                        </div>
+                        <div id="qrcode-output">
+                             <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">QR Code</label>
+                            <div id="qrcode-container"></div>
+                            <a id="qrcode-download" download="sharelette-qr.png">Download QR Code</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1184,6 +1192,19 @@ Share this on social media
                 const expirationTime = new Date().getTime() + twoWeeksInMs;
                 localStorage.setItem(syncPromoHiddenKey, expirationTime.toString());
                 syncPromoBlock.style.display = 'none';
+            });
+        }
+
+        // --- Link Generator Visibility Toggle ---
+        const showGeneratorBtn = document.getElementById('show-generator-btn');
+        const generatorContainer = document.getElementById('generator-container');
+        if (showGeneratorBtn && generatorContainer) {
+            showGeneratorBtn.addEventListener('click', () => {
+                generatorContainer.style.display = 'block';
+                showGeneratorBtn.style.display = 'none';
+                setTimeout(() => {
+                    generatorContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 0);
             });
         }
 
