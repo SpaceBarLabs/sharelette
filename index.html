@@ -1073,9 +1073,9 @@
 
             const codeSampleEl = document.getElementById('html-code-sample');
             const escapedLink = finalLink.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-            codeSampleEl.innerHTML = `&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"${escapedLink}"</span>&gt;
-Share this on social media
-&lt;/<span class="code-tag">a</span>&gt;`;
+            const buttonStyle = "display: inline-block; padding: 14px 22px; font-size: 1rem; font-weight: bold; color: #ffffff; background-color: #00A9A5; border: 3px solid #FF4500; border-radius: 10px; text-align: center; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;";
+            const escapedStyle = buttonStyle.replace(/"/g, '&quot;');
+            codeSampleEl.innerHTML = `&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"${escapedLink}"</span> <span class="code-attr">style</span>=<span class="code-value">"${escapedStyle}"</span>&gt;Share This Page&lt;/<span class="code-tag">a</span>&gt;`;
             document.getElementById('code-preview-wrapper').style.display = 'block';
 
             const qrcodeOutput = document.getElementById('qrcode-output');
