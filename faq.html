@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharelette Integration Guide</title>
+    <style>
+        :root {
+            --brand-blue: #007bff;
+            --code-bg: #f3f4f6;
+            --code-text: #333;
+            --border-color: #e5e7eb;
+            --text-secondary: #6b7280;
+            --body-bg: #f9fafb;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--body-bg);
+            color: var(--code-text);
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem 2rem;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        header {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: var(--brand-blue);
+        }
+        header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        section {
+            margin-bottom: 2.5rem;
+        }
+        h2 {
+            font-size: 1.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        h3 {
+            font-size: 1.25rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            margin-bottom: 1rem;
+        }
+        strong {
+            color: #111827;
+        }
+        pre {
+            background-color: var(--code-bg);
+            padding: 1em;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9em;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            color: var(--code-text);
+        }
+        .note {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--brand-blue);
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 0 4px 4px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .platform-meta {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+        <header>
+            <h1>Sharelette Integration Guide</h1>
+            <p>Your comprehensive guide to adding a Sharelette button to any platform.</p>
+        </header>
+
+        <section>
+            <h2>The Base Code</h2>
+            <p>Every example below uses this basic HTML structure with inline styling. The <code>href</code> attribute is what you'll customize for each platform.</p>
+            <pre><code>&lt;a href="YOUR_SHARE_LINK_HERE" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+        </section>
+
+        <section>
+            <h2>Code Samples for Top Platforms</h2>
+            <p>Here are specific snippets for the most common platforms, ordered by popularity.</p>
+
+            <article>
+                <h3>1. WordPress</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> Self-Hosted CMS<br>
+                    <strong>Where to Paste:</strong> In your theme's <code>single.php</code> or <code>content-single.php</code> file, inside The Loop.
+                </p>
+                <pre><code>&lt;?php
+// WordPress uses template tags to get the post URL and title.
+$share_url = urlencode(get_permalink());
+$share_text = urlencode(get_the_title());
+$sharelette_link = "https://sharelette.cloudbreak.app/?url=" . $share_url . "&text=" . $share_text;
+?&gt;
+
+&lt;a href="&lt;?php echo $sharelette_link; ?&gt;" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
+
+            <article>
+                <h3>2. Next.js (React)</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> JavaScript Framework<br>
+                    <strong>Where to Paste:</strong> Create this as a reusable component (e.g., <code>components/ShareletteButton.js</code>).
+                </p>
+                <pre><code>// components/ShareletteButton.js
+'use client'; // Ensures this component runs on the client-side
+
+import { useState, useEffect } from 'react';
+
+export default function ShareletteButton({ title }) {
+  const [shareLink, setShareLink] = useState('');
+
+  // The link is constructed on the client to get the final window URL.
+  useEffect(() => {
+    const pageUrl = window.location.href;
+    const pageTitle = title || document.title;
+    const encodedUrl = encodeURIComponent(pageUrl);
+    const encodedText = encodeURIComponent(pageTitle);
+    setShareLink(`https://sharelette.cloudbreak.app/?url=${encodedUrl}&text=${encodedText}`);
+  }, [title]);
+
+  if (!shareLink) return null; // Or a loading placeholder
+
+  return (
+    &lt;a href={shareLink} style={{display:'inline-block', padding:'12px 20px', backgroundColor:'#007bff', color:'#ffffff', borderRadius:'5px', fontWeight:'bold', textDecoration:'none', textAlign:'center'}}&gt;
+      Share this Post
+    &lt;/a&gt;
+  );
+}</code></pre>
+            </article>
+            
+            <article>
+                <h3>3. Ghost</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> Hosted/Self-Hosted CMS<br>
+                    <strong>Where to Paste:</strong> In your theme's <code>post.hbs</code> file.
+                </p>
+                <pre><code>{{!-- Ghost uses Handlebars with helpers like 'url' and 'encode'. --}}
+{{#post}}
+  &lt;a href="https://sharelette.cloudbreak.app/?url={{url absolute="true"}}&amp;text={{encode title}}" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+    Share this Post
+  &lt;/a&gt;
+{{/post}}</code></pre>
+            </article>
+
+            <article>
+                <h3>4. Hugo</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> Static Site Generator<br>
+                    <strong>Where to Paste:</strong> In your theme's content layout file (e.g., <code>layouts/_default/single.html</code>).
+                </p>
+                <pre><code>&lt;!-- Hugo provides the .Permalink and .Title variables for each page. --&gt;
+&lt;a href="https://sharelette.cloudbreak.app/?url={{ .Permalink }}&amp;text={{ .Title | urlquery }}" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
+
+            <article>
+                <h3>5. Jekyll</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> Static Site Generator<br>
+                    <strong>Where to Paste:</strong> In your post layout file (e.g., <code>_layouts/post.html</code>).
+                </p>
+                <pre><code>&lt;!-- Jekyll uses Liquid templating. The url_encode filter is crucial. --&gt;
+&lt;a href="https://sharelette.cloudbreak.app/?url={{ page.url | absolute_url }}&amp;text={{ page.title | url_encode }}" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
+
+            <article>
+                <h3>6. Blogger</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> Hosted Blogging Platform<br>
+                    <strong>Where to Paste:</strong> In the Blogger theme editor (Edit HTML), inside the main blog post widget.
+                </p>
+                <pre><code>&lt;!-- Blogger uses special expr:href and 'data:' tags to build attributes. --&gt;
+&lt;a expr:href='"https://sharelette.cloudbreak.app/?url=" + data:post.url + "&amp;text=" + data:post.title' style='display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;'&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
+        </section>
+
+        <section>
+            <h2>Other Platforms & Frameworks</h2>
+
+            <article>
+                <h3>Nuxt.js (Vue)</h3>
+                 <p class="platform-meta">
+                    <strong>Platform Type:</strong> JavaScript Framework<br>
+                    <strong>Where to Paste:</strong> Create a reusable component (e.g., <code>components/ShareletteButton.vue</code>).
+                </p>
+                <pre><code>&lt;!-- components/ShareletteButton.vue --&gt;
+&lt;template&gt;
+  &lt;a v-if="shareLink" :href="shareLink" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+    Share this Post
+  &lt;/a&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  props: { title: { type: String, default: '' } },
+  data() { return { shareLink: '' }; },
+  mounted() {
+    const pageUrl = window.location.href;
+    const pageTitle = this.title || document.title;
+    this.shareLink = `https://sharelette.cloudbreak.app/?url=${encodeURIComponent(pageUrl)}&amp;text=${encodeURIComponent(pageTitle)}`;
+  }
+};
+&lt;/script&gt;</code></pre>
+            </article>
+
+            <article>
+                <h3>Eleventy (11ty)</h3>
+                 <p class="platform-meta">
+                    <strong>Platform Type:</strong> Static Site Generator<br>
+                    <strong>Where to Paste:</strong> In a Liquid (<code>.liquid</code>) or Nunjucks (<code>.njk</code>) template.
+                </p>
+                <pre><code>{# The 'page' object holds the URL; front matter data holds the title. #}
+&lt;a href="https://sharelette.cloudbreak.app/?url={{ page.url | url | absoluteUrl(eleventy.server.url) }}&amp;text={{ title | url_encode }}" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
+
+            <article>
+                <h3>VuePress</h3>
+                 <p class="platform-meta">
+                    <strong>Platform Type:</strong> Static Site Generator<br>
+                    <strong>Where to Paste:</strong> In a theme layout component (e.g., <code>theme/layouts/Layout.vue</code>).
+                </p>
+                <pre><code>&lt;template&gt;
+  &lt;div&gt;
+    &lt;!-- Other layout content --&gt;
+    &lt;a :href="shareletteLink" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+      Share on Sharelette
+    &lt;/a&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  computed: {
+    shareletteLink() {
+      const baseUrl = 'https://sharelette.cloudbreak.app/?';
+      const url = `https://${this.$site.host}${this.$page.path}`;
+      const text = this.$page.title;
+      return `${baseUrl}url=${encodeURIComponent(url)}&amp;text=${encodeURIComponent(text)}`;
+    }
+  }
+}
+&lt;/script&gt;</code></pre>
+            </article>
+
+             <article>
+                <h3>Website Builders (Webflow, Squarespace, etc.)</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> UI-Driven Website Builders
+                </p>
+                <div class="note">
+                    <p>For platforms that are more UI-driven, you'll add a button and use their interface to set the link and styling rather than pasting code.</p>
+                    <ol>
+                        <li><strong>Add a Button:</strong> Drag a <strong>Button</strong> element onto your blog post template page.</li>
+                        <li><strong>Set the Link:</strong> In the button's settings, set the link URL. You will need to construct it manually using the platform's dynamic content/CMS variables. The structure will be:<br>
+                        <code>https://sharelette.cloudbreak.app/?url=</code> + <code>(variable for Post URL)</code> + <code>&amp;text=</code> + <code>(variable for Post Title)</code></li>
+                        <li><strong>Apply Styling:</strong> Use the platform's built-in style editor to set the following properties for the button:
+                            <ul>
+                                <li><strong>Background Color:</strong> <code>#007bff</code></li>
+                                <li><strong>Text Color:</strong> <code>#ffffff</code></li>
+                                <li><strong>Padding:</strong> ~12px top/bottom, ~20px left/right</li>
+                                <li><strong>Corner Radius:</strong> ~5px</li>
+                                <li><strong>Font Weight:</strong> Bold</li>
+                                <li><strong>Text Decoration:</strong> None</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </article>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 Sharelette by CloudBreak</p>
+        </footer>
+    </main>
+
+</body>
+</html>
