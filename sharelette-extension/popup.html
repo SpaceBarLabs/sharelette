@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body {
+        html, body {
+            /* Slightly smaller dimensions to prevent overflow */
+            width: 498px;
+            height: 698px;
             margin: 0;
             padding: 0;
-            width: 500px; /* Width of the popup */
-            height: 700px; /* Height of the popup */
+            overflow: hidden; /* Keep this to prevent scrollbars */
+        }
+        body {
             display: flex;
             flex-direction: column;
         }
         iframe {
             flex-grow: 1;
             border: none;
+            width: 100%;
+            height: 100%;
         }
         .loading {
             display: flex;

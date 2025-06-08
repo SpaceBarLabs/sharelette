@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const iframe = document.getElementById('sharelette-frame');
 
         // Ensure we got a tab back.
-        if (tabs.length === 0) {
+        if (tabs.length === 0 || !tabs[0].url) {
             loadingDiv.textContent = 'Could not find an active tab.';
             return;
         }
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = tab.title;
 
         // Check if the URL is a shareable web page.
-        if (!url || !url.startsWith('http')) {
+        if (!url.startsWith('http')) {
             loadingDiv.textContent = 'This page cannot be shared.';
             return;
         }
