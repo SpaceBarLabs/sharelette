@@ -219,10 +219,73 @@ export default function ShareletteButton({ title }) {
   &lt;/a&gt;
 {{/post}}</code></pre>
             </article>
+            
+            <article>
+                <h3>4. Hugo</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> Static Site Generator<br>
+                    <strong>Where to Paste:</strong> In your theme's content layout file (e.g., <code>layouts/_default/single.html</code>).
+                </p>
+                <pre><code class="language-go-template">&lt;!-- Hugo provides the .Permalink and .Title variables for each page. --&gt;
+&lt;a href="https://sharelette.cloudbreak.app/?url={{ .Permalink }}&amp;text={{ .Title | urlquery }}" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
         </section>
 
         <section>
             <h2>Other Platforms & Frameworks</h2>
+            
+            <article>
+                <h3>Jekyll</h3>
+                <p class="platform-meta">
+                    <strong>Platform Type:</strong> Static Site Generator<br>
+                    <strong>Where to Paste:</strong> In your post layout file (e.g., <code>_layouts/post.html</code>).
+                </p>
+                <pre><code class="language-liquid">&lt;!-- Jekyll uses Liquid templating. The url_encode filter is crucial. --&gt;
+&lt;a href="https://sharelette.cloudbreak.app/?url={{ page.url | absolute_url }}&amp;text={{ page.title | url_encode }}" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
+
+            <article>
+                <h3>Nuxt.js (Vue)</h3>
+                 <p class="platform-meta">
+                    <strong>Platform Type:</strong> JavaScript Framework<br>
+                    <strong>Where to Paste:</strong> Create a reusable component (e.g., <code>components/ShareletteButton.vue</code>).
+                </p>
+                <pre><code class="language-html">&lt;!-- components/ShareletteButton.vue --&gt;
+&lt;template&gt;
+  &lt;a v-if="shareLink" :href="shareLink" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+    Share this Post
+  &lt;/a&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  props: { title: { type: String, default: '' } },
+  data() { return { shareLink: '' }; },
+  mounted() {
+    const pageUrl = window.location.href;
+    const pageTitle = this.title || document.title;
+    this.shareLink = `https://sharelette.cloudbreak.app/?url=${encodeURIComponent(pageUrl)}&amp;text=${encodeURIComponent(pageTitle)}`;
+  }
+};
+&lt;/script&gt;</code></pre>
+            </article>
+
+            <article>
+                <h3>Eleventy (11ty)</h3>
+                 <p class="platform-meta">
+                    <strong>Platform Type:</strong> Static Site Generator<br>
+                    <strong>Where to Paste:</strong> In a Liquid (<code>.liquid</code>) or Nunjucks (<code>.njk</code>) template.
+                </p>
+                <pre><code class="language-liquid">{# The 'page' object holds the URL; front matter data holds the title. #}
+&lt;a href="https://sharelette.cloudbreak.app/?url={{ page.url | url | absoluteUrl(eleventy.server.url) }}&amp;text={{ title | url_encode }}" style="display:inline-block; padding:12px 20px; background-color:#007bff; color:#ffffff; border-radius:5px; font-weight:bold; text-decoration:none; text-align:center;"&gt;
+  Share this Post
+&lt;/a&gt;</code></pre>
+            </article>
+            
             <article>
                 <h3>Website Builders (Webflow, Squarespace, etc.)</h3>
                 <div class="note">
