@@ -1,21 +1,21 @@
 {
   "name": "Sharelette",
   "short_name": "Sharelette",
-  "description": "A simple, powerful tool to share links across various social media and save-for-later services.",
+  "description": "A simple, powerful tool to share links.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#007bff",
+  "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "sharelette.jpeg",
+      "src": "sharelette-icon-transparent-192px.png",
       "sizes": "192x192",
-      "type": "image/jpeg"
+      "type": "image/png"
     },
     {
-      "src": "sharelette.jpeg",
+      "src": "sharelette-icon-transparent-512px.png",
       "sizes": "512x512",
-      "type": "image/jpeg"
+      "type": "image/png"
     }
   ],
   "share_target": {
