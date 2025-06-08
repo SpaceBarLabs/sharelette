@@ -29,9 +29,9 @@ chrome.runtime.onInstalled.addListener(() => {
 // ====== (It only runs when injected into a web page) ============== //
 // ================================================================== //
 
-// This check ensures the content script code only runs when it's NOT in the
-// background service worker context.
-if (typeof window !== 'undefined' && typeof chrome.runtime === 'undefined') {
+// This check ensures the content script code only runs when it's in a page
+// context (has a `window` object) and not in the background service worker.
+if (typeof window !== 'undefined') {
 
     // Check if the native share function exists before we try to override it.
     if (navigator.share) {
@@ -85,4 +85,3 @@ if (typeof window !== 'undefined' && typeof chrome.runtime === 'undefined') {
         console.log('Sharelette: navigator.share has been successfully replaced.');
     }
 }
-
