@@ -49,13 +49,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 20px;
         }
         .logo {
-            width: 75px;
-            height: 75px;
+            width: 128px;
+            height: 128px;
         }
-        h1 { margin: 0; font-size: 2.5rem; font-weight: bold; }
+        h1 { margin: 0; font-size: 2.2rem; font-weight: bold; }
         h2 { font-size: 1.25rem; }
         h3, h4 {
             margin-bottom: 0.75rem;
@@ -71,6 +71,11 @@
              margin-top: 1.5rem;
         }
         .attribution { margin: 0.25rem 0 0 0; font-size: 0.9rem; }
+        .header .attribution {
+            margin: -5px 0 0 0;
+            font-size: 1rem;
+            text-align: left;
+        }
         .attribution a { color: var(--text-secondary); text-decoration: none; }
         .attribution a:hover { text-decoration: underline; }
         
@@ -386,11 +391,13 @@
         <div class="header">
             <div class="header-title-group">
                 <img src="sharelette-focused.jpg" alt="Sharelette Logo" class="logo">
-                <h1>Sharelette</h1>
+                <div>
+                    <h1>Sharelette</h1>
+                    <p class="attribution">
+                        by <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener">CloudBreak</a>
+                    </p>
+                </div>
             </div>
-            <p class="attribution">
-                <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener">from CloudBreak</a>
-            </p>
             <p class="coupon-code">
                 <button id="hide-coupon-btn" class="close-btn" aria-label="Hide coupon">&times;</button>
                 With Pocket shutting down, try our managed hosting for 
