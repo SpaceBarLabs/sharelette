@@ -8,7 +8,7 @@
     
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#007bff">
-    <link rel="apple-touch-icon" href="sharelette.jpeg">
+    <link rel="apple-touch-icon" href="sharelette-icon.jpeg">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Sharelette">
@@ -496,31 +496,6 @@
             </form>
             
             <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
-
-            <h4>Custom Share Buttons</h4>
-            <div id="custom-share-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"></div>
-            <form id="custom-share-form">
-                <div class="form-group">
-                    <label for="custom-name">Button Name</label>
-                    <input type="text" id="custom-name" placeholder="My Forum" required>
-                </div>
-                <div class="form-group">
-                    <label for="custom-url">Share URL Template</label>
-                    <input type="text" id="custom-url" placeholder="https://myforum.com/submit?url=%URL%&title=%TEXT%" required>
-                    <small>Use <code>%URL%</code> for the link and <code>%TEXT%</code> for the text.</small>
-                </div>
-                <button type="submit" class="btn btn-sm" id="add-custom-btn">Add Custom Button</button>
-            </form>
-            
-            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
-            
-            <h4>Bookmarklet</h4>
-            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">
-                To share the page you're currently on, drag this link to your browser's bookmarks bar.
-            </p>
-            <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move; color: white">Drag to Bookmarks</a>
-            
-            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
             
             <h4>Quick Share Contacts</h4>
             <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem; line-height: 1.5;">
@@ -546,6 +521,31 @@
                 <button type="submit" class="btn btn-sm" id="add-quick-share-btn">Add Person</button>
             </form>
 
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+
+            <h4>Custom Share Buttons</h4>
+            <div id="custom-share-list" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;"></div>
+            <form id="custom-share-form">
+                <div class="form-group">
+                    <label for="custom-name">Button Name</label>
+                    <input type="text" id="custom-name" placeholder="My Forum" required>
+                </div>
+                <div class="form-group">
+                    <label for="custom-url">Share URL Template</label>
+                    <input type="text" id="custom-url" placeholder="https://myforum.com/submit?url=%URL%&title=%TEXT%" required>
+                    <small>Use <code>%URL%</code> for the link and <code>%TEXT%</code> for the text.</small>
+                </div>
+                <button type="submit" class="btn btn-sm" id="add-custom-btn">Add Custom Button</button>
+            </form>
+            
+            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
+            
+            <h4>Bookmarklet</h4>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: -0.5rem; margin-bottom: 1rem;">
+                To share the page you're currently on, drag this link to your browser's bookmarks bar.
+            </p>
+            <a id="sharelette-bookmarklet" href="#" class="btn btn-primary" style="text-align: center; display: block; width: fit-content; margin: 0 auto; padding: 0.5rem 1rem; cursor: move; color: white">Drag to Bookmarks</a>
+            
             <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border-color);">
             
             <h4>Manage Settings File</h4>
