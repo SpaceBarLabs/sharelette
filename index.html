@@ -45,13 +45,15 @@
             width: 100%;
         }
         .header { margin-bottom: 0.5rem; }
+        .header-title-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
         .logo {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1rem auto;
-            display: block;
+            width: 50px;
+            height: 50px;
         }
         h1 { margin: 0; font-size: 2.5rem; font-weight: bold; }
         h2 { font-size: 1.25rem; }
@@ -373,8 +375,8 @@
             }
             h1 { font-size: 2rem; }
             .logo {
-                width: 180px;
-                height: 180px;
+                width: 40px;
+                height: 40px;
             }
         }
     </style>
@@ -382,8 +384,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="sharelette-focused.jpg" alt="Sharelette Logo" class="logo">
-            <h1>Sharelette</h1>
+            <div class="header-title-group">
+                <img src="sharelette-focused.jpg" alt="Sharelette Logo" class="logo">
+                <h1>Sharelette</h1>
+            </div>
             <p class="attribution">
                 <a href="https://cloudbreak.app/?utm_source=sharelette&utm_medium=webapp&utm_campaign=sharelette_tool&rby=sharelette" target="_blank" rel="noopener">from CloudBreak</a>
             </p>
