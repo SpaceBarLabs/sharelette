@@ -594,7 +594,9 @@
                             <button id="copy-generated-link-btn">Copy</button>
                         </div>
                         <div class="code-block-container" id="code-preview-wrapper" style="margin-top: 1rem; display: none;">
-                             <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">HTML Preview</label>
+                            <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">Rendered Preview</label>
+                            <div id="rendered-html-container" style="margin-bottom: 1rem; padding: 1rem; background-color: #f3f4f6; border-radius: 4px; text-align: center;"></div>
+                            <label style="font-weight: 500; margin-bottom: 0.5rem; display: block;">HTML Code</label>
                             <button class="copy-code-btn" id="copy-html-btn">Copy</button>
                             <pre><code id="html-code-sample"></code></pre>
                         </div>
@@ -1072,10 +1074,23 @@
             document.getElementById('output-area').style.display = 'block';
 
             const codeSampleEl = document.getElementById('html-code-sample');
+            const renderedContainer = document.getElementById('rendered-html-container');
             const escapedLink = finalLink.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
             const buttonStyle = "display: inline-block; padding: 14px 22px; font-size: 1rem; font-weight: bold; color: #ffffff; background-color: #00A9A5; border: 3px solid #FF4500; border-radius: 10px; text-align: center; text-decoration: none; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;";
+
+            // Update the HTML code preview
             const escapedStyle = buttonStyle.replace(/"/g, '&quot;');
             codeSampleEl.innerHTML = `&lt;<span class="code-tag">a</span> <span class="code-attr">href</span>=<span class="code-value">"${escapedLink}"</span> <span class="code-attr">style</span>=<span class="code-value">"${escapedStyle}"</span>&gt;Share This Page&lt;/<span class="code-tag">a</span>&gt;`;
+            
+            // Render the actual button for the live preview
+            renderedContainer.innerHTML = ''; // Clear previous preview
+            const previewButton = document.createElement('a');
+            previewButton.href = finalLink;
+            previewButton.setAttribute('style', buttonStyle);
+            previewButton.textContent = 'Share This Page';
+            previewButton.target = '_blank'; // Open in new tab
+            renderedContainer.appendChild(previewButton);
+
             document.getElementById('code-preview-wrapper').style.display = 'block';
 
             const qrcodeOutput = document.getElementById('qrcode-output');
