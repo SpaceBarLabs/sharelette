@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Sharelette (Active Tab)",
+    "name": "Sharelette",
     "version": "1.1",
     "description": "Click the toolbar icon to share the current page using Sharelette.",
     "permissions": [

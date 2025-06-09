@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Ensure the URL is a shareable web page.
         if (!tab.url.startsWith('http')) {
-            loadingDiv.textContent = 'This type of page cannot be shared (e.g., chrome:// pages).';
+            loadingDiv.textContent = 'This page cannot be shared.';
             return;
         }
 
