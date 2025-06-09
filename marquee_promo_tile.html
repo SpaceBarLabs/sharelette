@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharelette - Chrome Marquee Promo Tile</title>
+    <style>
+        /* Basic reset and font settings */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5; /* A light grey to see the tile bounds */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* The main canvas for the promo tile */
+        .promo-tile {
+            width: 1400px;
+            height: 560px;
+            background-color: #ffffff; /* White background */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            /* Changed to row for side-by-side layout */
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            text-align: left; /* Align text to the left in the text container */
+            padding: 60px;
+            box-sizing: border-box; /* Ensures padding is included in the dimensions */
+            overflow: hidden; /* Prevents content from spilling out */
+            gap: 60px; /* Adds space between the logo and text block */
+        }
+
+        /* Styling for the Sharelette logo */
+        .logo {
+            width: 240px;  /* Increased size for the larger canvas */
+            height: 240px;
+            flex-shrink: 0; /* Prevents the logo from shrinking */
+            content: url('https://sharelette.cloudbreak.app/sharelette-focused.jpg');
+        }
+
+        /* Container for the text content */
+        .text-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Styling for the main headline/tagline */
+        .title {
+            font-size: 72px; /* Increased font size */
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+
+        /* Styling for the subtitle/description */
+        .subtitle {
+            font-size: 28px; /* Increased font size */
+            color: #6b7280; /* A secondary text color */
+            margin: 0;
+            line-height: 1.5;
+            max-width: 600px; /* Constrain line width for readability */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="promo-tile">
+        <div class="logo"></div>
+        <div class="text-content">
+            <h1 class="title">Sharelette</h1>
+            <p class="subtitle">Bring the power of mobile sharing to your Mac, Windows, or Linux computer.</p>
+        </div>
+    </div>
+
+</body>
+</html>
