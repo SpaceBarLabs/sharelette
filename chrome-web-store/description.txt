@@ -1,0 +1,5 @@
+Bring the Power of Mobile Sharing to Your Mac, Windows, or Linux computer with Sharelette!
+
+Sharelette completely transforms your browser's sharing experience. It replaces the limited, native desktop share dialog with a beautiful, powerful, and customizable "share sheet," similar to  the one on your phone.
+
+When you click the "Share" button in your toolbar, Sharelette handles the request and presents a clean, centralized hub for all your sharing needs. No more wrestling with awkward menus--just one click to send links exactly where you want them to go.
