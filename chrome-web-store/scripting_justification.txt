@@ -1,0 +1,1 @@
+The scripting permission is fundamental to the extension's purpose. It is used to programmatically inject the content script (content_main.js) into the active tab to provide native sharing (navigator.share) support. This script is responsible for displaying the QR code overlay that enables the user to share the page content to their mobile device."

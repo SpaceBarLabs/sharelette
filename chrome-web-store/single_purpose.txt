@@ -1,0 +1,1 @@
+Sharelette makes it easy to share content in your browser.  Think of it as a customizable "share sheet" similar to the one on your phone.

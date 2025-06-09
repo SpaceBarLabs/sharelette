@@ -1,0 +1,1 @@
+Yes, this extension uses remote resources. It loads the sharelette.cloudbreak.app service. This service is essential for sharing content through the user's configured services.
