@@ -768,7 +768,17 @@
         const text = finalText;
 
         const nativeShareBtn = document.getElementById('native-share');
-        if (navigator.share) {
+        
+        // We want to hide the native share button if the page is being displayed
+        // by one of the Sharelette browser extensions, or in any other context
+        // where it's not the top-level document (e.g., opened in a popup or iframe).
+        // This prevents a confusing loop where the extension's share UI would call
+        // itself.
+        // The Firefox extension opens a new window, so window.opener will exist.
+        // The Chromium extension loads the page in an iframe, so window.top will not be window.self.
+        const isEmbeddedOrOpenedAsPopup = window.opener || (window.self !== window.top);
+
+        if (navigator.share && !isEmbeddedOrOpenedAsPopup) {
             nativeShareBtn.style.display = 'inline-flex';
             nativeShareBtn.addEventListener('click', async () => {
                 try {
