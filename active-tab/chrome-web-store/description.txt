@@ -1,3 +1,5 @@
-This extension allows users to share the current web page they are viewing.
+Bring the Power of Mobile-like Sharing to Your Mac, Windows, or Linux computer with Sharelette!
 
-By clicking the Sharelette icon in the browser toolbar, a popup will open, loading the Sharelette web application from our official site (sharelette.cloudbreak.app). The URL and title of the current page are automatically passed to the web app, allowing the user to easily share the page to various social networks and services without granting the extension broad permissions.
+Sharelette completely transforms your browser's sharing experience. It provides a share dialog with a beautiful, powerful, and customizable "share sheet," similar to  the one on your phone.
+
+When you click the "Share" button in your toolbar, Sharelette handles the request and presents a clean, centralized hub for all your sharing needs. No more wrestling with awkward menus--just one click to send links exactly where you want them to go.

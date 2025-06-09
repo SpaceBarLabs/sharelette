@@ -1,0 +1,1 @@
+The activeTab permission is essential for this core function. When a user clicks the extension's icon in the toolbar, we need to retrieve the URL and title of the page they are currently viewing. This data is then passed to our web application, which is loaded inside the extension's popup, to initiate the share.
