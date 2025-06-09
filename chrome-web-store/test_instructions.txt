@@ -1,2 +1,2 @@
 - Visit a public website page (e.g. a blog).  Click the Sharelette toolbar button.  Sharelette allows the user to share this page to the configured social networks and services.
-- Visit a page that has a native share button, for example: https://mdn.github.io/dom-examples/web-share/  Clicking it will open the Sharelette popup, just like sharing by clicking on the toolbar button.
+- Visit a page that has a native share button, for example: https://mdn.github.io/dom-examples/web-share/  Clicking it will open the Sharelette popup, just like sharing by clicking on the toolbar button.  Note how the preview changes between "Web share test" (the page title) for the toolbar button and "MDN" (the develope
