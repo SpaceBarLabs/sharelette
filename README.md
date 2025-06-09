@@ -2,11 +2,16 @@
 
 Bring the Power of Mobile Sharing to Your Mac, Windows, or Linux computer with Sharelette!
 
+Introduce yourself to [Sharelette](https://sharelette.cloudbreak.app/) today!
+
 ## What is it?
 
 ### Share buttons
 
 Sharelette can be used on your website, documents, or posters to encourage others to share content.
+
+- [Sharelette Link and QR Code Generator](https://sharelette.cloudbreak.app/#generator-description)
+- [Developer documentation](https://sharelette.cloudbreak.app/integration-guide/)
 
 ### Extension
 
