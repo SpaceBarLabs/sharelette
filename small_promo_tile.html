@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharelette - Chrome Promo Tile</title>
+    <style>
+        /* Basic reset and font settings */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5; /* A light grey to see the tile bounds */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* The main canvas for the promo tile */
+        .promo-tile {
+            width: 440px;
+            height: 280px;
+            background-color: #ffffff; /* White background */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box; /* Ensures padding is included in the dimensions */
+            overflow: hidden; /* Prevents content from spilling out */
+        }
+
+        /* Styling for the Sharelette logo */
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+            /* The image is from the existing Sharelette website */
+            content: url('https://sharelette.cloudbreak.app/sharelette-focused.jpg');
+        }
+
+        /* Styling for the main headline/tagline */
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 5px 0;
+        }
+
+        /* Styling for the subtitle/description */
+        .subtitle {
+            font-size: 16px;
+            color: #6b7280; /* A secondary text color */
+            margin: 0;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="promo-tile">
+        <div class="logo"></div>
+        <h1 class="title">Sharelette</h1>
+        <p class="subtitle">Mobile sharing, on your desktop.</p>
+    </div>
+
+</body>
+</html>
