@@ -45,22 +45,24 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onInstalle
 // context (has a `window` object) and not in the background service worker.
 if (typeof window !== 'undefined') {
 
-    // Check if the native share function exists before we try to override it.
-    if (navigator.share) {
-        
-        // 1. Save the original browser 'share' function.
-        const originalNavigatorShare = navigator.share.bind(navigator);
+        // 2. Define and replace navigator.canShare
+        // Our version always returns true because we can always open a popup.
+        navigator.canShare = function(data) {
+            console.log('Sharelette intercepted a canShare action. Data:', data);
+            // We return true to indicate that our custom share implementation can be called.
+            return true; 
+        };
 
-        // 2. Replace the 'share' function on the page with our custom version.
+        // 3. Replace the 'share' function with our custom version.
         navigator.share = async function(data) {
-            console.log('Sharelette intercepted a share action with data:', data);
+            console.log('Sharelette intercepted a share action. Data:', data);
 
             if (!data) {
-                return;
+                // If there's no data, we don't need to do anything.
+                return Promise.resolve();
             }
 
-            // 3. Open the Sharelette UI in a new popup window, passing the
-            //    page's URL and title as parameters.
+            // Open the Sharelette UI in a new popup window.
             const shareletteBaseUrl = 'https://sharelette.cloudbreak.app';
             const shareUrl = new URL(shareletteBaseUrl);
             
@@ -70,23 +72,19 @@ if (typeof window !== 'undefined') {
                 shareUrl.searchParams.set('text', data.text);
             }
             
-            // Define the dimensions and position for the popup window.
             const width = 550;
             const height = 750;
             const left = (screen.width / 2) - (width / 2);
             const top = (screen.height / 2) - (height / 2);
 
-            // Open the centered popup window.
             window.open(
                 shareUrl, 
                 'Sharelette', 
                 `width=${width},height=${height},top=${top},left=${left}`
             );
 
-            // We return a resolved promise because the share API is async.
             return Promise.resolve();
         };
 
-        console.log('Sharelette: navigator.share has been successfully replaced.');
-    }
+        console.log('Sharelette: navigator.share and navigator.canShare have been successfully replaced.');
 }
