@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Sharelette",
     "version": "1.0",
-    "description": "An extension to override the default web share API.",
+    "description": "Share the current page using Sharelette and replaces the native share dialog.",
     "permissions": [
         "scripting",
         "storage"
