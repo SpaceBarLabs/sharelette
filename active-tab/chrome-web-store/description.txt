@@ -1,0 +1,3 @@
+This extension allows users to share the current web page they are viewing.
+
+By clicking the Sharelette icon in the browser toolbar, a popup will open, loading the Sharelette web application from our official site (sharelette.cloudbreak.app). The URL and title of the current page are automatically passed to the web app, allowing the user to easily share the page to various social networks and services without granting the extension broad permissions.

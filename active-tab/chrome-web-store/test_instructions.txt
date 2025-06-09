@@ -1,0 +1,11 @@
+Testing the extension is straightforward:
+
+1. Install the extension.
+2. Navigate to any public website (e.g., https://www.wikipedia.org/).
+3. Click the Sharelette icon in the browser's toolbar.
+
+Expected Result:
+- A popup window should appear.
+- The popup should load and display the Sharelette web application, hosted at https://sharelette.cloudbreak.app.
+- The web application inside the popup should be pre-filled with the URL and title of the page you were on (e.g., "https://www.wikipedia.org/").
+- All sharing functionality within the popup works as expected.

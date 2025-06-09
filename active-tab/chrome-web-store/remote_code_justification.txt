@@ -1,0 +1,5 @@
+The extension's core functionality is provided by our web application, hosted at https://sharelette.cloudbreak.app.
+
+The extension popup simply acts as a container that loads this URL in an iframe. We pass the current page's URL and title as query parameters. This design is central to the extension's purpose, as all sharing logic and user interface are managed by the web application.
+
+This allows us to provide a rich user experience and update sharing options dynamically without requiring users to constantly update the extension. The extension itself contains no obfuscated code and its logic is minimal, serving only to bridge the browser and our web service in a secure, sandboxed iframe.
