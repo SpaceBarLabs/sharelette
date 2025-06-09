@@ -1,34 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Query for the currently active tab in the browser.
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const loadingDiv = document.getElementById('loading');
-        const iframe = document.getElementById('sharelette-frame');
+    const titleDisplay = document.getElementById('title-display');
+    const urlDisplay = document.getElementById('url-display');
+    const qrcodeContainer = document.getElementById('qrcode');
 
-        // Ensure we got a tab back.
-        if (tabs.length === 0 || !tabs[0].url) {
-            loadingDiv.textContent = 'Could not find an active tab.';
-            return;
+    // Retrieve the share data from storage
+    chrome.storage.local.get(['shareData'], (result) => {
+        if (result.shareData && result.shareData.url) {
+            const { url, title } = result.shareData;
+
+            titleDisplay.textContent = title || 'Shared Link';
+            urlDisplay.textContent = url;
+            
+            qrcodeContainer.innerHTML = ''; // Clear previous QR code
+            new QRCode(qrcodeContainer, {
+                text: url,
+                width: 150,
+                height: 150,
+            });
+
+            // Clear the storage so it's not reused on next manual open
+            chrome.storage.local.remove('shareData');
+        } else {
+            // Handle case where popup is opened manually without share data
+            titleDisplay.textContent = 'Sharelette';
+            urlDisplay.textContent = 'Use a website’s share button to send content here.';
         }
-
-        const tab = tabs[0];
-        const url = tab.url;
-        const title = tab.title;
-
-        // Check if the URL is a shareable web page.
-        if (!url.startsWith('http')) {
-            loadingDiv.textContent = 'This page cannot be shared.';
-            return;
-        }
-
-        // Construct the Sharelette URL with the page's data.
-        const shareletteBaseUrl = 'https://sharelette.cloudbreak.app';
-        const shareUrl = new URL(shareletteBaseUrl);
-        shareUrl.searchParams.set('url', url);
-        shareUrl.searchParams.set('text', title);
-
-        // Set the iframe's source and make it visible.
-        iframe.src = shareUrl.toString();
-        iframe.style.display = 'block';
-        loadingDiv.style.display = 'none';
     });
 });

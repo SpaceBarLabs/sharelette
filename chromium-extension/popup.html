@@ -1,41 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <title>Sharelette</title>
     <style>
-        html, body {
-            /* Further reduced dimensions for the popup window */
-            width: 400px;
-            height: 600px;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Keep this to prevent scrollbars */
+        body { 
+            width: 280px; 
+            padding: 10px;
+            text-align: center; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
         }
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-        iframe {
-            flex-grow: 1;
-            border: none;
-            width: 100%;
-            height: 100%;
-        }
-        .loading {
+        #qrcode { 
+            margin: 15px auto;
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100%;
-            font-family: sans-serif;
-            font-size: 16px;
-            color: #555;
+        }
+        h1 { 
+            font-size: 16px; 
+            word-wrap: break-word; 
+            margin: 0 0 5px 0;
+        }
+        p { 
+            font-size: 12px; 
+            word-wrap: break-word; 
+            color: #555; 
+            margin: 0;
         }
     </style>
-    <script src="popup.js" defer></script>
 </head>
 <body>
-    <div id="loading" class="loading">Loading...</div>
-    
-    <iframe id="sharelette-frame" style="display:none;"></iframe>
+    <h1 id="title-display">Loading...</h1>
+    <p id="url-display"></p>
+    <div id="qrcode"></div>
+    <script src="qrcode.min.js"></script>
+    <script src="popup.js"></script>
 </body>
 </html>

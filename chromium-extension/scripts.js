@@ -10,81 +10,69 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onInstalle
         try {
             await chrome.scripting.registerContentScripts([{
                 id: 'sharelette-interceptor',
-                js: ['scripts.js'], // It injects itself, but only the 'content' part runs.
+                js: ['scripts.js'],
                 matches: ['<all_urls>'],
-                runAt: 'document_start', // Run as early as possible.
-                world: 'MAIN' // Inject into the main page's context to access navigator.
+                runAt: 'document_start',
+                world: 'MAIN'
             }]);
             console.log("Sharelette content script registered.");
         } catch (err) {
-            // This error is expected if the script is already registered, so we can ignore it.
             if (!err.message.includes('Duplicate script ID')) {
                 console.error("Failed to register Sharelette content script:", err);
             }
         }
     };
 
-    // Run the injection function when the extension is first installed.
-    chrome.runtime.onInstalled.addListener(() => {
-        injectContentScript();
-    });
+    chrome.runtime.onInstalled.addListener(injectContentScript);
+    chrome.runtime.onStartup.addListener(injectContentScript);
 
-    // Also run when the browser starts, in case the extension was disabled and re-enabled.
-    chrome.runtime.onStartup.addListener(() => {
-        injectContentScript();
+    // Listen for share messages from the content script
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+        if (message.type === 'share') {
+            console.log('Sharelette: Background received share data:', message.data);
+            
+            // Store the data for the popup to access
+            chrome.storage.local.set({ shareData: message.data }, () => {
+                // Programmatically open the extension's popup
+                if (chrome.action.openPopup) {
+                    chrome.action.openPopup();
+                }
+            });
+            return true;
+        }
     });
 }
 
 
 // ================================================================== //
 // ====== THIS PART OF THE FILE ACTS AS THE CONTENT SCRIPT ========== //
-// ====== (It only runs when injected into a web page) ============== //
 // ================================================================== //
 
-// This check ensures the content script code only runs when it's in a page
-// context (has a `window` object) and not in the background service worker.
 if (typeof window !== 'undefined') {
-
-        // 2. Define and replace navigator.canShare
-        // Our version always returns true because we can always open a popup.
+	// if (navigator.share) {
         navigator.canShare = function(data) {
-            console.log('Sharelette intercepted a canShare action. Data:', data);
-            // We return true to indicate that our custom share implementation can be called.
+            console.log('Sharelette intercepted a canShare action.');
             return true; 
         };
 
-        // 3. Replace the 'share' function with our custom version.
         navigator.share = async function(data) {
-            console.log('Sharelette intercepted a share action. Data:', data);
-
-            if (!data) {
-                // If there's no data, we don't need to do anything.
-                return Promise.resolve();
-            }
-
-            // Open the Sharelette UI in a new popup window.
-            const shareletteBaseUrl = 'https://sharelette.cloudbreak.app';
-            const shareUrl = new URL(shareletteBaseUrl);
+            console.log('Sharelette: Intercepted share, sending to background.');
             
-            shareUrl.searchParams.set('url', data.url || window.location.href);
-            shareUrl.searchParams.set('title', data.title || document.title);
-            if (data.text) {
-                shareUrl.searchParams.set('text', data.text);
-            }
+            if (!data) return Promise.resolve();
             
-            const width = 550;
-            const height = 750;
-            const left = (screen.width / 2) - (width / 2);
-            const top = (screen.height / 2) - (height / 2);
-
-            window.open(
-                shareUrl, 
-                'Sharelette', 
-                `width=${width},height=${height},top=${top},left=${left}`
-            );
+            // Send share data to the background script
+            chrome.runtime.sendMessage({
+                type: 'share',
+                data: {
+                    url: data.url || window.location.href,
+                    title: data.title || document.title,
+                    text: data.text || ''
+                }
+            });
 
             return Promise.resolve();
         };
 
-        console.log('Sharelette: navigator.share and navigator.canShare have been successfully replaced.');
+        console.log('Sharelette: navigator.share and navigator.canShare have been replaced.');
+    // }
 }
