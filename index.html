@@ -665,9 +665,25 @@
         // --- The rest of the page logic ---
         function copyTextToClipboard(text) {
             return new Promise((resolve, reject) => {
-                if (navigator.clipboard) {
+                // If in an extension iframe, message the parent popup script
+                if (window.self !== window.top) {
+                    const listener = (event) => {
+                        if (event.data.type === 'sharelette-copy-response') {
+                            window.removeEventListener('message', listener);
+                            if (event.data.success) {
+                                resolve();
+                            } else {
+                                reject(new Error(event.data.error || 'Copy failed in extension.'));
+                            }
+                        }
+                    };
+                    window.addEventListener('message', listener);
+                    window.parent.postMessage({ type: 'sharelette-copy-request', text }, '*');
+                } else if (navigator.clipboard) {
+                    // Use modern clipboard API in a standard web context
                     navigator.clipboard.writeText(text).then(resolve).catch(reject);
                 } else {
+                    // Fallback for older browsers
                     try {
                         const textArea = document.createElement("textarea");
                         textArea.value = text;

@@ -1,6 +1,24 @@
+// sharelette/chromium-extension/popup.js
 document.addEventListener('DOMContentLoaded', () => {
     const loadingDiv = document.getElementById('loading');
     const iframe = document.getElementById('sharelette-frame');
+
+    // Add this message listener to handle copy requests from the iframe
+    window.addEventListener('message', (event) => {
+        const iframeOrigin = "https://sharelette.cloudbreak.app";
+        if (event.origin !== iframeOrigin) {
+            return;
+        }
+
+        if (event.data.type === 'sharelette-copy-request') {
+            navigator.clipboard.writeText(event.data.text).then(() => {
+                iframe.contentWindow.postMessage({ type: 'sharelette-copy-response', success: true }, iframeOrigin);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                iframe.contentWindow.postMessage({ type: 'sharelette-copy-response', success: false, error: err.message }, iframeOrigin);
+            });
+        }
+    });
 
     // Retrieve the share data from storage that the background script saved.
     chrome.storage.local.get(['shareData'], (result) => {
